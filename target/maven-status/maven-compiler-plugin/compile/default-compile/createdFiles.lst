@@ -1,0 +1,3 @@
+com\deloitte\inspection\controller\LoginController.class
+com\deloitte\inspection\main\ServletInitializer.class
+com\deloitte\inspection\main\LexInspectionApplication.class
