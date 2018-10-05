@@ -6,6 +6,8 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -46,7 +48,7 @@ public class LISSubscriberMaster implements Serializable {
 	@Column(name = "UPDATED_BY")
 	private String updatedBy;
 		
-	@OneToMany(mappedBy="subscriberMaster")
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISUserTypeMaster> userTypeMaster;
 	
 	/**
