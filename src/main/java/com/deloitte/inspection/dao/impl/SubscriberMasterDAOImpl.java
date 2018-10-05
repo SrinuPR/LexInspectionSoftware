@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -79,6 +78,18 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 			//if(session != null)
 				//session.close();
 		}
+		return null;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public LISSubscriberMaster getSubscriberById(Integer subscriberId) throws SubscriberMasterException {
+		logger.info("Entered into validateLoginCredentials");	
+		Query query = getSession().createQuery(" From LISSubscriberMaster l where l.subscriberId = :subscriberId");
+		query.setParameter("subscriberId", subscriberId);
+		List<LISSubscriberMaster> subscriberMasterlist = query.list();
+		if(null != subscriberMasterlist && subscriberMasterlist.size() > 0)
+			return subscriberMasterlist.get(0);
 		return null;
 	}
 }

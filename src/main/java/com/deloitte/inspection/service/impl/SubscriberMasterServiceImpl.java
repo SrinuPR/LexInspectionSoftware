@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.deloitte.inspection.component.CryptoComponent;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
@@ -26,9 +25,6 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 
 	@Autowired
 	private SubscriberMasterDAO subMasterDAO;
-	
-	@Autowired
-	private CryptoComponent cryptoComponent;
 	
 	/* (non-Javadoc)
 	 * @see com.deloitte.inspection.service.SubscriberMasterService#validateSubscriber(com.deloitte.inspection.dto.SubscriberMasterDTO)

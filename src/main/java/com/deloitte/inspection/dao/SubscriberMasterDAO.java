@@ -7,5 +7,8 @@ import com.deloitte.inspection.model.LISSubscriberMaster;
 public interface SubscriberMasterDAO {
 	
 	public LISSubscriberMaster validateSubscriber(Integer subscriberId) throws SubscriberMasterException;
+	
 	public SubscriberMasterDTO createSubscriber(SubscriberMasterDTO subMasterDTO) throws SubscriberMasterException;
+	
+	public LISSubscriberMaster getSubscriberById(Integer subscriberId) throws SubscriberMasterException;
 }

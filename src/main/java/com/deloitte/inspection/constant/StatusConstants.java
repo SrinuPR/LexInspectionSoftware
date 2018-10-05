@@ -15,5 +15,9 @@ public class StatusConstants {
 	public static final String SUBSCRIBER_AVAILABLE="Subscriber ID exists";
 	public static final String SUBSCRIBER_NOT_AVAILABLE="Subscriber ID not exists";
 	
+	public static final String SUCCESS = "Success";
+	public static final String FAILURE = "Failed";
+	
+	
 	public static final String ERROR="Error";
 }

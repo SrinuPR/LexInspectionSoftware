@@ -1,5 +1,7 @@
 package com.deloitte.inspection.service.impl;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class LoginServiceImpl implements LoginService{
 	private CryptoComponent cryptoComponent;
 	
 	@Override
-	public LoginDTO validateLoginCredentials(LoginDTO loginDTO) throws LoginException {
+	public LoginDTO validateLoginCredentials(LoginDTO loginDTO, HttpSession httpSession) throws LoginException {
 		LoginDTO responseDTO = new LoginDTO();
 		logger.info("User name and password "+loginDTO.getUserId()+" , "+loginDTO.getPassword());
 		if(null != loginDTO && null != loginDTO.getUserId() && null != loginDTO.getPassword()){
@@ -38,7 +40,9 @@ public class LoginServiceImpl implements LoginService{
 					responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
 				}else{
 					System.out.println(login.getUserId()+" , "+login.getPassword());
+					responseDTO.setUserId(login.getLoginId());
 					responseDTO.setStatus(StatusConstants.LOGIN_SUCCESS);
+					httpSession.setAttribute("user", responseDTO);
 				}
 			}catch(CryptoException cryptoException){
 				logger.error("Error while decrypting credentails "+cryptoException.getMessage());
