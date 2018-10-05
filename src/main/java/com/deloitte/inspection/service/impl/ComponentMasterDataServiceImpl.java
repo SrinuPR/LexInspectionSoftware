@@ -152,4 +152,14 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 		}
 		return null;
 	}
+
+	@Override
+	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
+		try{
+			return componentMasterDataDAO.deleteComponent(componentId);
+		}catch(Exception exception){
+			logger.error("Exception while deleting component "+exception.getMessage());
+		}
+		return StatusConstants.FAILURE;
+	}
 }

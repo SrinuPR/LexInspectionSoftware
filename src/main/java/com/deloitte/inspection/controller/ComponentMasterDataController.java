@@ -114,4 +114,17 @@ public class ComponentMasterDataController {
 		}
 		return new ResponseEntity(null,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/delete/{componentId}", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<String> deleteComponent(@PathVariable("componentId") Integer componentId){
+		try{
+			String status = componentMasterDataService.deleteComponent(componentId);
+			return new ResponseEntity(status,HttpStatus.OK);
+		}catch(Exception exception){
+			logger.error("Exception while sending the details "+exception.getMessage());
+		}
+		return new ResponseEntity(StatusConstants.FAILURE,HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

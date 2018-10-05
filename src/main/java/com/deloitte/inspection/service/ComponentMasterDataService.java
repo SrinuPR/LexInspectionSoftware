@@ -15,4 +15,6 @@ public interface ComponentMasterDataService {
 
 	public List<ComponentMasterDataDTO> getAllComponentMasterData()  throws ComponentMasterDataException;
 
+	public String deleteComponent(Integer componentId) throws ComponentMasterDataException;
+
 }

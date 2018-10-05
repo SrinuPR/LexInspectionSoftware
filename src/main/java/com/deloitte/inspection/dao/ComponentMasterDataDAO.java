@@ -13,4 +13,6 @@ public interface ComponentMasterDataDAO {
 
 	public List<LISMaintainMasterDataComponent> getAllComponentMasterData() throws ComponentMasterDataException;
 
+	public String deleteComponent(Integer componentId) throws ComponentMasterDataException;
+
 }

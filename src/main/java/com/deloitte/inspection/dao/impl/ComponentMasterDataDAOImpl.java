@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
@@ -54,6 +55,19 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l ORDER BY l.createdTimestamp DESC");
 		List<LISMaintainMasterDataComponent> list = query.list();
 		return list;
+	}
+
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
+	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
+		String status = StatusConstants.FAILURE;
+		Query query = getSession().createSQLQuery("DELETE FROM  LIS_CMDCS l WHERE l.CMDCS_ID = :componentId");
+		query.setParameter(componentId, componentId);
+		int result = query.executeUpdate();
+		if(result > 0){
+			status = StatusConstants.SUCCESS;
+		}
+		return status;	
 	}
 
 }
