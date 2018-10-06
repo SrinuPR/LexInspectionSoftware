@@ -5,5 +5,5 @@ import com.deloitte.inspection.model.LISLogin;
 
 public interface LoginDAO {
 
-	public LISLogin validateLoginCredentials(Integer userId) throws LoginException;
+	public LISLogin validateLoginCredentials(String string) throws LoginException;
 }

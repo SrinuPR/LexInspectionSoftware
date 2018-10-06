@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -49,6 +50,9 @@ public class LISUserMasterCreate implements Serializable{
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name="SUBSCRIBER_ID")
 	private LISSubscriberMaster subscriberMaster;
+	
+	@OneToOne(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private LISLogin loginDetails;
 
 	public String getUserId() {
 		return userId;
@@ -128,6 +132,14 @@ public class LISUserMasterCreate implements Serializable{
 
 	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
 		this.subscriberMaster = subscriberMaster;
+	}
+
+	public LISLogin getLoginDetails() {
+		return loginDetails;
+	}
+
+	public void setLoginDetails(LISLogin loginDetails) {
+		this.loginDetails = loginDetails;
 	}
 
 }

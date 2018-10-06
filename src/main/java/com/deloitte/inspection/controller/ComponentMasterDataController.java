@@ -89,7 +89,7 @@ public class ComponentMasterDataController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/all", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<List<ComponentMasterDataDTO>> displayComponentMasterData(){
 		logger.info("Entered into displayComponentMasterData");
 		List<ComponentMasterDataDTO> componentMasterDataDTOs = null;
@@ -104,7 +104,7 @@ public class ComponentMasterDataController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/create", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/create", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<LoginDTO> createComponent(HttpSession httpSession){
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
@@ -117,7 +117,7 @@ public class ComponentMasterDataController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/delete/{componentId}", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/delete/{componentId}", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<String> deleteComponent(@PathVariable("componentId") Integer componentId){
 		try{
 			String status = componentMasterDataService.deleteComponent(componentId);

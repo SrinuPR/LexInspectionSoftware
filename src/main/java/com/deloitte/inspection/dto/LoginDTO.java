@@ -2,18 +2,18 @@ package com.deloitte.inspection.dto;
 
 public class LoginDTO {
 	
-	private Integer userId;
+	private String userId;
 	private String password;
 	private String userName;
-	private String subscriberId;
+	private Integer subscriberId;
 	private String subscriberName;
 	private String status;
 	private String errorMessage;
 	
-	public Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public String getPassword() {
@@ -40,10 +40,10 @@ public class LoginDTO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getSubscriberId() {
+	public Integer getSubscriberId() {
 		return subscriberId;
 	}
-	public void setSubscriberId(String subscriberId) {
+	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
 	public String getSubscriberName() {

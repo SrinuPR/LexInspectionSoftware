@@ -61,8 +61,8 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 	@Override
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM  LIS_CMDCS l WHERE l.CMDCS_ID = :componentId");
-		query.setParameter(componentId, componentId);
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_CMDCS WHERE CMDCS_ID = :componentId");
+		query.setParameter("componentId", componentId);
 		int result = query.executeUpdate();
 		if(result > 0){
 			status = StatusConstants.SUCCESS;

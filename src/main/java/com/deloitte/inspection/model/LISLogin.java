@@ -3,9 +3,13 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,14 +23,8 @@ public class LISLogin implements Serializable{
 	@Column(name = "LOGIN_ID")
 	private Integer loginId;
 	
-	@Column(name = "USER_ID")
-	private Integer userId;
-	
 	@Column(name ="PASSWORD")
 	private String password;
-	
-	@Column(name = "SUBSCRIBER_ID ")
-	private Integer subscriberId;
 	
 	@Column(name = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
@@ -40,6 +38,14 @@ public class LISLogin implements Serializable{
 	@Column(name = "UPDATED_BY")
 	private String updatedBy;
 
+	@ManyToOne
+    @JoinColumn(name="SUBSCRIBER_ID", nullable=false)
+    private LISSubscriberMaster subscriberMaster;
+	
+	@OneToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name="USER_ID")
+	private LISUserMasterCreate userMasterCreate;
+	
 	public Integer getLoginId() {
 		return loginId;
 	}
@@ -48,28 +54,12 @@ public class LISLogin implements Serializable{
 		this.loginId = loginId;
 	}
 
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Integer getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Integer subscriberId) {
-		this.subscriberId = subscriberId;
 	}
 
 	public Date getCreatedTimestamp() {
@@ -102,6 +92,22 @@ public class LISLogin implements Serializable{
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public LISSubscriberMaster getSubscriberMaster() {
+		return subscriberMaster;
+	}
+
+	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
+		this.subscriberMaster = subscriberMaster;
+	}
+
+	public LISUserMasterCreate getUserMasterCreate() {
+		return userMasterCreate;
+	}
+
+	public void setUserMasterCreate(LISUserMasterCreate userMasterCreate) {
+		this.userMasterCreate = userMasterCreate;
 	}
 
 }

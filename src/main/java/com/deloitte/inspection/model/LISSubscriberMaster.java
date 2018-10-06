@@ -53,6 +53,9 @@ public class LISSubscriberMaster implements Serializable {
 		
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISUserTypeMaster> userTypeMaster;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISLogin> login;
 
 	public Integer getSubscriberId() {
 		return subscriberId;
@@ -132,6 +135,14 @@ public class LISSubscriberMaster implements Serializable {
 
 	public void setUserTypeMaster(Set<LISUserTypeMaster> userTypeMaster) {
 		this.userTypeMaster = userTypeMaster;
+	}
+
+	public Set<LISLogin> getLogin() {
+		return login;
+	}
+
+	public void setLogin(Set<LISLogin> login) {
+		this.login = login;
 	}
 		
 }

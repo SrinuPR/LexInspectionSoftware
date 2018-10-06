@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,6 +22,7 @@ public class LISMaintainMasterDataComponent implements Serializable{
 
 	@Id
 	@Column(name = "CMDCS_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer cmdcsId;
 	
 	@Column(name = "COMP_PROD_DRAW_NUM" , length = 50)

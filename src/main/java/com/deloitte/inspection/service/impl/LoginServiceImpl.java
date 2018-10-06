@@ -39,8 +39,15 @@ public class LoginServiceImpl implements LoginService{
 				if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
 					responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
 				}else{
-					System.out.println(login.getUserId()+" , "+login.getPassword());
-					responseDTO.setUserId(login.getLoginId());
+					if(null != login.getSubscriberMaster()){
+						responseDTO.setSubscriberId(login.getSubscriberMaster().getSubscriberId());
+						responseDTO.setSubscriberName(login.getSubscriberMaster().getSubscriberName());
+					}
+					if(null != login.getUserMasterCreate()){
+						System.out.println(login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
+						responseDTO.setUserId(login.getUserMasterCreate().getUserId());
+						responseDTO.setUserName(login.getUserMasterCreate().getUserName());
+					}
 					responseDTO.setStatus(StatusConstants.LOGIN_SUCCESS);
 					httpSession.setAttribute("user", responseDTO);
 				}
