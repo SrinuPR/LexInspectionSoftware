@@ -47,6 +47,10 @@ public class LoginServiceImpl implements LoginService{
 						System.out.println(login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
 						responseDTO.setUserId(login.getUserMasterCreate().getUserId());
 						responseDTO.setUserName(login.getUserMasterCreate().getUserName());
+						if(null == login.getUserMasterCreate().getOldPassword1() && null == login.getUserMasterCreate().getOldPassword2() 
+								&& null != login.getUserMasterCreate().getActivePassword()){
+							responseDTO.setFirstTimeLogin(true);
+						}
 					}
 					responseDTO.setStatus(StatusConstants.LOGIN_SUCCESS);
 					httpSession.setAttribute("user", responseDTO);

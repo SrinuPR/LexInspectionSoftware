@@ -9,6 +9,7 @@ public class LoginDTO {
 	private String subscriberName;
 	private String status;
 	private String errorMessage;
+	private boolean firstTimeLogin;
 	
 	public String getUserId() {
 		return userId;
@@ -52,4 +53,11 @@ public class LoginDTO {
 	public void setSubscriberName(String subscriberName) {
 		this.subscriberName = subscriberName;
 	}
+	public boolean isFirstTimeLogin() {
+		return firstTimeLogin;
+	}
+	public void setFirstTimeLogin(boolean firstTimeLogin) {
+		this.firstTimeLogin = firstTimeLogin;
+	}
+	
 }
