@@ -27,7 +27,7 @@ public class EmailService {
 	
 	public void sendEmail(String toEmail, String messageBody, String subject){
 		
-		logger.info("Sending email to : "+toEmail);
+		logger.info("Sending email to :"+toEmail);
 		Session session = loadEmailProperties();
 		try{
 			MimeMessage message = new MimeMessage(session);
