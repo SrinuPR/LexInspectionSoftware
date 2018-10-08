@@ -32,5 +32,6 @@ public class StatusConstants {
 	public static final String USER_TYPE_NAME_NOT_AVAILABLE = "User Type ID and User Type Name combination not exists";
 	
 	public static final char IS_ACTIVE = 'Y';
+	public static final String IN_ACTIVE_LOGIN_USER = "User is in active in the system";
 
 }

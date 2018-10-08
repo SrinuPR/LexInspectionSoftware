@@ -38,6 +38,8 @@ public class LoginServiceImpl implements LoginService{
 				LISLogin login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
 				if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
 					responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
+				}else if(null != login.getUserMasterCreate() && login.getUserMasterCreate().getIsActive() != 'Y'){
+					responseDTO.setErrorMessage(StatusConstants.IN_ACTIVE_LOGIN_USER);
 				}else{
 					if(null != login.getSubscriberMaster()){
 						responseDTO.setSubscriberId(login.getSubscriberMaster().getSubscriberId());
