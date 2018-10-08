@@ -25,7 +25,7 @@ public class EmailService {
 	@Autowired
 	private EmailProperties emailProperties;
 	
-	public void sendEmail(String toEmail){
+	public void sendEmail(String toEmail, String messageBody, String subject){
 		
 		logger.info("Sending email to : "+toEmail);
 		Session session = loadEmailProperties();
@@ -33,8 +33,8 @@ public class EmailService {
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 			helper.setTo(InternetAddress.parse(toEmail+","+""));
-			helper.setText("Sample Email", false);
-			helper.setSubject("");
+			helper.setText(messageBody, false);
+			helper.setSubject(subject);
 			helper.setFrom(new InternetAddress(emailProperties.USER_NAME));
 			Transport.send(message);
 			logger.info("Email sent to :"+toEmail);
