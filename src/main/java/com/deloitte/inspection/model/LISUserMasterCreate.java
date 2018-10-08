@@ -47,6 +47,9 @@ public class LISUserMasterCreate implements Serializable{
 	@Column(name = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
+	@Column(name = "IS_ACTIVE")
+	private char isActive;
+	
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name="SUBSCRIBER_ID")
 	private LISSubscriberMaster subscriberMaster;
@@ -140,6 +143,14 @@ public class LISUserMasterCreate implements Serializable{
 
 	public void setLoginDetails(LISLogin loginDetails) {
 		this.loginDetails = loginDetails;
+	}
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
 	}
 
 }

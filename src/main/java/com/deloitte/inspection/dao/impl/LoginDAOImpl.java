@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.exception.LoginException;
 import com.deloitte.inspection.model.LISLogin;
@@ -32,8 +33,9 @@ public class LoginDAOImpl implements LoginDAO{
 	@Override
 	public LISLogin validateLoginCredentials(String userId) throws LoginException {
 		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISLogin l where l.userMasterCreate.userId = :userId");
+		Query query = getSession().createQuery(" From LISLogin l where l.userMasterCreate.userId = :userId and l.userMasterCreate.isActive = :isActive ");
 		query.setParameter("userId", userId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISLogin> loginList = query.list();
 		if(null != loginList && loginList.size() > 0){
 			return loginList.get(0);
