@@ -3,11 +3,12 @@
  */
 package com.deloitte.inspection.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
@@ -30,16 +31,16 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 	 * @see com.deloitte.inspection.service.SubscriberMasterService#validateSubscriber(com.deloitte.inspection.dto.SubscriberMasterDTO)
 	 */
 	@Override
-	public String validateSubscriber(SubscriberMasterDTO subMasterDTO) throws SubscriberMasterException {
-		logger.info("Subscriber ID: " + subMasterDTO.getSubscriberId());
-		if(null != subMasterDTO && null != subMasterDTO.getSubscriberId()) {
-			LISSubscriberMaster login = subMasterDAO.validateSubscriber(subMasterDTO.getSubscriberId());
+	public String validateSubscriber(Integer subscriberId) throws SubscriberMasterException {
+		logger.info("Subscriber ID: " + subscriberId);
+		if(null != subscriberId && 0 != subscriberId) {
+			LISSubscriberMaster login = subMasterDAO.validateSubscriber(subscriberId);
 			if (null == login) {
 				return StatusConstants.SUBSCRIBER_NOT_AVAILABLE;
 			} else {
 				return StatusConstants.SUBSCRIBER_AVAILABLE;
 			}
-		} else if(null != subMasterDTO && null == subMasterDTO.getSubscriberId()) { 
+		} else if(null != subscriberId && 0 == subscriberId) { 
 			return StatusConstants.SUBSCRIBER_ID_EMPTY;
 		}
 		return "";
@@ -70,5 +71,25 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 			responseDTO.setErrorMessage(StatusConstants.USER_ID_EMPTY);
 		}
 		return responseDTO;
+	}
+	
+	@Override
+	public List<SubscriberMasterDTO> getAllSubscriberMasterData() throws SubscriberMasterException {
+		try{
+			List<SubscriberMasterDTO> subscriberMasterDTOList = new ArrayList<SubscriberMasterDTO>();
+			List<LISSubscriberMaster> lisSubscriberMasterList = subMasterDAO.getAllSubscriberMasterData();
+			if(null != lisSubscriberMasterList && lisSubscriberMasterList.size() > 0){
+				for(LISSubscriberMaster lisSubscriberMaster : lisSubscriberMasterList){
+					SubscriberMasterDTO subscriberMasterDTO = new SubscriberMasterDTO();
+					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId());
+					subscriberMasterDTO.setSubscriberName(lisSubscriberMaster.getSubscriberName());
+					subscriberMasterDTOList.add(subscriberMasterDTO);
+				}
+			}
+			return subscriberMasterDTOList;
+		}catch(Exception exception){
+			logger.error("Exception While Fetching the subscriber master data "+exception.getMessage());
+		}
+		return null;
 	}
 }

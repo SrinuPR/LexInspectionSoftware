@@ -15,7 +15,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.exception.SubscriberMasterException;
@@ -54,14 +53,13 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.deloitte.inspection.dao.SubscriberMasterDAO#createSubscriber(com.deloitte.inspection.dto.SubscriberMasterDTO)
+	 */
 	@Override
 	public SubscriberMasterDTO createSubscriber(SubscriberMasterDTO subMasterDTO) throws SubscriberMasterException {
 		logger.info("Entered into createSubscriber");	
-		//Session session = getSession();
-		//Transaction trans = null;
 		try {
-			//if(session != null) 
-				//trans = getSession().beginTransaction();
 			LISSubscriberMaster subMasterModel = new LISSubscriberMaster();
 			subMasterModel.setCreatedBy(subMasterDTO.getCreatedBy());
 			subMasterModel.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
@@ -72,15 +70,15 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 			if(value != null)
 				return subMasterDTO;
 		} catch (HibernateException ex) {
-			//if(trans != null)
-				//trans.rollback();
-		} finally {
-			//if(session != null)
-				//session.close();
-		}
+			ex.printStackTrace();
+			logger.error(ex.getMessage());
+		} 
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.deloitte.inspection.dao.SubscriberMasterDAO#getSubscriberById(java.lang.Integer)
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISSubscriberMaster getSubscriberById(Integer subscriberId) throws SubscriberMasterException {
@@ -91,5 +89,17 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 		if(null != subscriberMasterlist && subscriberMasterlist.size() > 0)
 			return subscriberMasterlist.get(0);
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.deloitte.inspection.dao.SubscriberMasterDAO#getAllSubscriberMasterData()
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISSubscriberMaster> getAllSubscriberMasterData() throws SubscriberMasterException {
+		logger.info("Entered into getAllSubscriberMasterData");	
+		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS ORDER BY SUMAS.createdTimestamp DESC");
+		List<LISSubscriberMaster> list = query.list();
+		return list;
 	}
 }
