@@ -12,6 +12,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.dao.impl.LoginDAOImpl;
 import com.deloitte.inspection.dto.LoginDTO;
+import com.deloitte.inspection.dto.PasswordMaintenanceDTO;
 import com.deloitte.inspection.exception.CryptoException;
 import com.deloitte.inspection.exception.LoginException;
 import com.deloitte.inspection.model.LISLogin;
@@ -66,6 +67,18 @@ public class LoginServiceImpl implements LoginService{
 			responseDTO.setErrorMessage(StatusConstants.USER_ID_EMPTY);
 		}
 		return responseDTO;
+	}
+
+	@Override
+	public String forgotPassword(PasswordMaintenanceDTO passwordMaintenanceDTO) throws LoginException {
+		
+		return null;
+	}
+
+	@Override
+	public String changePassword(PasswordMaintenanceDTO passwordMaintenanceDTO) throws LoginException {
+		
+		return null;
 	}
 
 }

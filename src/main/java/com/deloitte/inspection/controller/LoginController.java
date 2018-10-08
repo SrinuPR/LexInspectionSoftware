@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.LoginDTO;
+import com.deloitte.inspection.dto.PasswordMaintenanceDTO;
 import com.deloitte.inspection.service.LoginService;
 
 @RestController
@@ -47,14 +48,48 @@ public class LoginController {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@CrossOrigin
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<String> logout(HttpSession httpSession) {
 		try {
 			httpSession.invalidate();
 			return new ResponseEntity(StatusConstants.SUCCESS, HttpStatus.OK);
-		}catch (Exception e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}catch (Exception exception) {
+			logger.error("Exception While logout the user "+exception.getMessage());
+			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@CrossOrigin
+	@RequestMapping(value = "/forgot/password", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<String> forgotPassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
+		try {
+			String status = loginService.forgotPassword(passwordMaintenanceDTO);
+			if(StatusConstants.SUCCESS.equalsIgnoreCase(status))
+				return new ResponseEntity(status, HttpStatus.OK);
+			else
+				return new ResponseEntity(status, HttpStatus.EXPECTATION_FAILED);
+		}catch (Exception exception) {
+			logger.error("Exception While performing forgot password "+exception.getMessage());
+			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@CrossOrigin
+	@RequestMapping(value = "/change/password", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<String> changePassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
+		try {
+			String status = loginService.changePassword(passwordMaintenanceDTO);
+			if(StatusConstants.SUCCESS.equalsIgnoreCase(status))
+				return new ResponseEntity(status, HttpStatus.OK);
+			else
+				return new ResponseEntity(status, HttpStatus.EXPECTATION_FAILED);
+		}catch (Exception exception) {
+			logger.error("Exception While user changing the password "+exception.getMessage());
+			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
