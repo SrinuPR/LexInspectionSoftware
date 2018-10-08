@@ -3,6 +3,7 @@
  */
 package com.deloitte.inspection.controller;
 
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.service.SubscriberMasterService;
@@ -39,11 +40,11 @@ public class SubscriberMasterController {
 	 * @return
 	 */
 	@CrossOrigin
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/validate", method = RequestMethod.POST, produces=MediaType.TEXT_PLAIN_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<SubscriberMasterDTO> validateSubscriber(@RequestBody SubscriberMasterDTO subMasterDTO){
+	@SuppressWarnings({ "unchecked", "rawtypes"})
+	@RequestMapping(value = "/{subscriberId}", method = RequestMethod.GET, produces=MediaType.TEXT_PLAIN_VALUE)
+	public @ResponseBody ResponseEntity<SubscriberMasterDTO> validateSubscriber(@PathVariable("subscriberId") Integer subscriberId){
 		try{
-			String outPutStr = subMasterService.validateSubscriber(subMasterDTO);
+			String outPutStr = subMasterService.validateSubscriber(subscriberId);
 			if(null != outPutStr)
 				return new ResponseEntity(outPutStr, HttpStatus.OK);
 			else
@@ -75,5 +76,23 @@ public class SubscriberMasterController {
 			logger.error("Exception While validating credentials "+exception.getMessage());
 		}
 		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	/**
+	 * @return ResponseEntity
+	 */
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<List<SubscriberMasterDTO>> subscriberMasterDTOList(){
+		logger.info("Entered into displayComponentMasterData");
+		List<SubscriberMasterDTO> subscriberMasterDTOList = null;
+		try{
+			subscriberMasterDTOList = subMasterService.getAllSubscriberMasterData();
+			return new ResponseEntity(subscriberMasterDTOList,HttpStatus.OK);
+		}catch(Exception exception){
+			logger.error("Error while fetching the data : "+exception.getMessage());
+		}
+		return new ResponseEntity(subscriberMasterDTOList,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
