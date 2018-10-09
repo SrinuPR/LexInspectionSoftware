@@ -64,16 +64,17 @@ public class LoginController {
 	@CrossOrigin
 	@RequestMapping(value = "/forgot/password", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<String> forgotPassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
+		String status = null;
 		try {
-			String status = loginService.forgotPassword(passwordMaintenanceDTO);
+			status = loginService.forgotPassword(passwordMaintenanceDTO);
 			if(StatusConstants.PASSWORD_CHANGED_SUCCESS.equalsIgnoreCase(status))
 				return new ResponseEntity(status, HttpStatus.OK);
 			else
 				return new ResponseEntity(status, HttpStatus.EXPECTATION_FAILED);
 		}catch (Exception exception) {
 			logger.error("Exception While performing forgot password "+exception.getMessage());
-			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity(status, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	
@@ -81,15 +82,16 @@ public class LoginController {
 	@CrossOrigin
 	@RequestMapping(value = "/change/password", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<String> changePassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
+		String status = null;
 		try {
-			String status = loginService.changePassword(passwordMaintenanceDTO);
+			status = loginService.changePassword(passwordMaintenanceDTO);
 			if(StatusConstants.PASSWORD_CHANGED_SUCCESS.equalsIgnoreCase(status))
 				return new ResponseEntity(status, HttpStatus.OK);
 			else
 				return new ResponseEntity(status, HttpStatus.EXPECTATION_FAILED);
 		}catch (Exception exception) {
 			logger.error("Exception While user changing the password "+exception.getMessage());
-			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity(status, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

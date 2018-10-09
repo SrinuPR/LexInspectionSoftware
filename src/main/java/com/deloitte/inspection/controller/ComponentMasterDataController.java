@@ -44,11 +44,13 @@ public class ComponentMasterDataController {
 			if(null != userDto)
 				userName = userDto.getUserName();
 			status = componentMasterDataService.saveComponentMasterData(componentMasterDataDTO,userName);
+			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
-				List<ComponentMasterDataDTO> componentMasterDataDTO2 = componentMasterDataService.getAllComponentMasterData();
-				return new ResponseEntity(componentMasterDataDTO2, HttpStatus.OK);
-			}
-			return new ResponseEntity(null,HttpStatus.GONE);
+				componentMasterData  = componentMasterDataService.getAllComponentMasterData();
+				return new ResponseEntity(componentMasterData,HttpStatus.OK);
+			}else{
+				return new ResponseEntity(null,HttpStatus.GONE);
+			}	
 		}catch(Exception exception){
 			logger.error("Error while saving the data : "+exception.getMessage());
 			return new ResponseEntity(status,HttpStatus.METHOD_FAILURE);
@@ -75,7 +77,7 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<ComponentMasterDataDTO>> updateComponentMasterData(@RequestBody ComponentMasterDataDTO componentMasterDataDTO, HttpSession httpSession){
+	public @ResponseBody ResponseEntity<String> updateComponentMasterData(@RequestBody ComponentMasterDataDTO componentMasterDataDTO, HttpSession httpSession){
 		logger.info("Entered into updateComponentMasterData");
 		String status = StatusConstants.FAILURE;
 		try{
@@ -83,12 +85,14 @@ public class ComponentMasterDataController {
 			String userName = null;
 			if(null != userDto)
 				userName = userDto.getUserName();
-			status = componentMasterDataService.updateComponentMasterData(componentMasterDataDTO, userName);
+			status = componentMasterDataService.updateComponentMasterData(componentMasterDataDTO, userName);		
+			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
-				List<ComponentMasterDataDTO> componentMasterDataDTO2 = componentMasterDataService.getAllComponentMasterData();
-				return new ResponseEntity(componentMasterDataDTO2, HttpStatus.OK);
-			}
-			return new ResponseEntity(null,HttpStatus.GONE);
+				componentMasterData  = componentMasterDataService.getAllComponentMasterData();
+				return new ResponseEntity(componentMasterData,HttpStatus.OK);
+			}else{
+				return new ResponseEntity(null,HttpStatus.GONE);
+			}	
 		}catch(Exception exception){
 			logger.error("Error while updating the data : "+exception.getMessage());
 			return new ResponseEntity(status,HttpStatus.METHOD_FAILURE);
