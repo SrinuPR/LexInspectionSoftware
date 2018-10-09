@@ -42,5 +42,9 @@ public class StatusConstants {
 	
 	public static final String FORGOT_PASSWORD_MAIL_BODY = "Hi, \n Please find your new password :- \n\n";
 	public static final String EMAIL_SENT_FAILED = "Email sending failed";
+	public static final String USER_CREATE_FIALED="User NOT saved, Please try again";
+	public static final String USER_CREATE_SUCCESS="User saved";
+	public static final String USER_EXISTS="User ID Exists";
+	public static final String EMPTY="";
 
 }

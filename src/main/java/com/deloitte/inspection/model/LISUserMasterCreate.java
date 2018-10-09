@@ -26,14 +26,17 @@ public class LISUserMasterCreate implements Serializable{
 	@Column(name = "USER_NAME" , length = 20)
 	private String userName;
 	
-	@Column(name = "OLD_PASSWORD1" , length = 50)
+	@Column(name = "OLD_PASSWORD1" , length = 20)
 	private String oldPassword1;
 	
-	@Column(name = "OLD_PASSWORD2" , length = 50)
+	@Column(name = "OLD_PASSWORD2" , length = 20)
 	private String oldPassword2;
 	
-	@Column(name = "ACTIVE_PASSWORD" , length = 50)
+	@Column(name = "ACTIVE_PASSWORD" , length = 20)
 	private String activePassword;
+	
+	@Column(name = "USER_TYPE_ID", length =30)
+	private String userTypeId;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;
@@ -103,6 +106,14 @@ public class LISUserMasterCreate implements Serializable{
 
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+	
+	public String getUserTypeId() {
+		return userTypeId;
+	}
+
+	public void setUserTypeId(String userTypeId) {
+		this.userTypeId = userTypeId;
 	}
 
 	public Date getCreatedTimestamp() {
