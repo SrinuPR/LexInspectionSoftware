@@ -66,7 +66,7 @@ public class LoginController {
 	public @ResponseBody ResponseEntity<String> forgotPassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
 		try {
 			String status = loginService.forgotPassword(passwordMaintenanceDTO);
-			if(StatusConstants.SUCCESS.equalsIgnoreCase(status))
+			if(StatusConstants.PASSWORD_CHANGED_SUCCESS.equalsIgnoreCase(status))
 				return new ResponseEntity(status, HttpStatus.OK);
 			else
 				return new ResponseEntity(status, HttpStatus.EXPECTATION_FAILED);
@@ -83,7 +83,7 @@ public class LoginController {
 	public @ResponseBody ResponseEntity<String> changePassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
 		try {
 			String status = loginService.changePassword(passwordMaintenanceDTO);
-			if(StatusConstants.SUCCESS.equalsIgnoreCase(status))
+			if(StatusConstants.PASSWORD_CHANGED_SUCCESS.equalsIgnoreCase(status))
 				return new ResponseEntity(status, HttpStatus.OK);
 			else
 				return new ResponseEntity(status, HttpStatus.EXPECTATION_FAILED);

@@ -32,13 +32,14 @@ public class EmailService {
 		try{
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-			helper.setTo(InternetAddress.parse(toEmail+","+""));
+			helper.setTo(InternetAddress.parse(toEmail));
 			helper.setText(messageBody, false);
 			helper.setSubject(subject);
 			helper.setFrom(new InternetAddress(emailProperties.USER_NAME));
 			Transport.send(message);
 			logger.info("Email sent to :"+toEmail);
 		} catch (MessagingException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

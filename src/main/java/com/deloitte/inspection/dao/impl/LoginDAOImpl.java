@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -11,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.exception.LoginException;
 import com.deloitte.inspection.model.LISLogin;
+import com.deloitte.inspection.model.LISUserMasterCreate;
 
 @Repository
 @Transactional
@@ -40,5 +43,36 @@ public class LoginDAOImpl implements LoginDAO{
 		}
 		return null;
 	}
+	
+	@Override
+	public String changePassword(LISUserMasterCreate userMasterModel) throws LoginException {
+		
+		logger.info("Inside ChangePasswordDAOImpl");
+		String status = new String();
+		try {
+			if (null != userMasterModel) {
+				getSession().saveOrUpdate(userMasterModel);
+			}
+			status = StatusConstants.SUCCESS;
+		}catch (HibernateException exception) {
+			logger.info("Exception in updating password " + exception.getMessage());
+			status = StatusConstants.FAILURE;
+		}
+		return status;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public LISUserMasterCreate validateUser(String userId) throws LoginException {
+		
+		logger.info("Inside LoginDAOImpl validateUser");
+		Query query = getSession().createQuery("from LISUserMasterCreate where userId = :userId");
+		query.setParameter("userId", userId);
+		List<LISUserMasterCreate> userList = query.list();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0);
+		}
+		return null;
+	}		
 
 }

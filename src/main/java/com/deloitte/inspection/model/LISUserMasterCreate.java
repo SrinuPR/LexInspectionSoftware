@@ -26,13 +26,13 @@ public class LISUserMasterCreate implements Serializable{
 	@Column(name = "USER_NAME" , length = 20)
 	private String userName;
 	
-	@Column(name = "OLD_PASSWORD1" , length = 20)
+	@Column(name = "OLD_PASSWORD1" , length = 50)
 	private String oldPassword1;
 	
-	@Column(name = "OLD_PASSWORD2" , length = 20)
+	@Column(name = "OLD_PASSWORD2" , length = 50)
 	private String oldPassword2;
 	
-	@Column(name = "ACTIVE_PASSWORD" , length = 20)
+	@Column(name = "ACTIVE_PASSWORD" , length = 50)
 	private String activePassword;
 	
 	@Column(name = "CREATED_BY")

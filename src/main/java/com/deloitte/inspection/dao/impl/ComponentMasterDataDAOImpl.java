@@ -70,4 +70,18 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 		return status;	
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public LISMaintainMasterDataComponent getComponentDataByDrwNum(String productDrawNumber)
+			throws ComponentMasterDataException {
+		logger.info("Entered into validateLoginCredentials");	
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where lower(l.componentProductDrawNumber) = :productDrawNumber ORDER BY l.createdTimestamp DESC");
+		query.setParameter("productDrawNumber", productDrawNumber);
+		List<LISMaintainMasterDataComponent> list = query.list();
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+
 }

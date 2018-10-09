@@ -15,4 +15,6 @@ public interface ComponentMasterDataDAO {
 
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException;
 
+	public LISMaintainMasterDataComponent getComponentDataByDrwNum(String productDrawNumber) throws ComponentMasterDataException;
+
 }
