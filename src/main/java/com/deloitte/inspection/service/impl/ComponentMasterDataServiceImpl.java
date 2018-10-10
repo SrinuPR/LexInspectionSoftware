@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
+import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISSubscriberMaster;
+import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.service.ComponentMasterDataService;
 
 @Service
@@ -28,19 +30,26 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 	
 	@Autowired
 	private SubscriberMasterDAO subscriberMasterDAO;
+	
+	@Autowired
+	private CreateUserDAO createUserDAO;
 
 	@Override
-	public String saveComponentMasterData(ComponentMasterDataDTO componentMasterDataDTO, String userName) throws ComponentMasterDataException {
+	public String saveComponentMasterData(ComponentMasterDataDTO componentMasterDataDTO, String userName, String userId) throws ComponentMasterDataException {
 		String status = StatusConstants.FAILURE;
 		try{
 			if(null != componentMasterDataDTO){
 				logger.info(" Subscriber Id "+componentMasterDataDTO.getSubscriberId());
 				LISMaintainMasterDataComponent masterDataComponent =  new LISMaintainMasterDataComponent();
-				if(null != componentMasterDataDTO.getSubscriberId()){
-					LISSubscriberMaster subscriberMaster = subscriberMasterDAO.getSubscriberById(componentMasterDataDTO.getSubscriberId());
-					masterDataComponent.setSubscriberMaster(subscriberMaster);
-				}
 				if(!isProductDrawNumberExist(componentMasterDataDTO.getComponentProductDrawNumber())){
+					if(null != componentMasterDataDTO.getSubscriberId()){
+						LISSubscriberMaster subscriberMaster = subscriberMasterDAO.getSubscriberById(componentMasterDataDTO.getSubscriberId());
+						masterDataComponent.setSubscriberMaster(subscriberMaster);
+					}
+					if(null != componentMasterDataDTO.getSubscriberId()){
+						LISUserMasterCreate userMasterCreate = createUserDAO.validateUserId(userId);
+						masterDataComponent.setUserMasterCreate(userMasterCreate);
+					}
 					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber());
 					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial());
 					masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName());
@@ -48,7 +57,8 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 					masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber());
 					masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress());
 					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits());
-					masterDataComponent.setCreatedBy("Hai");
+					masterDataComponent.setIsActive(StatusConstants.IS_ACTIVE);
+					masterDataComponent.setCreatedBy(userName);
 					masterDataComponent.setCreatedTimestamp(new Date());
 					componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
 					status = StatusConstants.SUCCESS;
@@ -103,7 +113,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 			if(null != componentMasterDataDTO){
 				LISMaintainMasterDataComponent masterDataComponent = null;
 				if(null != componentMasterDataDTO.getComponentId() && 0 != componentMasterDataDTO.getComponentId()){
-						if(!isProductDrawNumberExist(componentMasterDataDTO.getComponentProductDrawNumber())){
+					if(!isProductDrawNumberExist(componentMasterDataDTO.getComponentProductDrawNumber())){
 						masterDataComponent = componentMasterDataDAO.getComponentDataById(componentMasterDataDTO.getComponentId());
 						masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber());
 						masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial());
@@ -112,7 +122,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 						masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber());
 						masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress());
 						masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits());
-						masterDataComponent.setUpdatedBy("Update");
+						masterDataComponent.setUpdatedBy(userName);
 						masterDataComponent.setUpdatedTimestamp(new Date());
 						componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
 						status = StatusConstants.SUCCESS;
@@ -130,10 +140,10 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 	}
 
 	@Override
-	public List<ComponentMasterDataDTO> getAllComponentMasterData() throws ComponentMasterDataException {
+	public List<ComponentMasterDataDTO> getAllComponentMasterData(String userId) throws ComponentMasterDataException {
 		try{
 			List<ComponentMasterDataDTO> componentMasterDataDTOs = new ArrayList<ComponentMasterDataDTO>();
-			List<LISMaintainMasterDataComponent> maintainMasterDataComponents = componentMasterDataDAO.getAllComponentMasterData();
+			List<LISMaintainMasterDataComponent> maintainMasterDataComponents = componentMasterDataDAO.getAllComponentMasterData(userId);
 			if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
 				for(LISMaintainMasterDataComponent masterDataComponent : maintainMasterDataComponents){
 					ComponentMasterDataDTO componentMasterDataDTO = new ComponentMasterDataDTO();

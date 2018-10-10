@@ -41,12 +41,15 @@ public class ComponentMasterDataController {
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
-			if(null != userDto)
+			String userId = null;
+			if(null != userDto){
 				userName = userDto.getUserName();
-			status = componentMasterDataService.saveComponentMasterData(componentMasterDataDTO,userName);
+				userId = userDto.getUserId();
+			}
+			status = componentMasterDataService.saveComponentMasterData(componentMasterDataDTO,userName,userId);
 			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
-				componentMasterData  = componentMasterDataService.getAllComponentMasterData();
+				componentMasterData  = componentMasterDataService.getAllComponentMasterData(userId);
 				return new ResponseEntity(componentMasterData,HttpStatus.OK);
 			}else{
 				return new ResponseEntity(null,HttpStatus.GONE);
@@ -83,12 +86,15 @@ public class ComponentMasterDataController {
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
-			if(null != userDto)
+			String userId = null;
+			if(null != userDto){
 				userName = userDto.getUserName();
+				userId = userDto.getUserId();
+			}
 			status = componentMasterDataService.updateComponentMasterData(componentMasterDataDTO, userName);		
 			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
-				componentMasterData  = componentMasterDataService.getAllComponentMasterData();
+				componentMasterData  = componentMasterDataService.getAllComponentMasterData(userId);
 				return new ResponseEntity(componentMasterData,HttpStatus.OK);
 			}else{
 				return new ResponseEntity(null,HttpStatus.GONE);
@@ -102,11 +108,16 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<ComponentMasterDataDTO>> displayComponentMasterData(){
+	public @ResponseBody ResponseEntity<List<ComponentMasterDataDTO>> displayComponentMasterData(HttpSession httpSession){
 		logger.info("Entered into displayComponentMasterData");
 		List<ComponentMasterDataDTO> componentMasterDataDTOs = null;
 		try{
-			componentMasterDataDTOs = componentMasterDataService.getAllComponentMasterData();
+			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
+			String userId = null;
+			if(null != userDto){
+				userId = userDto.getUserId();
+			}
+			componentMasterDataDTOs = componentMasterDataService.getAllComponentMasterData(userId);
 			return new ResponseEntity(componentMasterDataDTOs,HttpStatus.OK);
 		}catch(Exception exception){
 			logger.error("Error while fetching the data : "+exception.getMessage());

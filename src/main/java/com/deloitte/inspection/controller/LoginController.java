@@ -62,7 +62,7 @@ public class LoginController {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@CrossOrigin
-	@RequestMapping(value = "/forgot/password", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/forgot/password", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<String> forgotPassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
 		String status = null;
 		try {
@@ -80,7 +80,7 @@ public class LoginController {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@CrossOrigin
-	@RequestMapping(value = "/change/password", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/change/password", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<String> changePassword(@RequestBody PasswordMaintenanceDTO passwordMaintenanceDTO) {
 		String status = null;
 		try {

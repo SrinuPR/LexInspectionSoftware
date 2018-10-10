@@ -7,13 +7,13 @@ import com.deloitte.inspection.exception.ComponentMasterDataException;
 
 public interface ComponentMasterDataService {
 
-	public String saveComponentMasterData(ComponentMasterDataDTO componentMasterDataDTO, String userName) throws ComponentMasterDataException;
+	public String saveComponentMasterData(ComponentMasterDataDTO componentMasterDataDTO, String userName, String userId) throws ComponentMasterDataException;
 
 	public ComponentMasterDataDTO getComponentDataById(Integer componentId) throws ComponentMasterDataException;
 
 	public String updateComponentMasterData(ComponentMasterDataDTO componentMasterDataDTO, String userName) throws ComponentMasterDataException;
 
-	public List<ComponentMasterDataDTO> getAllComponentMasterData()  throws ComponentMasterDataException;
+	public List<ComponentMasterDataDTO> getAllComponentMasterData(String userId)  throws ComponentMasterDataException;
 
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException;
 

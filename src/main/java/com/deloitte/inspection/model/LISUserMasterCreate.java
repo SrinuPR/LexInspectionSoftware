@@ -2,6 +2,7 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -26,13 +28,13 @@ public class LISUserMasterCreate implements Serializable{
 	@Column(name = "USER_NAME" , length = 20)
 	private String userName;
 	
-	@Column(name = "OLD_PASSWORD1" , length = 20)
+	@Column(name = "OLD_PASSWORD1" , length = 100)
 	private String oldPassword1;
 	
-	@Column(name = "OLD_PASSWORD2" , length = 20)
+	@Column(name = "OLD_PASSWORD2" , length = 100)
 	private String oldPassword2;
 	
-	@Column(name = "ACTIVE_PASSWORD" , length = 20)
+	@Column(name = "ACTIVE_PASSWORD" , length = 100)
 	private String activePassword;
 	
 	@Column(name = "USER_TYPE_ID", length =30)
@@ -59,6 +61,9 @@ public class LISUserMasterCreate implements Serializable{
 	
 	@OneToOne(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private LISLogin loginDetails;
+	
+	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL)
+	private List<LISMaintainMasterDataComponent> maintainMasterDataComponents;
 
 	public String getUserId() {
 		return userId;
@@ -162,6 +167,14 @@ public class LISUserMasterCreate implements Serializable{
 
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
+	}
+
+	public List<LISMaintainMasterDataComponent> getMaintainMasterDataComponents() {
+		return maintainMasterDataComponents;
+	}
+
+	public void setMaintainMasterDataComponents(List<LISMaintainMasterDataComponent> maintainMasterDataComponents) {
+		this.maintainMasterDataComponents = maintainMasterDataComponents;
 	}
 
 }

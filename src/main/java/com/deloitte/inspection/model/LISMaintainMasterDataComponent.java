@@ -62,6 +62,12 @@ public class LISMaintainMasterDataComponent implements Serializable{
     @JoinColumn(name="SUBSCRIBER_ID")
 	private LISSubscriberMaster subscriberMaster;
 	
+	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinColumn(name="USER_ID")
+	private LISUserMasterCreate userMasterCreate;
+	
+	@Column(name = "IS_ACTIVE")
+	private char isActive;	
 
 	public Integer getCmdcsId() {
 		return cmdcsId;
@@ -165,6 +171,22 @@ public class LISMaintainMasterDataComponent implements Serializable{
 
 	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
 		this.subscriberMaster = subscriberMaster;
+	}
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
+	}
+
+	public LISUserMasterCreate getUserMasterCreate() {
+		return userMasterCreate;
+	}
+
+	public void setUserMasterCreate(LISUserMasterCreate userMasterCreate) {
+		this.userMasterCreate = userMasterCreate;
 	}
 	
 }

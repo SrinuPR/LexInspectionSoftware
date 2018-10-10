@@ -50,9 +50,11 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISMaintainMasterDataComponent> getAllComponentMasterData() throws ComponentMasterDataException {
+	public List<LISMaintainMasterDataComponent> getAllComponentMasterData(String userId) throws ComponentMasterDataException {
 		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("userId", userId);
 		List<LISMaintainMasterDataComponent> list = query.list();
 		return list;
 	}
@@ -61,8 +63,9 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 	@Override
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_CMDCS WHERE CMDCS_ID = :componentId");
+		Query query = getSession().createSQLQuery("UPDATE LIS_CMDCS SET IS_ACTIVE = :inactive WHERE CMDCS_ID = :componentId ");
 		query.setParameter("componentId", componentId);
+		query.setParameter("inactive", StatusConstants.IN_ACTIVE);
 		int result = query.executeUpdate();
 		if(result > 0){
 			status = StatusConstants.SUCCESS;
