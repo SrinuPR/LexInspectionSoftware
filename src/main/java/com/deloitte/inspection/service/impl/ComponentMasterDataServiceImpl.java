@@ -113,23 +113,20 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 			if(null != componentMasterDataDTO){
 				LISMaintainMasterDataComponent masterDataComponent = null;
 				if(null != componentMasterDataDTO.getComponentId() && 0 != componentMasterDataDTO.getComponentId()){
-					if(!isProductDrawNumberExist(componentMasterDataDTO.getComponentProductDrawNumber())){
-						masterDataComponent = componentMasterDataDAO.getComponentDataById(componentMasterDataDTO.getComponentId());
-						masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber());
-						masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial());
-						masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName());
-						masterDataComponent.setComponentProductNotes(componentMasterDataDTO.getComponentProductNotes());
-						masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber());
-						masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress());
-						masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits());
-						masterDataComponent.setUpdatedBy(userName);
-						masterDataComponent.setUpdatedTimestamp(new Date());
-						componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
-						status = StatusConstants.SUCCESS;
-						return status;
-					}
-				}else
-					status = StatusConstants.DUPLICATE;
+					masterDataComponent = componentMasterDataDAO.getComponentDataById(componentMasterDataDTO.getComponentId());
+					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber());
+					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial());
+					masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName());
+					masterDataComponent.setComponentProductNotes(componentMasterDataDTO.getComponentProductNotes());
+					masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber());
+					masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress());
+					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits());
+					masterDataComponent.setUpdatedBy(userName);
+					masterDataComponent.setUpdatedTimestamp(new Date());
+					componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
+					status = StatusConstants.SUCCESS;
+					return status;
+				}
 			}
 		}catch(ComponentMasterDataException componentMasterDataException){
 			logger.error("Exception While saving the Component master data "+componentMasterDataException.getMessage());

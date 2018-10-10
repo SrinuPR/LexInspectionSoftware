@@ -73,6 +73,15 @@ public class LoginDAOImpl implements LoginDAO{
 			return userList.get(0);
 		}
 		return null;
+	}
+
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
+	public void updateLoginPassword(String userId, String password) throws LoginException {
+		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET PASSWORD = :password WHERE USER_ID = :userId ");
+		query.setParameter("password", password);
+		query.setParameter("userId",userId);
+		query.executeUpdate();	
 	}		
 
 }

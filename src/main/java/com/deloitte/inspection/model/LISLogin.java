@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,7 +21,7 @@ public class LISLogin implements Serializable{
 	private static final long serialVersionUID = 5112717685665555840L;
 
 	@Id
-	/*@GeneratedValue(strategy = GenerationType.AUTO)*/
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "LOGIN_ID")
 	private Integer loginId;
 	

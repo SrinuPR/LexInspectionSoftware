@@ -170,6 +170,14 @@ public class LoginServiceImpl implements LoginService{
 			response = StatusConstants.PASSWORD_CHANGED_FAIL;
 		}
 		status = loginDAO.changePassword(userMasterModel);
+		if(status.equalsIgnoreCase(StatusConstants.SUCCESS)){
+			try{
+				String password = cryptoComponent.encrypt(passwordMaintenanceDTO.getNewPassword());
+				loginDAO.updateLoginPassword(userMasterModel.getUserId(), password);
+			}catch(LoginException |CryptoException loginException){
+				logger.error("Exception While updating the password in login table "+loginException.getMessage());
+			}
+		}
 		if (status.equals(StatusConstants.SUCCESS)) {
 			response = StatusConstants.PASSWORD_CHANGED_SUCCESS;
 		} else {

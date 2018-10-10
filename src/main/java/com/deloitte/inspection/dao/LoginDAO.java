@@ -8,7 +8,9 @@ public interface LoginDAO {
 
 	public LISLogin validateLoginCredentials(String userId) throws LoginException;
 
-	String changePassword(LISUserMasterCreate userMasterModel) throws LoginException;
+	public String changePassword(LISUserMasterCreate userMasterModel) throws LoginException;
 
-	LISUserMasterCreate validateUser(String userId) throws LoginException;
+	public LISUserMasterCreate validateUser(String userId) throws LoginException;
+
+	public void updateLoginPassword(String userId, String password) throws LoginException;
 }
