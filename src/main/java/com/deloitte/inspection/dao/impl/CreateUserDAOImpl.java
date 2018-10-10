@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
@@ -41,6 +40,7 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
         return sessionFactory.getCurrentSession();
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 	public CreateUserDTO createUser(CreateUserDTO createuserDTO) throws CreateUserException {
 		logger.info("Entered into createUser");	
 		try {
@@ -65,16 +65,16 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 			
 			getSession().save(userMaster);
 			
-			return createuserDTO;
-		} catch (HibernateException | SubscriberMasterException exception) {
-			logger.error("Error while saving the user data "+exception.getMessage());	
+				return createuserDTO;
+		} catch (HibernateException | SubscriberMasterException ex) {
+			//if(trans != null)
+				//trans.rollback();
 		} 
 		return null;
 	}
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public CreateUserDTO fetchData() throws CreateUserException {
-    	
 		logger.info("Entered into fetchData");	
 		CreateUserDTO createuserDTO=new CreateUserDTO();
 		Map<Integer,String> subscriberMap=new HashMap<Integer,String>();
@@ -87,8 +87,7 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 			}
 		}
 		
-		query = getSession().createQuery(" From LISStaticUserType USERTYP WHERE USERTYP.activeSw = :activeSw");
-		query.setParameter("activeSw", StatusConstants.IS_ACTIVE);
+		query = getSession().createQuery(" From LISStaticUserType USERTYP WHERE ACTIVE_SW='Y' ");
 		List<LISStaticUserType> usertypes = query.list();
 		if(null != usertypes && usertypes.size() > 0) {
 			for(LISStaticUserType userType:usertypes) {
@@ -117,11 +116,11 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	}
     
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public LISUserMasterCreate getByUserName(String userName) {
+	public LISUserMasterCreate getByUserID(String userId) {
 		logger.info("Entered into getByUserName");
 		LISUserMasterCreate userMaster = null;
 		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS where SUMAS.userName = :userName");
-		query.setParameter("userName", userName);
+		query.setParameter("userName", userId);
 		List<LISUserMasterCreate> userMasterlist = query.list();
 		if (null != userMasterlist && userMasterlist.size() > 0) {
 			userMaster = userMasterlist.get(0);

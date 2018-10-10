@@ -72,6 +72,19 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 		}
 		return status;	
 	}
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
+	public List<LISMaintainMasterDataComponent> getAllBySubscriberId(Integer subscriberId) throws ComponentMasterDataException{
+		logger.info("Entered into validateLoginCredentials");	
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent CMDCS where CMDCS.subscriberId = :subscriberId");
+		query.setParameter("subscriberId", subscriberId);
+		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = query.list();
+		if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
+			return maintainMasterDataComponents;
+		}
+		return null;
+	}
+
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

@@ -56,6 +56,9 @@ public class LISSubscriberMaster implements Serializable {
 	
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISLogin> login;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISPurchaseOrderMaster> purchaseOrderMaster;
 
 	public Integer getSubscriberId() {
 		return subscriberId;
@@ -143,6 +146,14 @@ public class LISSubscriberMaster implements Serializable {
 
 	public void setLogin(Set<LISLogin> login) {
 		this.login = login;
+	}
+
+	public Set<LISPurchaseOrderMaster> getPurchaseOrderMaster() {
+		return purchaseOrderMaster;
+	}
+
+	public void setPurchaseOrderMaster(Set<LISPurchaseOrderMaster> purchaseOrderMaster) {
+		this.purchaseOrderMaster = purchaseOrderMaster;
 	}
 		
 }

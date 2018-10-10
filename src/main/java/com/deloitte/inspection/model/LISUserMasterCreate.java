@@ -28,13 +28,13 @@ public class LISUserMasterCreate implements Serializable{
 	@Column(name = "USER_NAME" , length = 20)
 	private String userName;
 	
-	@Column(name = "OLD_PASSWORD1" , length = 100)
+	@Column(name = "OLD_PASSWORD1" , length = 20)
 	private String oldPassword1;
 	
-	@Column(name = "OLD_PASSWORD2" , length = 100)
+	@Column(name = "OLD_PASSWORD2" , length = 20)
 	private String oldPassword2;
 	
-	@Column(name = "ACTIVE_PASSWORD" , length = 100)
+	@Column(name = "ACTIVE_PASSWORD" , length = 20)
 	private String activePassword;
 	
 	@Column(name = "USER_TYPE_ID", length =30)
@@ -64,6 +64,9 @@ public class LISUserMasterCreate implements Serializable{
 	
 	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL)
 	private List<LISMaintainMasterDataComponent> maintainMasterDataComponents;
+
+	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<LISPurchaseOrderMaster> purchaseOrderMaster;
 
 	public String getUserId() {
 		return userId;
@@ -161,6 +164,14 @@ public class LISUserMasterCreate implements Serializable{
 		this.loginDetails = loginDetails;
 	}
 
+	public List<LISPurchaseOrderMaster> getPurchaseOrderMaster() {
+		return purchaseOrderMaster;
+	}
+
+	public void setPurchaseOrderMaster(List<LISPurchaseOrderMaster> purchaseOrderMaster) {
+		this.purchaseOrderMaster = purchaseOrderMaster;
+	}
+
 	public char getIsActive() {
 		return isActive;
 	}
@@ -176,5 +187,6 @@ public class LISUserMasterCreate implements Serializable{
 	public void setMaintainMasterDataComponents(List<LISMaintainMasterDataComponent> maintainMasterDataComponents) {
 		this.maintainMasterDataComponents = maintainMasterDataComponents;
 	}
+	
 
 }

@@ -47,5 +47,12 @@ public class StatusConstants {
 	public static final String USER_CREATE_SUCCESS="User saved";
 	public static final String USER_EXISTS="User ID Exists";
 	public static final String EMPTY="";
+	
+	public static final String CREATE_PURCHASE_ORDER_SUCCESS="Customer P.O. Saved";
+	public static final String CREATE_PURCHASE_ORDER_FAILURE="Customer P.O. NOT Saved. Please try again";
+	public static final String PURCHASE_ORDER_EXISTS="Customer P.O. Exists";
+	public static final String INVALID_DATE="Date format is dd/mm/yyyy";
+	public static final String CUSTOMER_PO_EXISTS="Customer P.O. Exists";
+	public static final String WARN_PO_QUANTITY="P.O. Quantity less than Produced Quantity!!";
 
 }
