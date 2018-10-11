@@ -55,7 +55,7 @@ public class UserTypeMasterController {
 			exception.printStackTrace();
 			logger.error("Exception While validating user type master " + exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class UserTypeMasterController {
 			exception.printStackTrace();
 			logger.error("Exception While creating user type master "+exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	

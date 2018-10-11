@@ -54,7 +54,7 @@ public class SubscriberMasterController {
 			exception.printStackTrace();
 			logger.error("Exception While validating credentials " + exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class SubscriberMasterController {
 			exception.printStackTrace();
 			logger.error("Exception While validating credentials "+exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/**
@@ -90,38 +90,41 @@ public class SubscriberMasterController {
 		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
 		List<SubscriberMasterDTO> subscriberMasterDTOList = null;
 		try{
-			responseDTO.setStatus(StatusConstants.SUCCESS);
 			subscriberMasterDTOList = subMasterService.getAllSubscriberMasterData();
 			if(null != subscriberMasterDTOList && subscriberMasterDTOList.size() > 0) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setSubMasterList(subscriberMasterDTOList);
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			} else {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 			}
 		}catch(Exception exception){
 			logger.error("Error while fetching the data : "+exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(responseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes"})
-	@RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/all/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<SubscriberMasterDTO> getSubscribers(@PathVariable("userId") String userId){
 		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
 		List<SubscriberMasterDTO> subscriberMasterDTOList = null;
 		try{
 			subscriberMasterDTOList = subMasterService.getSubscriber(userId);
 			if(null != subscriberMasterDTOList && subscriberMasterDTOList.size() > 0) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setSubMasterList(subscriberMasterDTOList);
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			} else {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 			}
 		}catch(Exception exception){
 			exception.printStackTrace();
-			logger.error("Exception While validating credentials " + exception.getMessage());
+			logger.error("Exception While validating getSubscribers " + exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

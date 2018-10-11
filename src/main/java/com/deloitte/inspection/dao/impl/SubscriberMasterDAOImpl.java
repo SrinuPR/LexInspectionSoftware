@@ -103,12 +103,12 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 		return list;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
 	@Override
 	public List<LISSubscriberMaster> getSubscriberData(String userId) throws SubscriberMasterException {
 		logger.info("Entered into getSubscriberData");	
 		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS WHERE SUMAS.createdBy = :userId ORDER BY SUMAS.createdTimestamp DESC");
-		query.setParameter("userId", "'"+ userId + "'");
+		query.setString("userId", userId);
 		List<LISSubscriberMaster> list = query.list();
 		return list;
 	}
