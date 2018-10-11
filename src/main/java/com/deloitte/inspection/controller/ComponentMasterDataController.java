@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deloitte.inspection.constant.ComponentConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.LoginDTO;
+import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
 import com.deloitte.inspection.service.ComponentMasterDataService;
 
 @RestController
@@ -35,7 +37,7 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<ComponentMasterDataDTO>> saveComponentMasterData(@RequestBody ComponentMasterDataDTO componentMasterDataDTO, HttpSession httpSession){
+	public @ResponseBody ResponseEntity<ComponentMasterResponseDataDTO> saveComponentMasterData(@RequestBody ComponentMasterDataDTO componentMasterDataDTO, HttpSession httpSession){
 		logger.info("Entered into saveComponentMasterData");
 		String status = StatusConstants.FAILURE;
 		try{
@@ -46,13 +48,19 @@ public class ComponentMasterDataController {
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
 			}
+			ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 			status = componentMasterDataService.saveComponentMasterData(componentMasterDataDTO,userName,userId);
 			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
 				componentMasterData  = componentMasterDataService.getAllComponentMasterData(userId);
-				return new ResponseEntity(componentMasterData,HttpStatus.OK);
+				componentMasterResponseDataDTO.setResult(componentMasterData);
+				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_UPDATE_SUCCESS);
+				componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.OK);
 			}else{
-				return new ResponseEntity(null,HttpStatus.GONE);
+				componentMasterResponseDataDTO.setStatus(StatusConstants.ERROR);
+				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_SAVE_FAILED);
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
 			}	
 		}catch(Exception exception){
 			logger.error("Error while saving the data : "+exception.getMessage());
@@ -80,7 +88,7 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<String> updateComponentMasterData(@RequestBody ComponentMasterDataDTO componentMasterDataDTO, HttpSession httpSession){
+	public @ResponseBody ResponseEntity<ComponentMasterResponseDataDTO> updateComponentMasterData(@RequestBody ComponentMasterDataDTO componentMasterDataDTO, HttpSession httpSession){
 		logger.info("Entered into updateComponentMasterData");
 		String status = StatusConstants.FAILURE;
 		try{
@@ -91,13 +99,19 @@ public class ComponentMasterDataController {
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
 			}
+			ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 			status = componentMasterDataService.updateComponentMasterData(componentMasterDataDTO, userName);		
 			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
 				componentMasterData  = componentMasterDataService.getAllComponentMasterData(userId);
-				return new ResponseEntity(componentMasterData,HttpStatus.OK);
+				componentMasterResponseDataDTO.setResult(componentMasterData);
+				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_UPDATE_SUCCESS);
+				componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.OK);
 			}else{
-				return new ResponseEntity(null,HttpStatus.GONE);
+				componentMasterResponseDataDTO.setStatus(StatusConstants.ERROR);
+				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_UPDATE_FAILED);
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
 			}	
 		}catch(Exception exception){
 			logger.error("Error while updating the data : "+exception.getMessage());
@@ -108,8 +122,9 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<ComponentMasterDataDTO>> displayComponentMasterData(HttpSession httpSession){
+	public @ResponseBody ResponseEntity<ComponentMasterResponseDataDTO> displayComponentMasterData(HttpSession httpSession){
 		logger.info("Entered into displayComponentMasterData");
+		ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 		List<ComponentMasterDataDTO> componentMasterDataDTOs = null;
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
@@ -118,11 +133,16 @@ public class ComponentMasterDataController {
 				userId = userDto.getUserId();
 			}
 			componentMasterDataDTOs = componentMasterDataService.getAllComponentMasterData(userId);
-			return new ResponseEntity(componentMasterDataDTOs,HttpStatus.OK);
+			componentMasterResponseDataDTO.setResult(componentMasterDataDTOs);
+			componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_LIST_SUCCESS);
+			componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+			return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.OK);
 		}catch(Exception exception){
 			logger.error("Error while fetching the data : "+exception.getMessage());
 		}
-		return new ResponseEntity(componentMasterDataDTOs,HttpStatus.INTERNAL_SERVER_ERROR);
+		componentMasterResponseDataDTO.setStatus(StatusConstants.ERROR);
+		componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_LIST_FAILED);
+		return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@CrossOrigin
@@ -141,13 +161,23 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/delete/{componentId}", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<String> deleteComponent(@PathVariable("componentId") Integer componentId){
+	public @ResponseBody ResponseEntity<ComponentMasterResponseDataDTO> deleteComponent(@PathVariable("componentId") Integer componentId){
+		ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 		try{
 			String status = componentMasterDataService.deleteComponent(componentId);
-			return new ResponseEntity(status,HttpStatus.OK);
+			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
+				componentMasterResponseDataDTO.setStatus(status);
+				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_DELETE_SUCCESS);
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.OK);
+			}else{
+				componentMasterResponseDataDTO.setStatus(StatusConstants.ERROR);
+				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_DELETE_FAILED);
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
+			}
+			
 		}catch(Exception exception){
 			logger.error("Exception while sending the details "+exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.FAILURE,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

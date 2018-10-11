@@ -18,5 +18,5 @@ public interface ComponentMasterDataDAO {
 	public List<LISMaintainMasterDataComponent> getAllBySubscriberId(Integer subscriberId) throws ComponentMasterDataException;
 
 	public LISMaintainMasterDataComponent getComponentDataByDrwNum(String productDrawNumber) throws ComponentMasterDataException;
-
+	
 }

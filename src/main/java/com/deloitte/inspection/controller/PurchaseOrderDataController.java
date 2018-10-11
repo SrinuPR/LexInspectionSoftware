@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deloitte.inspection.constant.PurchaseOrderConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
-import com.deloitte.inspection.model.LISPurchaseOrderMaster;
+import com.deloitte.inspection.response.dto.PurchaseOrderResponseDataDTO;
 import com.deloitte.inspection.service.PurchaseOrderMasterService;
 
 @RestController
@@ -36,52 +37,63 @@ public class PurchaseOrderDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<PurchaseOrderDataDTO> savePurchaseOrderMasterData(@RequestBody PurchaseOrderDataDTO purchaseOrderDataDTO, HttpSession httpSession){
-		logger.info("Entered into saveComponentMasterData");
+	public @ResponseBody ResponseEntity<PurchaseOrderResponseDataDTO> savePurchaseOrderMasterData(@RequestBody PurchaseOrderDataDTO purchaseOrderDataDTO, HttpSession httpSession){
+		
+		logger.info("Entered into savePurchaseOrderMasterData");
 		String status = StatusConstants.FAILURE;
-		String response=null;
-		PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
+		PurchaseOrderResponseDataDTO purchaseOrderResponseDataDTO = new PurchaseOrderResponseDataDTO();
 		try{
-			
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
-			if(null != userDto)
+			String userId = null;
+			if(null != userDto){
 				userName = userDto.getUserName();
-			status = purchaseOrderDataService.savePurchaseOrderData(purchaseOrderDataDTO,userName);
-			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
-				purchaseOrderDto.setStatus(StatusConstants.CREATE_PURCHASE_ORDER_SUCCESS);
-			}else {
-				purchaseOrderDto.setErrorMessage(StatusConstants.CREATE_PURCHASE_ORDER_FAILURE);
+				userId = userDto.getUserId();
 			}
-			return new ResponseEntity(purchaseOrderDto,StatusConstants.SUCCESS.equalsIgnoreCase(status)? HttpStatus.OK:HttpStatus.EXPECTATION_FAILED);
+			status = purchaseOrderDataService.savePurchaseOrderData(purchaseOrderDataDTO,userName, userId);
+			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
+				List<PurchaseOrderDataDTO> purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
+				purchaseOrderResponseDataDTO.setResult(purchaseOrderList);
+				purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CREATE_PURCHASE_ORDER_SUCCESS);
+				return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.OK);
+			}else {
+				purchaseOrderResponseDataDTO.setStatus(StatusConstants.ERROR);
+				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CREATE_PURCHASE_ORDER_FAILURE);
+				return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
+			}
 		}catch(Exception exception){
 			logger.error("Exception while saving the data : "+exception.getMessage());
-			purchaseOrderDto.setErrorMessage(StatusConstants.CREATE_PURCHASE_ORDER_FAILURE);
-			return new ResponseEntity(purchaseOrderDto,HttpStatus.METHOD_FAILURE);
+			purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CREATE_PURCHASE_ORDER_FAILURE);
+			return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.METHOD_FAILURE);
 		}
 	}
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<PurchaseOrderDataDTO>> getAllPurchaseOrders(HttpSession httpSession){
-		logger.info("Entered into displayComponentMasterData");
+	public @ResponseBody ResponseEntity<PurchaseOrderResponseDataDTO> getAllPurchaseOrders(HttpSession httpSession){
+		logger.info("Entered into getAllPurchaseOrders");
+		PurchaseOrderResponseDataDTO purchaseOrderResponseDataDTO = new PurchaseOrderResponseDataDTO();
 		List<PurchaseOrderDataDTO> purchaseOrderList = null;
 		LoginDTO userDto=new LoginDTO();
 		try{
-			//userDto = (LoginDTO)httpSession.getAttribute("userId");
-			//to do
-		//	userDto.setUserId("Srinu123");
-		//	if(null != userDto && null!= userDto.getUserId()) {
-			purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders("Srinu123");
-			if(null!=purchaseOrderList)
-			return new ResponseEntity(purchaseOrderList,HttpStatus.OK);
-			//}
-			
+			userDto = (LoginDTO)httpSession.getAttribute("user");
+			String userId = null;
+			if(null != userDto){
+				userId = userDto.getUserId();
+			}
+			purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
+			purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+			purchaseOrderResponseDataDTO.setResult(purchaseOrderList);
+			purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CUSTOMER_PO_EXIST);
+			return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.OK);
 		}catch(Exception exception){
 			logger.error("Error while fetching the data : "+exception.getMessage());
 		}
-		return new ResponseEntity(purchaseOrderList,HttpStatus.INTERNAL_SERVER_ERROR);
+		purchaseOrderResponseDataDTO.setStatus(StatusConstants.ERROR);
+		purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CUSTOMER_PO_NOT_EXIST);
+		return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
 	}
 	
 	@CrossOrigin
@@ -121,41 +133,57 @@ public class PurchaseOrderDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<PurchaseOrderDataDTO> updatePurchaseOrderData(@RequestBody PurchaseOrderDataDTO purchaseOrderDataDTO, HttpSession httpSession){
+	public @ResponseBody ResponseEntity<PurchaseOrderResponseDataDTO> updatePurchaseOrderData(@RequestBody PurchaseOrderDataDTO purchaseOrderDataDTO, HttpSession httpSession){
 		logger.info("Entered into updateComponentMasterData");
 		String status = StatusConstants.FAILURE;
-		PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
+		PurchaseOrderResponseDataDTO purchaseOrderResponseDataDTO = new PurchaseOrderResponseDataDTO();
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
-			if(null != userDto)
+			String userId = null;
+			if(null != userDto){
 				userName = userDto.getUserName();
-			status = purchaseOrderDataService.updatePurchaseOrderData(purchaseOrderDataDTO, userName);
-			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
-				purchaseOrderDto.setStatus(StatusConstants.CREATE_PURCHASE_ORDER_SUCCESS);
-			}else {
-				purchaseOrderDto.setErrorMessage(StatusConstants.CREATE_PURCHASE_ORDER_FAILURE);
+				userId = userDto.getUserId();
 			}
-			
-			return new ResponseEntity(purchaseOrderDto,StatusConstants.SUCCESS.equalsIgnoreCase(status)? HttpStatus.OK:HttpStatus.EXPECTATION_FAILED);
+			status = purchaseOrderDataService.updatePurchaseOrderData(purchaseOrderDataDTO, userName, userId);
+			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
+				List<PurchaseOrderDataDTO> purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
+				purchaseOrderResponseDataDTO.setResult(purchaseOrderList);
+				purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.UPDATE_PURCHASE_ORDER_SUCCESS);
+				return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.OK);
+			}else {
+				purchaseOrderResponseDataDTO.setStatus(StatusConstants.ERROR);
+				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.UPDATE_PURCHASE_ORDER_FAILURE);
+				return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
+			}
 		}catch(Exception exception){
 			logger.error("Error while updating the data : "+exception.getMessage());
-			purchaseOrderDto.setErrorMessage(StatusConstants.CREATE_PURCHASE_ORDER_FAILURE);
-			return new ResponseEntity(purchaseOrderDto,HttpStatus.METHOD_FAILURE);
+			purchaseOrderResponseDataDTO.setStatus(StatusConstants.ERROR);
+			purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.UPDATE_PURCHASE_ORDER_FAILURE);
+			return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.METHOD_FAILURE);
 		}
 	}
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/delete/{customerPoId}", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<String> deletePurchaseOrder(@PathVariable("customerPoId") String customerPoId){
+	public @ResponseBody ResponseEntity<PurchaseOrderResponseDataDTO> deletePurchaseOrder(@PathVariable("customerPoId") String customerPoId){
+		PurchaseOrderResponseDataDTO purchaseOrderResponseDataDTO = new PurchaseOrderResponseDataDTO();
 		try{
 			String status = purchaseOrderDataService.deletePurchaseOrder(customerPoId);
-			return new ResponseEntity(status,HttpStatus.OK);
+			if(null != status && StatusConstants.SUCCESS.equalsIgnoreCase(status)){
+				purchaseOrderResponseDataDTO.setStatus(status);
+				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.DELETE_PURCHASE_ORDER_SUCCESS);
+				return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.OK);
+			}
+			purchaseOrderResponseDataDTO.setStatus(StatusConstants.ERROR);
+			purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.DELETE_PURCHASE_ORDER_FAILURE);
+			return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
 			logger.error("Exception while sending the details "+exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.FAILURE,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(purchaseOrderResponseDataDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@CrossOrigin

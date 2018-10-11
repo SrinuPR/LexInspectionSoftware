@@ -2,6 +2,7 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -65,6 +67,9 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name="USER_ID")
 	private LISUserMasterCreate userMasterCreate;
+	
+	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<LISPurchaseOrderMaster> purchaseOrderMaster;
 	
 	@Column(name = "IS_ACTIVE")
 	private char isActive;	
@@ -188,5 +193,12 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	public void setUserMasterCreate(LISUserMasterCreate userMasterCreate) {
 		this.userMasterCreate = userMasterCreate;
 	}
-	
+
+	public List<LISPurchaseOrderMaster> getPurchaseOrderMaster() {
+		return purchaseOrderMaster;
+	}
+
+	public void setPurchaseOrderMaster(List<LISPurchaseOrderMaster> purchaseOrderMaster) {
+		this.purchaseOrderMaster = purchaseOrderMaster;
+	}
 }

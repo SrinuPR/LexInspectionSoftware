@@ -3,7 +3,6 @@ package com.deloitte.inspection.service.impl;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,16 +10,18 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.deloitte.inspection.constant.PurchaseOrderConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
-import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
+import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
+import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
@@ -39,13 +40,13 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	private CreateUserDAO createUserDAO;
 	
 	@Autowired
-	private ComponentMasterDataDAO componentMasterDataDAO;
+	private SubscriberMasterDAO subscriberMasterDAO;
 	
 	@Autowired
-	private SubscriberMasterDAO subscriberMasterDAO;
+	private ComponentMasterDataDAO componentMasterDataDAO;
 
 	@Override
-	public String savePurchaseOrderData(PurchaseOrderDataDTO purchaseOrderDataDTO, String userName)
+	public String savePurchaseOrderData(PurchaseOrderDataDTO purchaseOrderDataDTO, String userName, String userId)
 			throws PurchaseOrderMasterException, CreateUserException, SubscriberMasterException {
 		String status = StatusConstants.FAILURE;
 		if(null!=purchaseOrderDataDTO) {
@@ -54,10 +55,19 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			LISUserMasterCreate userMaster=new LISUserMasterCreate();
 			LISSubscriberMaster subscriberMaster=null;
 			if(null != purchaseOrderDataDTO.getSubscriberId()){
-					subscriberMaster = subscriberMasterDAO.getSubscriberById(purchaseOrderDataDTO.getSubscriberId());
+				subscriberMaster = subscriberMasterDAO.getSubscriberById(purchaseOrderDataDTO.getSubscriberId());
 				purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
 			}
-			userMaster = createUserDAO.getByUserID(purchaseOrderDataDTO.getUserId());
+			if(null != purchaseOrderDataDTO.getComponentProductDrawNum()){
+				try {
+					LISMaintainMasterDataComponent masterDataComponent = componentMasterDataDAO.getComponentDataById(purchaseOrderDataDTO.getComponentId());
+					purchaseOrderMaster.setComponentMasterData(masterDataComponent);
+				} catch (ComponentMasterDataException e) {
+					e.printStackTrace();
+					logger.error("Error while getting the component");
+				}
+			}
+			userMaster = createUserDAO.validateUserId(userId);
 			purchaseOrderMaster.setUserMasterCreate(userMaster);
 			purchaseOrderMaster.setCreatedBy(userName);
 			purchaseOrderMaster.setCreatedTimestamp(new Date());
@@ -79,29 +89,27 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 
 	@Override
 	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(String userId) throws PurchaseOrderMasterException, CreateUserException {
-		LISSubscriberMaster subscriberMaster=new LISSubscriberMaster();
 		LISUserMasterCreate userMaster=new LISUserMasterCreate();
-		HashSet componentSet=new HashSet();
-		String subscriberName=null;
 		List<PurchaseOrderDataDTO> purchaseOrderDTOList =  new ArrayList<PurchaseOrderDataDTO>();
 		List<LISPurchaseOrderMaster> purchaseOrderList = null;
 		
 		if( null!=userId)
 			try {
-				userMaster = createUserDAO.getByUserID(userId);
+				userMaster = createUserDAO.validateUserId(userId);
 				
-				purchaseOrderList = purchaseOrderDataDAO
-						.getAllByUserId(userMaster.getUserId());
+				purchaseOrderList = purchaseOrderDataDAO.getAllByUserId(userMaster.getUserId());
 				for(LISPurchaseOrderMaster purchaseOrder:purchaseOrderList) {
 					PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
-					purchaseOrderDto.setComponentId(purchaseOrder.getCustomerPoId());
+					if(null != purchaseOrder.getComponentMasterData()){
+						purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponentMasterData().getComponentProductDrawNumber());
+						purchaseOrderDto.setComponentId(purchaseOrder.getComponentMasterData().getCmdcsId());
+					}
 					purchaseOrderDto.setCustomerPODate(InspectionUtils.convertDateToString(purchaseOrder.getCustomerPODate()));
 					purchaseOrderDto.setCustomerPONumber(purchaseOrder.getCustomerPONumber());
 					purchaseOrderDto.setCustomerPOQuantity(purchaseOrder.getCustomerPOQuantity());
 					purchaseOrderDto.setPoNotes(purchaseOrder.getNotesPO());
 					purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriberMaster().getSubscriberId());
 					purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriberMaster().getSubscriberName());
-					purchaseOrderDto.setUserId(userId);
 					purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId());
 					purchaseOrderDTOList.add(purchaseOrderDto);
 				}
@@ -118,14 +126,13 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 
 	@Override
 	public String validatePODate(PurchaseOrderDataDTO PurchaseOrderDataDTO) {
-
-		PurchaseOrderDataDTO purchaseOrderRes=new PurchaseOrderDataDTO();
+		logger.info(" Entered into validatePODate ");
 		boolean isValid=false;
 		try {
 			if(null!=PurchaseOrderDataDTO.getCustomerPODate()) {
 				isValid=InspectionUtils.isValidDate(PurchaseOrderDataDTO.getCustomerPODate());
 				if(!isValid)
-				return StatusConstants.INVALID_DATE;	
+				return PurchaseOrderConstants.INVALID_DATE;	
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -145,7 +152,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 				}
 			}
 			if(poNumExists) {
-				return StatusConstants.CUSTOMER_PO_EXISTS;
+				return PurchaseOrderConstants.CUSTOMER_PO_EXISTS;
 			}else {
 				return StatusConstants.SUCCESS;
 			}
@@ -159,21 +166,13 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	@Override
 	public String validatePOQuantity(PurchaseOrderDataDTO purchaseOrderDataDTO)
 			throws PurchaseOrderMasterException {
-		boolean isValidQuantity=false;
-		LISPurchaseOrderMaster purchaseOrder=new LISPurchaseOrderMaster();
 		try {
+			
 			if(null!=purchaseOrderDataDTO && null!=purchaseOrderDataDTO.getCustomerPONumber()) {
-				purchaseOrder = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
-			
-			
-			}
-			if(!isValidQuantity) {
-			//	return StatusConstants.WARN_PO_QUANTITY;
-				return StatusConstants.SUCCESS;
-			}else {
-				return StatusConstants.SUCCESS;
-			}
-			
+				LISPurchaseOrderMaster purchaseOrder = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
+				if(null != purchaseOrder)
+					return StatusConstants.SUCCESS;	
+			}		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -182,7 +181,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	}
 
 	@Override
-	public String updatePurchaseOrderData(PurchaseOrderDataDTO purchaseOrderDataDTO, String userName)
+	public String updatePurchaseOrderData(PurchaseOrderDataDTO purchaseOrderDataDTO, String userName, String userId)
 			throws PurchaseOrderMasterException, SubscriberMasterException, CreateUserException {
 		String status=StatusConstants.FAILURE;
 		LISPurchaseOrderMaster purchaseMaster=new LISPurchaseOrderMaster();
@@ -190,7 +189,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 		LISSubscriberMaster subscriberMaster=null;
 		
 		if(null!=purchaseOrderDataDTO && null!=purchaseOrderDataDTO.getCustomerPONumber()) {
-			userMaster = createUserDAO.getByUserID(purchaseOrderDataDTO.getUserId());
+			userMaster = createUserDAO.validateUserId(userId);
 			purchaseMaster = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
 			if(null != userMaster.getSubscriberMaster().getSubscriberId()){
 					subscriberMaster = subscriberMasterDAO.getSubscriberById(userMaster.getSubscriberMaster().getSubscriberId());

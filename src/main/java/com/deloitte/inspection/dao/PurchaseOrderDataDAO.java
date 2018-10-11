@@ -3,9 +3,7 @@ package com.deloitte.inspection.dao;
 import java.util.List;
 
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
-import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
-import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 
 public interface PurchaseOrderDataDAO {

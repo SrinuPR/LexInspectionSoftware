@@ -40,7 +40,6 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
         return sessionFactory.getCurrentSession();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	public CreateUserDTO createUser(CreateUserDTO createuserDTO) throws CreateUserException {
 		logger.info("Entered into createUser");	
 		try {
@@ -115,16 +114,16 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 		return userMasterCreate;
 	}
     
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	/*@SuppressWarnings({ "unchecked", "rawtypes" })
 	public LISUserMasterCreate getByUserID(String userId) {
 		logger.info("Entered into getByUserName");
 		LISUserMasterCreate userMaster = null;
-		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS where SUMAS.userName = :userName");
+		Query query = getSession().createQuery(" From LISUserMasterCreate SUMAS where SUMAS.userId = :userId");
 		query.setParameter("userName", userId);
 		List<LISUserMasterCreate> userMasterlist = query.list();
 		if (null != userMasterlist && userMasterlist.size() > 0) {
 			userMaster = userMasterlist.get(0);
 		}
 		return userMaster;
-	}
+	}*/
 }

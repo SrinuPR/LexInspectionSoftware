@@ -6,11 +6,10 @@ import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
-import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 
 public interface PurchaseOrderMasterService {
 
-	public String savePurchaseOrderData(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName) throws PurchaseOrderMasterException, CreateUserException, SubscriberMasterException ;
+	public String savePurchaseOrderData(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName, String userId) throws PurchaseOrderMasterException, CreateUserException, SubscriberMasterException ;
 
 	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(String userName) throws PurchaseOrderMasterException,CreateUserException;
 
@@ -20,7 +19,7 @@ public interface PurchaseOrderMasterService {
 
 	public String validatePOQuantity(PurchaseOrderDataDTO PurchaseOrderDataDTO) throws PurchaseOrderMasterException;
 
-	public String updatePurchaseOrderData(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName) throws PurchaseOrderMasterException,SubscriberMasterException,CreateUserException;
+	public String updatePurchaseOrderData(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName, String userId) throws PurchaseOrderMasterException,SubscriberMasterException,CreateUserException;
 
 	public String deletePurchaseOrder(String customerPoId) throws PurchaseOrderMasterException; 
 	

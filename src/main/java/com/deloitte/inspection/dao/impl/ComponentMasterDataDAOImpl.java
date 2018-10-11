@@ -72,11 +72,11 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 		}
 		return status;	
 	}
-	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISMaintainMasterDataComponent> getAllBySubscriberId(Integer subscriberId) throws ComponentMasterDataException{
-		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent CMDCS where CMDCS.subscriberId = :subscriberId");
+		logger.info("Entered into getAllBySubscriberId");	
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent CMDCS where CMDCS.subscriberMaster.subscriberId = :subscriberId");
 		query.setParameter("subscriberId", subscriberId);
 		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = query.list();
 		if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
@@ -90,7 +90,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 	@Override
 	public LISMaintainMasterDataComponent getComponentDataByDrwNum(String productDrawNumber)
 			throws ComponentMasterDataException {
-		logger.info("Entered into validateLoginCredentials");	
+		logger.info("Entered into getComponentDataByDrwNum");	
 		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where lower(l.componentProductDrawNumber) = :productDrawNumber ORDER BY l.createdTimestamp DESC");
 		query.setParameter("productDrawNumber", productDrawNumber);
 		List<LISMaintainMasterDataComponent> list = query.list();
@@ -99,5 +99,5 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 		}
 		return null;
 	}
-
+	
 }

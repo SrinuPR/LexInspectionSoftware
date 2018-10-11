@@ -12,7 +12,7 @@ public interface CreateUserDAO {
 	
 	public LISUserMasterCreate validateUserId(String userId) throws CreateUserException;
 	
-	public LISUserMasterCreate getByUserID(String userId) throws CreateUserException;
-	
+	/*public LISUserMasterCreate getByUserID(String userId) throws CreateUserException;
+	*/
 }
 

@@ -2,10 +2,8 @@ package com.deloitte.inspection.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaQuery;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +19,6 @@ import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
-import com.deloitte.inspection.model.LISUserMasterCreate;
 
 @Repository
 @Transactional
@@ -46,6 +43,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 		getSession().saveOrUpdate(purchaseOrderMaster);		
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISPurchaseOrderMaster> getAllByUserId(String userId)
 			throws PurchaseOrderMasterException {
@@ -81,6 +79,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 		return status;	
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LISPurchaseOrderMaster getByCustomerPONumber(String customerPONumber) throws PurchaseOrderMasterException {
 		logger.info("Entered into validatePoNumber");	

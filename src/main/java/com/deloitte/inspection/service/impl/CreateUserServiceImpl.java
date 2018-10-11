@@ -22,6 +22,7 @@ public class CreateUserServiceImpl implements CreateUserService {
 	
 	@Override
 	public CreateUserDTO fetchData() throws CreateUserException {
+		logger.info("Inside fetchData ");
 		CreateUserDTO resCreateUserDTO=new CreateUserDTO();
 		try {
 			resCreateUserDTO=createUserDAO.fetchData();
@@ -32,9 +33,8 @@ public class CreateUserServiceImpl implements CreateUserService {
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
-		}finally {
-			return resCreateUserDTO;
 		}
+		return resCreateUserDTO;
 		
 	}
 
@@ -47,9 +47,7 @@ public class CreateUserServiceImpl implements CreateUserService {
 				if(null!=userMaster && null!= userMaster.getUserId() ) {
 					return StatusConstants.USER_EXISTS;
 				}
-				
 			}
-			
 		}catch(CreateUserException cue) {
 			cue.printStackTrace();
 		}catch(Exception e) {
@@ -67,8 +65,6 @@ public class CreateUserServiceImpl implements CreateUserService {
 				resCreateUserDTO=createUserDAO.createUser(createuserDTO);
 				if(null!=resCreateUserDTO) {
 					resCreateUserDTO.setStatus(StatusConstants.USER_CREATE_SUCCESS);
-				}else {
-					resCreateUserDTO.setErrorMessage(StatusConstants.USER_CREATE_FIALED);
 				}
 			}else if(null!=createuserDTO && null==createuserDTO.getSubscriberId()){
 				resCreateUserDTO.setErrorMessage(StatusConstants.SUBSCRIBER_ID_EMPTY);

@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -59,9 +58,9 @@ public class LISPurchaseOrderMaster implements Serializable{
 	@JoinColumn(name="USER_ID")
     private LISUserMasterCreate userMasterCreate;
 	
-/*	@OneToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="CUSTOMERPO_NUMBER")
-    private LISWorkOrderMaster workOrderMaster;*/
+	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	@JoinColumn(name="CMDCS_ID")
+    private LISMaintainMasterDataComponent componentMasterData;;
 
 	public String getCustomerPONumber() {
 		return customerPONumber;
@@ -151,6 +150,12 @@ public class LISPurchaseOrderMaster implements Serializable{
 	public void setCustomerPoId(Integer customerPoId) {
 		this.customerPoId = customerPoId;
 	}
-	
-	
+
+	public LISMaintainMasterDataComponent getComponentMasterData() {
+		return componentMasterData;
+	}
+
+	public void setComponentMasterData(LISMaintainMasterDataComponent componentMasterData) {
+		this.componentMasterData = componentMasterData;
+	}	
 }
