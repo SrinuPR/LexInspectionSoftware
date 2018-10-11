@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.constant.UserTypeMasterConstants;
 import com.deloitte.inspection.dao.UserTypeMasterDAO;
 import com.deloitte.inspection.dto.UserTypeMasterDTO;
 import com.deloitte.inspection.exception.UserTypeMasterException;
@@ -30,27 +31,36 @@ public class UserTypeMasterServiceImpl implements UserTypeMasterService{
 	 * @see com.deloitte.inspection.service.UserTypeMasterService#validateUserType(com.deloitte.inspection.dto.UserTypeMasterDTO)
 	 */
 	@Override
-	public String validateUserType(UserTypeMasterDTO userTypeMasDTO) throws UserTypeMasterException {
+	public UserTypeMasterDTO validateUserType(UserTypeMasterDTO userTypeMasDTO) throws UserTypeMasterException {
 		logger.info("Subscriber ID: " + userTypeMasDTO.getUserTypeId());
+		UserTypeMasterDTO responseDTO = new UserTypeMasterDTO();
 		if(null != userTypeMasDTO && null != userTypeMasDTO.getUserTypeId()) {
 			LISUserTypeMaster login = userTypeMasDAO.validateUserType(userTypeMasDTO);
 			if(userTypeMasDTO.getUserTypeName() != null && !userTypeMasDTO.getUserTypeName().equals("")) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				if (null == login) {
-					return StatusConstants.USER_TYPE_NAME_NOT_AVAILABLE;
+					responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_NAME_NOT_AVAILABLE);
+					return responseDTO;
 				} else {
-					return StatusConstants.USER_TYPE_NAME_AVAILABLE;
+					responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_NAME_AVAILABLE);
+					return responseDTO;
 				}
 			} else  {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				if (null == login) {
-					return StatusConstants.USER_TYPE_NOT_AVAILABLE;
+					responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_NOT_AVAILABLE);
+					return responseDTO;
 				} else {
-					return StatusConstants.USER_TYPE_AVAILABLE;
+					responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_AVAILABLE);
+					return responseDTO;
 				}
 			} 
 		} else if(null != userTypeMasDTO && null == userTypeMasDTO.getUserTypeId()) { 
-			return StatusConstants.USER_TYPE_ID_EMPTY;
+			responseDTO.setStatus(StatusConstants.SUCCESS);
+			responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_ID_EMPTY);
+			return responseDTO;
 		}
-		return "";
+		return responseDTO;
 	}	
 	
 	/* (non-Javadoc)
@@ -63,16 +73,19 @@ public class UserTypeMasterServiceImpl implements UserTypeMasterService{
 		logger.info("Subscriber ID, name and Address "+userTypeMasDTO.getUserTypeId()+" , "+userTypeMasDTO.getUserTypeName());
 		if(null != userTypeMasDTO && null != userTypeMasDTO.getUserTypeId() && null != userTypeMasDTO.getUserTypeName()) {
 			UserTypeMasterDTO login = userTypeMasDAO.createUserTypeMaster(userTypeMasDTO);
+			responseDTO.setStatus(StatusConstants.SUCCESS);
 			if (null == login) {
-				responseDTO.setErrorMessage(StatusConstants.CREATE_USER_TYPE_FAILED);
+				responseDTO.setMessage(UserTypeMasterConstants.CREATE_USER_TYPE_FAILED);
 			} else {
 				responseDTO = userTypeMasDTO;
-				responseDTO.setStatus(StatusConstants.CREATE_USER_TYPE_SUCCESS);
+				responseDTO.setStatus(UserTypeMasterConstants.CREATE_USER_TYPE_SUCCESS);
 			}
 		} else if(null != userTypeMasDTO && null == userTypeMasDTO.getUserTypeId()) { 
-			responseDTO.setErrorMessage(StatusConstants.USER_TYPE_ID_EMPTY);
+			responseDTO.setStatus(StatusConstants.SUCCESS);
+			responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_ID_EMPTY);
 		} else if(null != userTypeMasDTO && null == userTypeMasDTO.getUserTypeName()) { 
-			responseDTO.setErrorMessage(StatusConstants.USER_TYPE_NAME_EMPTY);
+			responseDTO.setStatus(StatusConstants.SUCCESS);
+			responseDTO.setMessage(UserTypeMasterConstants.USER_TYPE_NAME_EMPTY);
 		}
 		return responseDTO;
 	}

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.constant.SubscriberConstants;
+import com.deloitte.inspection.constant.UserTypeMasterConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
 import com.deloitte.inspection.exception.CreateUserException;
@@ -67,9 +69,9 @@ public class CreateUserServiceImpl implements CreateUserService {
 					resCreateUserDTO.setStatus(StatusConstants.USER_CREATE_SUCCESS);
 				}
 			}else if(null!=createuserDTO && null==createuserDTO.getSubscriberId()){
-				resCreateUserDTO.setErrorMessage(StatusConstants.SUBSCRIBER_ID_EMPTY);
+				resCreateUserDTO.setErrorMessage(SubscriberConstants.SUBSCRIBER_ID_EMPTY);
 			}else if(null!=createuserDTO && null==createuserDTO.getUserTypeId()) {
-				resCreateUserDTO.setErrorMessage(StatusConstants.USER_TYPE_ID_EMPTY);
+				resCreateUserDTO.setErrorMessage(UserTypeMasterConstants.USER_TYPE_ID_EMPTY);
 			}
 		} catch (CreateUserException e) {
 			e.printStackTrace();

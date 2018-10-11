@@ -15,4 +15,6 @@ public interface SubscriberMasterDAO {
 	public LISSubscriberMaster getSubscriberById(Integer subscriberId) throws SubscriberMasterException;
 	
 	public List<LISSubscriberMaster> getAllSubscriberMasterData() throws SubscriberMasterException;
+	
+	public List<LISSubscriberMaster> getSubscriberData(String userId) throws SubscriberMasterException;
 }

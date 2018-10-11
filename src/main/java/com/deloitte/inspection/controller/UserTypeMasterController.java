@@ -40,16 +40,17 @@ public class UserTypeMasterController {
 	 */
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/validate", method = RequestMethod.POST, produces=MediaType.TEXT_PLAIN_VALUE, 
+	@RequestMapping(value = "/validate", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, 
 		consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<UserTypeMasterDTO> validateUserType
 		(@RequestBody UserTypeMasterDTO userTypeMasterDTO){
+		UserTypeMasterDTO responseDTO = new UserTypeMasterDTO();
 		try{
-			String outPutStr = userTypeMasterService.validateUserType(userTypeMasterDTO);
-			if(null != outPutStr)
-				return new ResponseEntity(outPutStr, HttpStatus.OK);
+			responseDTO = userTypeMasterService.validateUserType(userTypeMasterDTO);
+			if(null != responseDTO)
+				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
-				return new ResponseEntity(outPutStr, HttpStatus.EXPECTATION_FAILED);
+				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
 			exception.printStackTrace();
 			logger.error("Exception While validating user type master " + exception.getMessage());
@@ -70,7 +71,7 @@ public class UserTypeMasterController {
 		UserTypeMasterDTO responseDTO = new UserTypeMasterDTO();
 		try{
 			responseDTO = userTypeMasterService.createUserTypeMaster(userTypeMasterDTO);
-			if(null != responseDTO && responseDTO.getErrorMessage() == null)
+			if(null != responseDTO)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
@@ -78,7 +79,7 @@ public class UserTypeMasterController {
 			exception.printStackTrace();
 			logger.error("Exception While creating user type master "+exception.getMessage());
 		}
-		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	

@@ -3,18 +3,22 @@
  */
 package com.deloitte.inspection.dto;
 
+import java.util.Date;
+
 /**
  * @author rnarne
  *
  */
-public class UserTypeMasterDTO extends AbstractDTO{
+public class UserTypeMasterDTO extends CommonDTO{
 		
 		private Integer userTypeId;
 		private Integer subscriberId;
 		private String userTypeName;
-		private String errorMessage;
-		private String status;
-			
+		private Date createdTimestamp;
+		private Date updatedTimestamp;
+		private String createdBy;
+		private String updatedBy;
+					
 		/**
 		 * @return the subscriberId
 		 */
@@ -52,27 +56,51 @@ public class UserTypeMasterDTO extends AbstractDTO{
 			this.userTypeName = userTypeName;
 		}
 		/**
-		 * @return the errorMessage
+		 * @return the createdTimestamp
 		 */
-		public String getErrorMessage() {
-			return errorMessage;
+		public Date getCreatedTimestamp() {
+			return createdTimestamp;
 		}
 		/**
-		 * @param errorMessage the errorMessage to set
+		 * @param createdTimestamp the createdTimestamp to set
 		 */
-		public void setErrorMessage(String errorMessage) {
-			this.errorMessage = errorMessage;
+		public void setCreatedTimestamp(Date createdTimestamp) {
+			this.createdTimestamp = createdTimestamp;
 		}
 		/**
-		 * @return the status
+		 * @return the updatedTimestamp
 		 */
-		public String getStatus() {
-			return status;
+		public Date getUpdatedTimestamp() {
+			return updatedTimestamp;
 		}
 		/**
-		 * @param status the status to set
+		 * @param updatedTimestamp the updatedTimestamp to set
 		 */
-		public void setStatus(String status) {
-			this.status = status;
+		public void setUpdatedTimestamp(Date updatedTimestamp) {
+			this.updatedTimestamp = updatedTimestamp;
+		}
+		/**
+		 * @return the createdBy
+		 */
+		public String getCreatedBy() {
+			return createdBy;
+		}
+		/**
+		 * @param createdBy the createdBy to set
+		 */
+		public void setCreatedBy(String createdBy) {
+			this.createdBy = createdBy;
+		}
+		/**
+		 * @return the updatedBy
+		 */
+		public String getUpdatedBy() {
+			return updatedBy;
+		}
+		/**
+		 * @param updatedBy the updatedBy to set
+		 */
+		public void setUpdatedBy(String updatedBy) {
+			this.updatedBy = updatedBy;
 		}
 }

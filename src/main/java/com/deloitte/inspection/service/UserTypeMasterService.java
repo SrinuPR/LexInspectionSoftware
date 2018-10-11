@@ -11,6 +11,6 @@ import com.deloitte.inspection.exception.UserTypeMasterException;
  *
  */
 public interface UserTypeMasterService {
-	public String validateUserType(UserTypeMasterDTO userTypeMasterDTO) throws UserTypeMasterException;
+	public UserTypeMasterDTO validateUserType(UserTypeMasterDTO userTypeMasterDTO) throws UserTypeMasterException;
 	public UserTypeMasterDTO createUserTypeMaster(UserTypeMasterDTO userTypeMasterDTO) throws UserTypeMasterException;
 }

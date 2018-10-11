@@ -12,7 +12,8 @@ import com.deloitte.inspection.exception.SubscriberMasterException;
  *
  */
 public interface SubscriberMasterService {
-	public String validateSubscriber(Integer subscriberId) throws SubscriberMasterException;
+	public SubscriberMasterDTO validateSubscriber(Integer subscriberId) throws SubscriberMasterException;
 	public SubscriberMasterDTO createSubscriber(SubscriberMasterDTO subMasterDTO) throws SubscriberMasterException;
 	public List<SubscriberMasterDTO> getAllSubscriberMasterData() throws SubscriberMasterException;
+	public List<SubscriberMasterDTO> getSubscriber(String userId) throws SubscriberMasterException;;
 }

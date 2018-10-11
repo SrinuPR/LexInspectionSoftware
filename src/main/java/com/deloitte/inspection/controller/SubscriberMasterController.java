@@ -41,14 +41,15 @@ public class SubscriberMasterController {
 	 */
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes"})
-	@RequestMapping(value = "/{subscriberId}", method = RequestMethod.GET, produces=MediaType.TEXT_PLAIN_VALUE)
+	@RequestMapping(value = "/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<SubscriberMasterDTO> validateSubscriber(@PathVariable("subscriberId") Integer subscriberId){
+		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
 		try{
-			String outPutStr = subMasterService.validateSubscriber(subscriberId);
-			if(null != outPutStr)
-				return new ResponseEntity(outPutStr, HttpStatus.OK);
+			responseDTO = subMasterService.validateSubscriber(subscriberId);
+			if(null != responseDTO)
+				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
-				return new ResponseEntity(outPutStr, HttpStatus.EXPECTATION_FAILED);
+				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
 			exception.printStackTrace();
 			logger.error("Exception While validating credentials " + exception.getMessage());
@@ -67,7 +68,7 @@ public class SubscriberMasterController {
 		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
 		try{
 			responseDTO = subMasterService.createSubscriber(subMasterDTO);
-			if(null != responseDTO && responseDTO.getErrorMessage() == null)
+			if(null != responseDTO)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
@@ -75,7 +76,7 @@ public class SubscriberMasterController {
 			exception.printStackTrace();
 			logger.error("Exception While validating credentials "+exception.getMessage());
 		}
-		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/**
@@ -86,13 +87,41 @@ public class SubscriberMasterController {
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<List<SubscriberMasterDTO>> subscriberMasterDTOList(){
 		logger.info("Entered into displayComponentMasterData");
+		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
 		List<SubscriberMasterDTO> subscriberMasterDTOList = null;
 		try{
+			responseDTO.setStatus(StatusConstants.SUCCESS);
 			subscriberMasterDTOList = subMasterService.getAllSubscriberMasterData();
-			return new ResponseEntity(subscriberMasterDTOList,HttpStatus.OK);
+			if(null != subscriberMasterDTOList && subscriberMasterDTOList.size() > 0) {
+				responseDTO.setSubMasterList(subscriberMasterDTOList);
+				return new ResponseEntity(responseDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
+			}
 		}catch(Exception exception){
 			logger.error("Error while fetching the data : "+exception.getMessage());
 		}
-		return new ResponseEntity(subscriberMasterDTOList,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(StatusConstants.ERROR,HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes"})
+	@RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<SubscriberMasterDTO> getSubscribers(@PathVariable("userId") String userId){
+		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
+		List<SubscriberMasterDTO> subscriberMasterDTOList = null;
+		try{
+			subscriberMasterDTOList = subMasterService.getSubscriber(userId);
+			if(null != subscriberMasterDTOList && subscriberMasterDTOList.size() > 0) {
+				responseDTO.setSubMasterList(subscriberMasterDTOList);
+				return new ResponseEntity(responseDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
+			}
+		}catch(Exception exception){
+			exception.printStackTrace();
+			logger.error("Exception While validating credentials " + exception.getMessage());
+		}
+		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
