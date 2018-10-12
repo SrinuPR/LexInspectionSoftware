@@ -59,6 +59,9 @@ public class LISSubscriberMaster implements Serializable {
 	
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISPurchaseOrderMaster> purchaseOrderMaster;
+	
+	@Column(name = "IS_ACTIVE")
+	private char isActive;
 
 	public Integer getSubscriberId() {
 		return subscriberId;
@@ -155,5 +158,13 @@ public class LISSubscriberMaster implements Serializable {
 	public void setPurchaseOrderMaster(Set<LISPurchaseOrderMaster> purchaseOrderMaster) {
 		this.purchaseOrderMaster = purchaseOrderMaster;
 	}
-		
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
+	}
+	
 }

@@ -48,6 +48,8 @@ public class LISUserTypeMaster implements Serializable {
     @JoinColumn(name="SUBSCRIBER_ID", nullable=false)
     private LISSubscriberMaster subscriberMaster;
 	
+	@Column(name = "IS_ACTIVE")
+	private char isActive;
 
 	/**
 	 * @return the userTypeId
@@ -146,4 +148,13 @@ public class LISUserTypeMaster implements Serializable {
 	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
 		this.subscriberMaster = subscriberMaster;
 	}
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
+	}
+	
 }

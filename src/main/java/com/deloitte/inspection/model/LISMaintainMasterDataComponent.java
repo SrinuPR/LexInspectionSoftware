@@ -22,11 +22,11 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	
 	private static final long serialVersionUID = 382945870712132280L;
 
-	@Id
-	@Column(name = "CMDCS_ID")
+	@Column(name = "CMDCS_ID", unique= true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer cmdcsId;
 	
+	@Id
 	@Column(name = "COMP_PROD_DRAW_NUM" , length = 50)
 	private String componentProductDrawNumber;
 	

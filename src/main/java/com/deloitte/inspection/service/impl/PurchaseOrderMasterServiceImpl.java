@@ -58,7 +58,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 				subscriberMaster = subscriberMasterDAO.getSubscriberById(purchaseOrderDataDTO.getSubscriberId());
 				purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
 			}
-			if(null != purchaseOrderDataDTO.getComponentProductDrawNum()){
+			/*if(null != purchaseOrderDataDTO.getComponentProductDrawNum()){*/
 				try {
 					LISMaintainMasterDataComponent masterDataComponent = componentMasterDataDAO.getComponentDataById(purchaseOrderDataDTO.getComponentId());
 					purchaseOrderMaster.setComponentMasterData(masterDataComponent);
@@ -66,7 +66,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 					e.printStackTrace();
 					logger.error("Error while getting the component");
 				}
-			}
+			/*}*/
 			userMaster = createUserDAO.validateUserId(userId);
 			purchaseOrderMaster.setUserMasterCreate(userMaster);
 			purchaseOrderMaster.setCreatedBy(userName);

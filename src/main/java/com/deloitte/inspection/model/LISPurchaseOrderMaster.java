@@ -20,12 +20,12 @@ public class LISPurchaseOrderMaster implements Serializable{
 	
 	private static final long serialVersionUID = 382945870712132280L;
 
-	@Id
+	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CUSTOMER_PO_ID")
+	@Column(name = "CUSTOMER_PO_ID" , unique = true)
 	private Integer customerPoId;
 	
-	
+	@Id
 	@Column(name = "CUSTOMERPO_NUMBER" , length = 20)
 	private String customerPONumber;
 	
@@ -55,12 +55,15 @@ public class LISPurchaseOrderMaster implements Serializable{
     private LISSubscriberMaster subscriberMaster;
 
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="USER_ID")
+	@JoinColumn(name="COMP_PROD_DRAW_NUM")
     private LISUserMasterCreate userMasterCreate;
 	
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name="CMDCS_ID")
     private LISMaintainMasterDataComponent componentMasterData;;
+    
+    @Column(name = "IS_ACTIVE")
+    private char isActive;
 
 	public String getCustomerPONumber() {
 		return customerPONumber;
@@ -157,5 +160,14 @@ public class LISPurchaseOrderMaster implements Serializable{
 
 	public void setComponentMasterData(LISMaintainMasterDataComponent componentMasterData) {
 		this.componentMasterData = componentMasterData;
-	}	
+	}
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
+	}
+	
 }
