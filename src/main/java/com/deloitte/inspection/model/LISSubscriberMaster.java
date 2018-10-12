@@ -62,7 +62,23 @@ public class LISSubscriberMaster implements Serializable {
 	
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISInspectionTypeMaster> inspTypeMaster;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISInspectionStagesMaster> inspStagesMaster;
 
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISFacilityMaster> facilityMaster;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISShiftMaster> shiftMaster;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISInspectionMaster> inspMaster;
+	
+		
 	public Integer getSubscriberId() {
 		return subscriberId;
 	}
@@ -166,5 +182,74 @@ public class LISSubscriberMaster implements Serializable {
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
 	}
-	
+
+	/**
+	 * @return the inspTypeMaster
+	 */
+	public Set<LISInspectionTypeMaster> getInspTypeMaster() {
+		return inspTypeMaster;
+	}
+
+	/**
+	 * @param inspTypeMaster the inspTypeMaster to set
+	 */
+	public void setInspTypeMaster(Set<LISInspectionTypeMaster> inspTypeMaster) {
+		this.inspTypeMaster = inspTypeMaster;
+	}
+
+	/**
+	 * @return the inspStagesMaster
+	 */
+	public Set<LISInspectionStagesMaster> getInspStagesMaster() {
+		return inspStagesMaster;
+	}
+
+	/**
+	 * @param inspStagesMaster the inspStagesMaster to set
+	 */
+	public void setInspStagesMaster(Set<LISInspectionStagesMaster> inspStagesMaster) {
+		this.inspStagesMaster = inspStagesMaster;
+	}
+
+	/**
+	 * @return the facilityMaster
+	 */
+	public Set<LISFacilityMaster> getFacilityMaster() {
+		return facilityMaster;
+	}
+
+	/**
+	 * @param facilityMaster the facilityMaster to set
+	 */
+	public void setFacilityMaster(Set<LISFacilityMaster> facilityMaster) {
+		this.facilityMaster = facilityMaster;
+	}
+
+	/**
+	 * @return the shiftMaster
+	 */
+	public Set<LISShiftMaster> getShiftMaster() {
+		return shiftMaster;
+	}
+
+	/**
+	 * @param shiftMaster the shiftMaster to set
+	 */
+	public void setShiftMaster(Set<LISShiftMaster> shiftMaster) {
+		this.shiftMaster = shiftMaster;
+	}
+
+	/**
+	 * @return the inspMaster
+	 */
+	public Set<LISInspectionMaster> getInspMaster() {
+		return inspMaster;
+	}
+
+	/**
+	 * @param inspMaster the inspMaster to set
+	 */
+	public void setInspMaster(Set<LISInspectionMaster> inspMaster) {
+		this.inspMaster = inspMaster;
+	}
 }

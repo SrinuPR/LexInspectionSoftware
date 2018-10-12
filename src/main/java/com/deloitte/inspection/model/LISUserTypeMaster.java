@@ -5,8 +5,11 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -44,8 +47,8 @@ public class LISUserTypeMaster implements Serializable {
 	@Column(name = "UPDATED_BY")
 	private String updatedBy;
 	
-	@ManyToOne
-    @JoinColumn(name="SUBSCRIBER_ID", nullable=false)
+	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
 	
 	@Column(name = "IS_ACTIVE")

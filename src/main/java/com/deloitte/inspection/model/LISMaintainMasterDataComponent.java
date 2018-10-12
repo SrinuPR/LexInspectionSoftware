@@ -3,6 +3,7 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -71,6 +72,9 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<LISPurchaseOrderMaster> purchaseOrderMaster;
 	
+	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL)
+	private Set<LISInspectionMaster> inspectionMaster;
+		
 	@Column(name = "IS_ACTIVE")
 	private char isActive;	
 
@@ -200,5 +204,19 @@ public class LISMaintainMasterDataComponent implements Serializable{
 
 	public void setPurchaseOrderMaster(List<LISPurchaseOrderMaster> purchaseOrderMaster) {
 		this.purchaseOrderMaster = purchaseOrderMaster;
+	}
+
+	/**
+	 * @return the inspectionMaster
+	 */
+	public Set<LISInspectionMaster> getInspectionMaster() {
+		return inspectionMaster;
+	}
+
+	/**
+	 * @param inspectionMaster the inspectionMaster to set
+	 */
+	public void setInspectionMaster(Set<LISInspectionMaster> inspectionMaster) {
+		this.inspectionMaster = inspectionMaster;
 	}
 }
