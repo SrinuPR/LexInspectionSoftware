@@ -72,7 +72,7 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<LISPurchaseOrderMaster> purchaseOrderMaster;
 	
-	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<LISInspectionMaster> inspectionMaster;
 		
 	@Column(name = "IS_ACTIVE")
