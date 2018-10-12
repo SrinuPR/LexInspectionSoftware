@@ -69,7 +69,7 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 				responseDTO.setMessage(SubscriberConstants.CREATE_SUBSCRIBER_FAILED);
 			} else {
 				responseDTO = subMasterDTO;
-				responseDTO.setStatus(SubscriberConstants.CREATE_SUBSCRIBER_SUCCESS);
+				responseDTO.setMessage(SubscriberConstants.CREATE_SUBSCRIBER_SUCCESS);
 			}
 		} else if(null != subMasterDTO && null == subMasterDTO.getSubscriberId()) {
 			responseDTO.setStatus(StatusConstants.SUCCESS);
