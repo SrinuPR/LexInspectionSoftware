@@ -15,6 +15,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.exception.SubscriberMasterException;
@@ -66,6 +68,7 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 			subMasterModel.setSubscriberId(subMasterDTO.getSubscriberId());
 			subMasterModel.setSubscriberName(subMasterDTO.getSubscriberName());
 			subMasterModel.setSubscriberAddress(subMasterDTO.getSubscriberAddress());
+			subMasterModel.setIsActive(StatusConstants.IS_ACTIVE);
 			Integer value = (Integer) getSession().save(subMasterModel);
 			if(value != null)
 				return subMasterDTO;

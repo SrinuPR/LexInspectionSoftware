@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
@@ -55,13 +56,14 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 			userMaster.setUserId(createuserDTO.getUserId());
 			userMaster.setUserName(createuserDTO.getUserName());
 			userMaster.setUserTypeId(createuserDTO.getUserTypeId());
+			userMaster.setIsActive(StatusConstants.IS_ACTIVE);
 			LISLogin lisLogin=new LISLogin();
 			lisLogin.setCreatedBy(createuserDTO.getUserName());
 			lisLogin.setCreatedTimestamp(new Date());
 			lisLogin.setPassword(createuserDTO.getPassword());
 			lisLogin.setUserMasterCreate(userMaster);
 			lisLogin.setSubscriberMaster(subscriberMaster);
-			
+			lisLogin.setIsActive(StatusConstants.IS_ACTIVE);
 			getSession().save(userMaster);
 			
 				return createuserDTO;

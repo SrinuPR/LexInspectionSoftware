@@ -15,6 +15,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.UserTypeMasterDAO;
 import com.deloitte.inspection.dto.UserTypeMasterDTO;
 import com.deloitte.inspection.exception.UserTypeMasterException;
@@ -78,6 +80,7 @@ public class UserTypeMasterDAOImpl implements UserTypeMasterDAO {
 			userTypeMasModel.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
 			userTypeMasModel.setUserTypeId(userTypeMasDTO.getUserTypeId());
 			userTypeMasModel.setUserTypeName(userTypeMasDTO.getUserTypeName());
+			userTypeMasModel.setIsActive(StatusConstants.IS_ACTIVE);
 			LISSubscriberMaster subMaster = new LISSubscriberMaster();
 			subMaster.setSubscriberId(userTypeMasDTO.getSubscriberId());
 			userTypeMasModel.setSubscriberMaster(subMaster);
@@ -87,8 +90,7 @@ public class UserTypeMasterDAOImpl implements UserTypeMasterDAO {
 		} catch (HibernateException ex) {
 			ex.printStackTrace();
 			logger.error(ex.getMessage());
-		} /*finally {
-		}*/
+		} 
 		return null;
 	}
 }
