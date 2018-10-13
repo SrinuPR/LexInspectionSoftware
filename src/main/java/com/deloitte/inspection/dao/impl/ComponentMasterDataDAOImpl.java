@@ -91,8 +91,9 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 	public LISMaintainMasterDataComponent getComponentDataByDrwNum(String productDrawNumber)
 			throws ComponentMasterDataException {
 		logger.info("Entered into getComponentDataByDrwNum");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where lower(l.componentProductDrawNumber) = :productDrawNumber ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where lower(l.componentProductDrawNumber) = :productDrawNumber and isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("productDrawNumber", productDrawNumber);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISMaintainMasterDataComponent> list = query.list();
 		if(list.size() > 0){
 			return list.get(0);

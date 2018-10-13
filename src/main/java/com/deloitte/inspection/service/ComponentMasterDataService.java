@@ -2,6 +2,7 @@ package com.deloitte.inspection.service;
 
 import java.util.List;
 
+import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 
@@ -16,5 +17,7 @@ public interface ComponentMasterDataService {
 	public List<ComponentMasterDataDTO> getAllComponentMasterData(String userId)  throws ComponentMasterDataException;
 
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException;
+
+	public CommonDTO validateComponentDrawNumber(String lowerCase) throws ComponentMasterDataException;
 
 }

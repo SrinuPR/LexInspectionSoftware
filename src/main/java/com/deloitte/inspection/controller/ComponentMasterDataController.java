@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.deloitte.inspection.constant.ComponentConstants;
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
@@ -179,5 +180,28 @@ public class ComponentMasterDataController {
 			logger.error("Exception while sending the details "+exception.getMessage());
 		}
 		return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/validate/{customerDrawNumber}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<CommonDTO> validateComponentDrawNumber(@PathVariable("customerDrawNumber") String customerDrawNumber){
+		CommonDTO commonDTO = new CommonDTO();
+		try{
+			if(null != customerDrawNumber){
+				commonDTO = componentMasterDataService.validateComponentDrawNumber(customerDrawNumber.trim().toLowerCase());
+				if(StatusConstants.SUCCESS.equalsIgnoreCase(commonDTO.getStatus())){
+					return new ResponseEntity(commonDTO, HttpStatus.OK);
+				}else{
+					return new ResponseEntity(commonDTO, HttpStatus.EXPECTATION_FAILED);
+				}
+			}
+		}catch(Exception exception){
+			exception.printStackTrace();
+			logger.error("Exception while validating PO Number " + exception.getMessage());
+		}
+		commonDTO.setStatus(StatusConstants.ERROR);
+		commonDTO.setMessage(ComponentConstants.SOMETHING_WENT_WRONG);
+		return new ResponseEntity(commonDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

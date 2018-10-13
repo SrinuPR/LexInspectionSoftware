@@ -122,7 +122,7 @@ public class PurchaseOrderDataController {
 		CommonDTO commonDTO = new CommonDTO();
 		try{
 			if(null != customerPONumber){
-				commonDTO = purchaseOrderDataService.validatePONumber(customerPONumber);
+				commonDTO = purchaseOrderDataService.validatePONumber(customerPONumber.trim().toLowerCase());
 				if(StatusConstants.SUCCESS.equalsIgnoreCase(commonDTO.getStatus())){
 					return new ResponseEntity(commonDTO, HttpStatus.OK);
 				}else{

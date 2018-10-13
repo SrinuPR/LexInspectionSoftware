@@ -15,6 +15,6 @@ public class PurchaseOrderConstants {
 	public static final String CUSTOMER_PO_EXIST="Customer P.O exist";
 	public static final String CUSTOMER_PO_NOT_EXIST="Customer P.O does not exist";
 	public static final String COMPONENT_DRAW_NUM_LIST="Component Draw Number Data";
-	public static final String SOMETHING_WENT_WRONG="Comething Went Wrong Please try later";
+	public static final String SOMETHING_WENT_WRONG="Something Went Wrong Please try later";
 
 }
