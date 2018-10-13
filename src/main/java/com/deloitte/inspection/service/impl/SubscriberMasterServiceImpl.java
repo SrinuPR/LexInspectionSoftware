@@ -76,10 +76,10 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 			responseDTO.setMessage(SubscriberConstants.SUBSCRIBER_ID_EMPTY);
 		} else if(null != subMasterDTO && null == subMasterDTO.getSubscriberName()) { 
 			responseDTO.setStatus(StatusConstants.SUCCESS);
-			responseDTO.setMessage(StatusConstants.USER_ID_EMPTY);
+			responseDTO.setMessage(SubscriberConstants.SUBSCRIBER_NAME_EMPTY);
 		} else if(null != subMasterDTO && null == subMasterDTO.getSubscriberAddress()) { 
 			responseDTO.setStatus(StatusConstants.SUCCESS);
-			responseDTO.setMessage(StatusConstants.USER_ID_EMPTY);
+			responseDTO.setMessage(SubscriberConstants.SUBSCRIBER_ADDRESS_EMPTY);
 		}
 		return responseDTO;
 	}

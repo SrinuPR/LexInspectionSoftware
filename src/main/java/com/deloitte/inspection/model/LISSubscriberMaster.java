@@ -67,7 +67,7 @@ public class LISSubscriberMaster implements Serializable {
 	private Set<LISInspectionTypeMaster> inspTypeMaster;
 	
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
-	private Set<LISInspectionStagesMaster> inspStagesMaster;
+	private Set<LISInspectionStageMaster> inspStagesMaster;
 
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISFacilityMaster> facilityMaster;
@@ -200,14 +200,14 @@ public class LISSubscriberMaster implements Serializable {
 	/**
 	 * @return the inspStagesMaster
 	 */
-	public Set<LISInspectionStagesMaster> getInspStagesMaster() {
+	public Set<LISInspectionStageMaster> getInspStagesMaster() {
 		return inspStagesMaster;
 	}
 
 	/**
 	 * @param inspStagesMaster the inspStagesMaster to set
 	 */
-	public void setInspStagesMaster(Set<LISInspectionStagesMaster> inspStagesMaster) {
+	public void setInspStagesMaster(Set<LISInspectionStageMaster> inspStagesMaster) {
 		this.inspStagesMaster = inspStagesMaster;
 	}
 

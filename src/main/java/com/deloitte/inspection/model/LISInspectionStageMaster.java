@@ -21,7 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "LIS_ISMCS")
-public class LISInspectionStagesMaster implements Serializable{
+public class LISInspectionStageMaster implements Serializable{
 		
 	private static final long serialVersionUID = 382945870712132210L;
 

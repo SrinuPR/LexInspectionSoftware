@@ -52,7 +52,7 @@ public class SubscriberMasterController {
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
 			exception.printStackTrace();
-			logger.error("Exception While validating credentials " + exception.getMessage());
+			logger.error("Exception While validating validateSubscriber " + exception.getMessage());
 		}
 		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -74,7 +74,7 @@ public class SubscriberMasterController {
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
 			exception.printStackTrace();
-			logger.error("Exception While validating credentials "+exception.getMessage());
+			logger.error("Exception While validating createSubscriber "+exception.getMessage());
 		}
 		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -86,7 +86,7 @@ public class SubscriberMasterController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<List<SubscriberMasterDTO>> subscriberMasterDTOList(){
-		logger.info("Entered into displayComponentMasterData");
+		logger.info("Entered into subscriberMasterDTOList");
 		SubscriberMasterDTO responseDTO = new SubscriberMasterDTO();
 		List<SubscriberMasterDTO> subscriberMasterDTOList = null;
 		try{
