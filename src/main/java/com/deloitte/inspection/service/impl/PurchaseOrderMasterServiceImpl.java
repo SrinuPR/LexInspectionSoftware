@@ -16,6 +16,7 @@ import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
+import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.CreateUserException;
@@ -58,15 +59,13 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 				subscriberMaster = subscriberMasterDAO.getSubscriberById(purchaseOrderDataDTO.getSubscriberId());
 				purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
 			}
-			/*if(null != purchaseOrderDataDTO.getComponentProductDrawNum()){*/
-				try {
-					LISMaintainMasterDataComponent masterDataComponent = componentMasterDataDAO.getComponentDataById(purchaseOrderDataDTO.getComponentId());
-					purchaseOrderMaster.setComponentMasterData(masterDataComponent);
-				} catch (ComponentMasterDataException e) {
-					e.printStackTrace();
-					logger.error("Error while getting the component");
-				}
-			/*}*/
+			try {
+				LISMaintainMasterDataComponent masterDataComponent = componentMasterDataDAO.getComponentDataById(purchaseOrderDataDTO.getComponentId());
+				purchaseOrderMaster.setComponentMasterData(masterDataComponent);
+			} catch (ComponentMasterDataException e) {
+				e.printStackTrace();
+				logger.error("Error while getting the component");
+			}
 			userMaster = createUserDAO.validateUserId(userId);
 			purchaseOrderMaster.setUserMasterCreate(userMaster);
 			purchaseOrderMaster.setCreatedBy(userName);
@@ -80,7 +79,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			purchaseOrderMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
 			purchaseOrderMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
 			purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
-		
+			purchaseOrderMaster.setIsActive(StatusConstants.IN_ACTIVE);
 			purchaseOrderDataDAO.savePurchaseOrderData(purchaseOrderMaster);
 			status = StatusConstants.SUCCESS;
 		}
@@ -89,15 +88,12 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 
 	@Override
 	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(String userId) throws PurchaseOrderMasterException, CreateUserException {
-		LISUserMasterCreate userMaster=new LISUserMasterCreate();
 		List<PurchaseOrderDataDTO> purchaseOrderDTOList =  new ArrayList<PurchaseOrderDataDTO>();
 		List<LISPurchaseOrderMaster> purchaseOrderList = null;
 		
 		if( null!=userId)
-			try {
-				userMaster = createUserDAO.validateUserId(userId);
-				
-				purchaseOrderList = purchaseOrderDataDAO.getAllByUserId(userMaster.getUserId());
+			try {			
+				purchaseOrderList = purchaseOrderDataDAO.getAllByUserId(userId);
 				for(LISPurchaseOrderMaster purchaseOrder:purchaseOrderList) {
 					PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
 					if(null != purchaseOrder.getComponentMasterData()){
@@ -113,7 +109,6 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 					purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId());
 					purchaseOrderDTOList.add(purchaseOrderDto);
 				}
-				//purchaseOrderDto.setPurchaseOrderList(purchaseOrderList);
 				return purchaseOrderDTOList;
 			}catch(ParseException e) {
 				e.printStackTrace();
@@ -141,26 +136,27 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	}
 	
 	@Override
-	public String validatePONumber(PurchaseOrderDataDTO purchaseOrderDataDTO) {
-		LISPurchaseOrderMaster purchaseOrder=new LISPurchaseOrderMaster();
+	public CommonDTO validatePONumber(String custDrawNumber) {
+		logger.info("Inside validatePONumber method");
+		CommonDTO commonDTO = new CommonDTO();
 		boolean poNumExists=false;
 		try {
-			if(null!=purchaseOrderDataDTO && null!=purchaseOrderDataDTO.getCustomerPONumber()) {
-				purchaseOrder = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
-				if(null!=purchaseOrder){
-					poNumExists=true;
-				}
+			LISPurchaseOrderMaster purchaseOrder = purchaseOrderDataDAO.getByCustomerPONumber(custDrawNumber.trim().toLowerCase());
+			if(null!=purchaseOrder){
+				poNumExists=true;
 			}
 			if(poNumExists) {
-				return PurchaseOrderConstants.CUSTOMER_PO_EXISTS;
+				commonDTO.setStatus(StatusConstants.ERROR);
+				commonDTO.setMessage(PurchaseOrderConstants.CUSTOMER_PO_EXISTS);
 			}else {
-				return StatusConstants.SUCCESS;
+				commonDTO.setStatus(StatusConstants.SUCCESS);
+				commonDTO.setMessage(PurchaseOrderConstants.CUSTOMER_PO_NOT_EXIST);
 			}
-			
-		}catch(Exception e) {
-			e.printStackTrace();
+		}catch(Exception exception) {
+			exception.printStackTrace();
+			logger.info("validatePONumber Exception "+exception.getMessage());
 		}
-		return StatusConstants.EMPTY;
+		return commonDTO;
 	}
 	
 	@Override
@@ -185,30 +181,24 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			throws PurchaseOrderMasterException, SubscriberMasterException, CreateUserException {
 		String status=StatusConstants.FAILURE;
 		LISPurchaseOrderMaster purchaseMaster=new LISPurchaseOrderMaster();
-		LISUserMasterCreate userMaster=new LISUserMasterCreate();
-		LISSubscriberMaster subscriberMaster=null;
-		
+	
 		if(null!=purchaseOrderDataDTO && null!=purchaseOrderDataDTO.getCustomerPONumber()) {
-			userMaster = createUserDAO.validateUserId(userId);
-			purchaseMaster = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
-			if(null != userMaster.getSubscriberMaster().getSubscriberId()){
-					subscriberMaster = subscriberMasterDAO.getSubscriberById(userMaster.getSubscriberMaster().getSubscriberId());
+			purchaseMaster = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber().trim().toLowerCase());
+			if(null != purchaseMaster){
+				try {
+					purchaseMaster.setCustomerPODate(InspectionUtils.convertStringToDate(purchaseOrderDataDTO.getCustomerPODate()));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				purchaseMaster.setCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber().trim());
+				purchaseMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
+				purchaseMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
+				purchaseMaster.setUpdatedBy(userName);
+				purchaseMaster.setUpdatedTimestamp(new Date());
+				purchaseOrderDataDAO.savePurchaseOrderData(purchaseMaster);
+				status = StatusConstants.SUCCESS;
+				return status;
 			}
-			try {
-				purchaseMaster.setCustomerPODate(InspectionUtils.convertStringToDate(purchaseOrderDataDTO.getCustomerPODate()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			purchaseMaster.setCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
-			purchaseMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
-			purchaseMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
-			purchaseMaster.setSubscriberMaster(subscriberMaster);
-			purchaseMaster.setUpdatedBy(userName);
-			purchaseMaster.setUpdatedTimestamp(new Date());
-			purchaseMaster.setUserMasterCreate(userMaster);
-			purchaseOrderDataDAO.savePurchaseOrderData(purchaseMaster);
-			status = StatusConstants.SUCCESS;
-			return status;
 		}
 		return null;
 	}
@@ -222,6 +212,24 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			logger.error("Exception while deleting component "+exception.getMessage());
 		}
 		return StatusConstants.FAILURE;
+	}
+
+	@Override
+	public List<String> getAllComponentDrawingNumber() throws PurchaseOrderMasterException {
+		List<LISMaintainMasterDataComponent> masterDataComponent;
+		try {
+			masterDataComponent = componentMasterDataDAO.getAllComponentDrawingNumber();
+			if(null != masterDataComponent && masterDataComponent.size() > 0){
+				List<String> drawNum = new ArrayList<String>();
+				for(LISMaintainMasterDataComponent masterDataComponent2 : masterDataComponent){
+					drawNum.add(masterDataComponent2.getComponentProductDrawNumber());
+				}
+			}
+		} catch (ComponentMasterDataException componentMasterDataException) {
+			componentMasterDataException.printStackTrace();
+			logger.info("Error atComponet Product draw number list "+ componentMasterDataException.getMessage());
+		}
+		return null;
 	}
 
 	

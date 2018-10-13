@@ -14,4 +14,7 @@ public class PurchaseOrderConstants {
 	public static final String WARN_PO_QUANTITY="P.O. Quantity less than Produced Quantity!!";
 	public static final String CUSTOMER_PO_EXIST="Customer P.O exist";
 	public static final String CUSTOMER_PO_NOT_EXIST="Customer P.O does not exist";
+	public static final String COMPONENT_DRAW_NUM_LIST="Component Draw Number Data";
+	public static final String SOMETHING_WENT_WRONG="Comething Went Wrong Please try later";
+
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.dto.UserTypeMasterDTO;
 import com.deloitte.inspection.service.UserTypeMasterService;

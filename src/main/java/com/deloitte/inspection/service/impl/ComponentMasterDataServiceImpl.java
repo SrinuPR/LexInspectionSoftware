@@ -50,13 +50,13 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 						LISUserMasterCreate userMasterCreate = createUserDAO.validateUserId(userId);
 						masterDataComponent.setUserMasterCreate(userMasterCreate);
 					}
-					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber());
-					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial());
-					masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName());
+					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber().trim());
+					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial().trim());
+					masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName().trim());
 					masterDataComponent.setComponentProductNotes(componentMasterDataDTO.getComponentProductNotes());
-					masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber());
-					masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress());
-					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits());
+					masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber().trim());
+					masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress().trim());
+					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits().trim());
 					masterDataComponent.setIsActive(StatusConstants.IS_ACTIVE);
 					masterDataComponent.setCreatedBy(userName);
 					masterDataComponent.setCreatedTimestamp(new Date());
@@ -114,13 +114,13 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 				LISMaintainMasterDataComponent masterDataComponent = null;
 				if(null != componentMasterDataDTO.getComponentId() && 0 != componentMasterDataDTO.getComponentId()){
 					masterDataComponent = componentMasterDataDAO.getComponentDataById(componentMasterDataDTO.getComponentId());
-					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber());
-					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial());
-					masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName());
+					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber().trim());
+					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial().trim());
+					masterDataComponent.setComponentProductName(componentMasterDataDTO.getComponentProductName().trim());
 					masterDataComponent.setComponentProductNotes(componentMasterDataDTO.getComponentProductNotes());
-					masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber());
-					masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress());
-					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits());
+					masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber().trim());
+					masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress().trim());
+					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits().trim());
 					masterDataComponent.setUpdatedBy(userName);
 					masterDataComponent.setUpdatedTimestamp(new Date());
 					componentMasterDataDAO.saveComponentMasterData(masterDataComponent);

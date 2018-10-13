@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.deloitte.inspection.constant.PurchaseOrderConstants;
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
+import com.deloitte.inspection.response.dto.ComponetDrawNumberResponseDTO;
 import com.deloitte.inspection.response.dto.PurchaseOrderResponseDataDTO;
 import com.deloitte.inspection.service.PurchaseOrderMasterService;
 
@@ -115,19 +117,25 @@ public class PurchaseOrderDataController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/validate-order", method = RequestMethod.POST, produces=MediaType.TEXT_PLAIN_VALUE)
-	public @ResponseBody ResponseEntity<LoginDTO> validatePONumber(@RequestBody PurchaseOrderDataDTO purchaseOrderDataDTO){
+	@RequestMapping(value = "/validate/{customerPONumber}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<CommonDTO> validatePONumber(@PathVariable("customerPONumber") String customerPONumber){
+		CommonDTO commonDTO = new CommonDTO();
 		try{
-			String response = purchaseOrderDataService.validatePONumber(purchaseOrderDataDTO);
-			if(null != response)
-				return new ResponseEntity(response, HttpStatus.OK);
-			else
-				return new ResponseEntity(response, HttpStatus.EXPECTATION_FAILED);
+			if(null != customerPONumber){
+				commonDTO = purchaseOrderDataService.validatePONumber(customerPONumber);
+				if(StatusConstants.SUCCESS.equalsIgnoreCase(commonDTO.getStatus())){
+					return new ResponseEntity(commonDTO, HttpStatus.OK);
+				}else{
+					return new ResponseEntity(commonDTO, HttpStatus.EXPECTATION_FAILED);
+				}
+			}
 		}catch(Exception exception){
 			exception.printStackTrace();
-			logger.error("Exception While validating PO date " + exception.getMessage());
+			logger.error("Exception while validating PO Number " + exception.getMessage());
 		}
-		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		commonDTO.setStatus(StatusConstants.ERROR);
+		commonDTO.setMessage(PurchaseOrderConstants.SOMETHING_WENT_WRONG);
+		return new ResponseEntity(commonDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@CrossOrigin
@@ -201,6 +209,26 @@ public class PurchaseOrderDataController {
 			logger.error("Exception While validating PO date " + exception.getMessage());
 		}
 		return new ResponseEntity(StatusConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/drawNumbers", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<ComponetDrawNumberResponseDTO> getAllComponentDrawingNumber(){
+		ComponetDrawNumberResponseDTO componetDrawNumberResponseDTO = new ComponetDrawNumberResponseDTO();
+		try{
+			List<String> drawNumbers = purchaseOrderDataService.getAllComponentDrawingNumber();
+			componetDrawNumberResponseDTO.setStatus(StatusConstants.SUCCESS);
+			componetDrawNumberResponseDTO.setMessage(PurchaseOrderConstants.COMPONENT_DRAW_NUM_LIST);
+			componetDrawNumberResponseDTO.setResult(drawNumbers);
+			return new ResponseEntity(componetDrawNumberResponseDTO, HttpStatus.OK);
+		}catch(Exception exception){
+			exception.printStackTrace();
+			logger.error("Exception While fetching the getAllComponentDrawingNumber " + exception.getMessage());
+		}
+		componetDrawNumberResponseDTO.setStatus(StatusConstants.ERROR);
+		componetDrawNumberResponseDTO.setMessage(PurchaseOrderConstants.SOMETHING_WENT_WRONG);
+		return new ResponseEntity(componetDrawNumberResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	

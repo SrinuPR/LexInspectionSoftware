@@ -48,8 +48,9 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	public List<LISPurchaseOrderMaster> getAllByUserId(String userId)
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllByUserId");	
-		Query query = getSession().createQuery("SELECT i FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId=:userId"	);
+		Query query = getSession().createQuery("SELECT i FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC ");
 		query.setParameter("userId", userId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();
 		if(null != LISPurchaseOrderMaster && LISPurchaseOrderMaster.size() > 0){
 			return LISPurchaseOrderMaster;
@@ -61,7 +62,6 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	@Override
 	public String validatePOQuantity(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName)
 			throws PurchaseOrderMasterException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -70,8 +70,9 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	@Override
 	public String deletePurchaseOrder(String customerPoId) throws PurchaseOrderMasterException {
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_CPMCS WHERE CUSTOMER_PO_ID = :customerPoId");
+		Query query = getSession().createSQLQuery("UPDATE LIS_CPMCS SET IS_ACTIVE = :isActive WHERE CUSTOMER_PO_ID = :customerPoId");
 		query.setParameter("customerPoId", customerPoId);
+		query.setParameter("isActive", StatusConstants.IN_ACTIVE);
 		int result = query.executeUpdate();
 		if(result > 0){
 			status = StatusConstants.SUCCESS;
@@ -83,8 +84,9 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	@Override
 	public LISPurchaseOrderMaster getByCustomerPONumber(String customerPONumber) throws PurchaseOrderMasterException {
 		logger.info("Entered into validatePoNumber");	
-		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where CPMCS.customerPONumber = :customerPONumber");
+		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where lower(CPMCS.customerPONumber) = :customerPONumber and isActive = :isActive");
 		query.setParameter("customerPONumber", customerPONumber);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();
 		if(null != LISPurchaseOrderMaster && LISPurchaseOrderMaster.size() > 0){
 			return LISPurchaseOrderMaster.get(0);

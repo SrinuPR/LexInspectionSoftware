@@ -99,5 +99,15 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 		}
 		return null;
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISMaintainMasterDataComponent> getAllComponentDrawingNumber() throws ComponentMasterDataException {
+		logger.info("Entered into getComponentDataByDrwNum");	
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where 1.isActive = :isActive ORDER BY l.componentProductDrawNumber ASC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		List<LISMaintainMasterDataComponent> list = query.list();
+		return list;
+	}
 	
 }
