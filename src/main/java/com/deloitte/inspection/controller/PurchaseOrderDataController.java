@@ -51,6 +51,9 @@ public class PurchaseOrderDataController {
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+			}else{
+				userName = "Srinu";
+				userId = "Srinu123";
 			}
 			status = purchaseOrderDataService.savePurchaseOrderData(purchaseOrderDataDTO,userName, userId);
 			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
@@ -84,6 +87,8 @@ public class PurchaseOrderDataController {
 			String userId = null;
 			if(null != userDto){
 				userId = userDto.getUserId();
+			}else{
+				userId = "Srinu123";
 			}
 			purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
 			purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
@@ -152,6 +157,9 @@ public class PurchaseOrderDataController {
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+			}else{
+				userName = "Srinu";
+				userId = "Srinu123";
 			}
 			status = purchaseOrderDataService.updatePurchaseOrderData(purchaseOrderDataDTO, userName, userId);
 			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {

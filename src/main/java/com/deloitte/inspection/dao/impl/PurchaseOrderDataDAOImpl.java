@@ -48,7 +48,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	public List<LISPurchaseOrderMaster> getAllByUserId(String userId)
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllByUserId");	
-		Query query = getSession().createQuery("SELECT i FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC ");
+		Query query = getSession().createQuery("SELECT i FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY i.createdTimestamp DESC ");
 		query.setParameter("userId", userId);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();

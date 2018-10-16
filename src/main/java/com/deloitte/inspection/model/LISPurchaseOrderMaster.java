@@ -32,10 +32,10 @@ public class LISPurchaseOrderMaster implements Serializable{
 	@Column(name = "CUSTOMERPO_DATE" )
 	private Date customerPODate;
 	
-	@Column(name = "CUSTOMERPO_QUANTITY" , length = 11)
+	@Column(name = "CUSTOMERPO_QUANTITY" , length = 5)
 	private Integer customerPOQuantity;
 	
-	@Column(name = "NOTES_PO" , length = 250)
+	@Column(name = "NOTES_PO" , length = 150)
 	private String notesPO;
 	
 	@Column(name = "CREATED_BY" , length = 50)
@@ -55,11 +55,11 @@ public class LISPurchaseOrderMaster implements Serializable{
     private LISSubscriberMaster subscriberMaster;
 
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="COMP_PROD_DRAW_NUM")
+	@JoinColumn(name="USER_ID")
     private LISUserMasterCreate userMasterCreate;
 	
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="CMDCS_ID")
+	@JoinColumn(name="COMP_PROD_DRAW_NUM")
     private LISMaintainMasterDataComponent componentMasterData;;
     
     @Column(name = "IS_ACTIVE")

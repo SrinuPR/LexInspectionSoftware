@@ -48,6 +48,9 @@ public class ComponentMasterDataController {
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+			}else{
+				userName = "Srinu";
+				userId = "Srinu123";
 			}
 			ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 			status = componentMasterDataService.saveComponentMasterData(componentMasterDataDTO,userName,userId);
@@ -99,6 +102,9 @@ public class ComponentMasterDataController {
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+			}else{
+				userName = "Srinu";
+				userId = "Srinu123";
 			}
 			ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 			status = componentMasterDataService.updateComponentMasterData(componentMasterDataDTO, userName);		
@@ -132,6 +138,8 @@ public class ComponentMasterDataController {
 			String userId = null;
 			if(null != userDto){
 				userId = userDto.getUserId();
+			}else{
+				userId = "Srinu123";
 			}
 			componentMasterDataDTOs = componentMasterDataService.getAllComponentMasterData(userId);
 			componentMasterResponseDataDTO.setResult(componentMasterDataDTOs);

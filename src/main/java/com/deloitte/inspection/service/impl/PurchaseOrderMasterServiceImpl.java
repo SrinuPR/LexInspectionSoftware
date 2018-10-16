@@ -94,20 +94,22 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 		if( null!=userId)
 			try {			
 				purchaseOrderList = purchaseOrderDataDAO.getAllByUserId(userId);
-				for(LISPurchaseOrderMaster purchaseOrder:purchaseOrderList) {
-					PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
-					if(null != purchaseOrder.getComponentMasterData()){
-						purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponentMasterData().getComponentProductDrawNumber());
-						purchaseOrderDto.setComponentId(purchaseOrder.getComponentMasterData().getCmdcsId());
+				if(null != purchaseOrderList && purchaseOrderList.size() > 0){
+					for(LISPurchaseOrderMaster purchaseOrder:purchaseOrderList) {
+						PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
+						if(null != purchaseOrder.getComponentMasterData()){
+							purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponentMasterData().getComponentProductDrawNumber());
+							purchaseOrderDto.setComponentId(purchaseOrder.getComponentMasterData().getCmdcsId());
+						}
+						purchaseOrderDto.setCustomerPODate(InspectionUtils.convertDateToString(purchaseOrder.getCustomerPODate()));
+						purchaseOrderDto.setCustomerPONumber(purchaseOrder.getCustomerPONumber());
+						purchaseOrderDto.setCustomerPOQuantity(purchaseOrder.getCustomerPOQuantity());
+						purchaseOrderDto.setPoNotes(purchaseOrder.getNotesPO());
+						purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriberMaster().getSubscriberId());
+						purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriberMaster().getSubscriberName());
+						purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId());
+						purchaseOrderDTOList.add(purchaseOrderDto);
 					}
-					purchaseOrderDto.setCustomerPODate(InspectionUtils.convertDateToString(purchaseOrder.getCustomerPODate()));
-					purchaseOrderDto.setCustomerPONumber(purchaseOrder.getCustomerPONumber());
-					purchaseOrderDto.setCustomerPOQuantity(purchaseOrder.getCustomerPOQuantity());
-					purchaseOrderDto.setPoNotes(purchaseOrder.getNotesPO());
-					purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriberMaster().getSubscriberId());
-					purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriberMaster().getSubscriberName());
-					purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId());
-					purchaseOrderDTOList.add(purchaseOrderDto);
 				}
 				return purchaseOrderDTOList;
 			}catch(ParseException e) {
