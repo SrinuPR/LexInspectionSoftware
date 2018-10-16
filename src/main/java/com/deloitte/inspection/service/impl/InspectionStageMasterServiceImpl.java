@@ -41,6 +41,7 @@ public class InspectionStageMasterServiceImpl implements InspectionStageMasterSe
 				responseDTO.setMessage(InspectionTypeMasterConstants.INSPECTION_STAGE_ID_NOT_AVAILABLE);
 				return responseDTO;
 			} else {
+				responseDTO.setInspStageId(inspStageId);
 				responseDTO.setMessage(InspectionTypeMasterConstants.INSPECTION_STAGE_ID_AVAILABLE);
 				return responseDTO;
 			}

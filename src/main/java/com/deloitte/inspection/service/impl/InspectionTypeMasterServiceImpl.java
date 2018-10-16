@@ -40,6 +40,7 @@ public class InspectionTypeMasterServiceImpl implements InspectionTypeMasterServ
 				responseDTO.setMessage(InspectionTypeMasterConstants.INSPECTION_TYPE_ID_NOT_AVAILABLE);
 				return responseDTO;
 			} else {
+				responseDTO.setInspTypeId(inspTypeId);
 				responseDTO.setMessage(InspectionTypeMasterConstants.INSPECTION_TYPE_ID_AVAILABLE);
 				return responseDTO;
 			}

@@ -40,6 +40,7 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 				responseDTO.setMessage(FacilityMasterConstants.FACILITY_NUMBER_NOT_AVAILABLE);
 				return responseDTO;
 			} else {
+				responseDTO.setFacilityNumber(facilityNum);
 				responseDTO.setMessage(FacilityMasterConstants.FACILITY_NUMBER_AVAILABLE);
 				return responseDTO;
 			}
