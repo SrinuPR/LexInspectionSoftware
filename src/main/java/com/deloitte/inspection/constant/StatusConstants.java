@@ -30,5 +30,7 @@ public class StatusConstants {
 	public static final String USER_EXISTS="User ID Exists";
 	public static final String EMPTY="";
 
+	public static final String DEFAULT_USER_NAME = "Admin";
+	public static final String DEFAULT_USER_ID = "Admin";
 
 }

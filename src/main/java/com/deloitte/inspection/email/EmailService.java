@@ -3,8 +3,8 @@ package com.deloitte.inspection.email;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -25,8 +25,8 @@ public class EmailService {
 	@Autowired
 	private EmailProperties emailProperties;
 	
-	/*@Resource(mappedName="java:/jboss/mail/gmail")
-    private Session mailSession;*/
+	@Resource(mappedName="java:/jboss/mail/gmail")
+    private Session session;
 	
 	public void sendEmail(String toEmail, String messageBody, String subject){
 		
@@ -54,14 +54,6 @@ public class EmailService {
 		props.put("mail.smtp.host", emailProperties.SMTP_HOST);
 		props.put("mail.smtp.port", emailProperties.SMTP_PORT);
 
-		Session session = Session.getInstance(props,
-		  new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(emailProperties.USER_NAME, emailProperties.PASSWORD);
-			}
-		  });
 		return session;
 	}
-	
-	
 }
