@@ -206,7 +206,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	}
 
 	@Override
-	public String deletePurchaseOrder(String customerPoId)
+	public String deletePurchaseOrder(Integer customerPoId)
 			throws PurchaseOrderMasterException {
 		try{
 			return purchaseOrderDataDAO.deletePurchaseOrder(customerPoId);

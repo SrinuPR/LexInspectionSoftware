@@ -10,6 +10,7 @@ public class StatusConstants {
 	public static final String SUCCESS = "Success";
 	public static final String FAILURE = "Failed";
 	public static final String DUPLICATE = "Duplicate";
+	public static final String WARNING = "Warning";
 	
 	public static final String ERROR="Error";
 	
@@ -32,5 +33,8 @@ public class StatusConstants {
 
 	public static final String DEFAULT_USER_NAME = "Admin";
 	public static final String DEFAULT_USER_ID = "Admin";
+	
+	public static final String UPDATE ="Update";
+	public static final String INSERT ="Insert";
 
 }

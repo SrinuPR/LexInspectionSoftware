@@ -68,7 +68,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 
 	@SuppressWarnings({ "deprecation", "rawtypes" })
 	@Override
-	public String deletePurchaseOrder(String customerPoId) throws PurchaseOrderMasterException {
+	public String deletePurchaseOrder(Integer customerPoId) throws PurchaseOrderMasterException {
 		String status = StatusConstants.FAILURE;
 		Query query = getSession().createSQLQuery("UPDATE LIS_CPMCS SET IS_ACTIVE = :isActive WHERE CUSTOMER_PO_ID = :customerPoId");
 		query.setParameter("customerPoId", customerPoId);

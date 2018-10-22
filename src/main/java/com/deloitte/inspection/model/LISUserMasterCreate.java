@@ -67,6 +67,9 @@ public class LISUserMasterCreate implements Serializable{
 
 	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<LISPurchaseOrderMaster> purchaseOrderMaster;
+	
+	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<LISWorkJobOrderMaster> workJobOrderMasters;
 
 	public String getUserId() {
 		return userId;
@@ -187,6 +190,12 @@ public class LISUserMasterCreate implements Serializable{
 	public void setMaintainMasterDataComponents(List<LISMaintainMasterDataComponent> maintainMasterDataComponents) {
 		this.maintainMasterDataComponents = maintainMasterDataComponents;
 	}
-	
 
+	public List<LISWorkJobOrderMaster> getWorkJobOrderMasters() {
+		return workJobOrderMasters;
+	}
+
+	public void setWorkJobOrderMasters(List<LISWorkJobOrderMaster> workJobOrderMasters) {
+		this.workJobOrderMasters = workJobOrderMasters;
+	}
 }

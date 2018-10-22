@@ -14,7 +14,7 @@ public interface PurchaseOrderDataDAO {
 
 	public String validatePOQuantity(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName) throws PurchaseOrderMasterException;
 
-	public String deletePurchaseOrder(String customerPONumber) throws PurchaseOrderMasterException;
+	public String deletePurchaseOrder(Integer customerPONumber) throws PurchaseOrderMasterException;
 	
 	public LISPurchaseOrderMaster getByCustomerPONumber(String customerPoId) throws PurchaseOrderMasterException;
 
