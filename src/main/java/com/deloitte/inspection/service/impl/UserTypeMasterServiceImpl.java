@@ -79,7 +79,7 @@ public class UserTypeMasterServiceImpl implements UserTypeMasterService{
 			} else {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO = userTypeMasDTO;
-				responseDTO.setStatus(UserTypeMasterConstants.CREATE_USER_TYPE_SUCCESS);
+				responseDTO.setMessage(UserTypeMasterConstants.CREATE_USER_TYPE_SUCCESS);
 			}
 		} else if(null != userTypeMasDTO && null == userTypeMasDTO.getUserTypeId()) { 
 			responseDTO.setStatus(StatusConstants.SUCCESS);
