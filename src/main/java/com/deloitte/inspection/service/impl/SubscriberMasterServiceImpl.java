@@ -64,11 +64,12 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 		if(null != subMasterDTO && null != subMasterDTO.getSubscriberId() && null != subMasterDTO.getSubscriberName() 
 				&& null != subMasterDTO.getSubscriberAddress()) {
 			SubscriberMasterDTO login = subMasterDAO.createSubscriber(subMasterDTO);
-			responseDTO.setStatus(StatusConstants.SUCCESS);
 			if (null == login) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(SubscriberConstants.CREATE_SUBSCRIBER_FAILED);
 			} else {
 				responseDTO = subMasterDTO;
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(SubscriberConstants.CREATE_SUBSCRIBER_SUCCESS);
 			}
 		} else if(null != subMasterDTO && null == subMasterDTO.getSubscriberId()) {

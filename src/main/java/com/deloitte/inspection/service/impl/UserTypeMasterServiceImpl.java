@@ -73,10 +73,11 @@ public class UserTypeMasterServiceImpl implements UserTypeMasterService{
 		logger.info("Subscriber ID, name and Address "+userTypeMasDTO.getUserTypeId()+" , "+userTypeMasDTO.getUserTypeName());
 		if(null != userTypeMasDTO && null != userTypeMasDTO.getUserTypeId() && null != userTypeMasDTO.getUserTypeName()) {
 			UserTypeMasterDTO login = userTypeMasDAO.createUserTypeMaster(userTypeMasDTO);
-			responseDTO.setStatus(StatusConstants.SUCCESS);
 			if (null == login) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(UserTypeMasterConstants.CREATE_USER_TYPE_FAILED);
 			} else {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO = userTypeMasDTO;
 				responseDTO.setStatus(UserTypeMasterConstants.CREATE_USER_TYPE_SUCCESS);
 			}

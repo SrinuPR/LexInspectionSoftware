@@ -61,11 +61,12 @@ public class InspectionStageMasterServiceImpl implements InspectionStageMasterSe
 		logger.info("Inspection stage ID, name "+inspTypeMasterDTO.getInspStageId() + " , " + inspTypeMasterDTO.getInspStageName());
 		if(null != inspTypeMasterDTO && null != inspTypeMasterDTO.getInspStageId() && null != inspTypeMasterDTO.getInspStageName()) {
 			InspectionStageMasterDTO login = inspStageMasterDAO.createInspectionStage(inspTypeMasterDTO);
-			responseDTO.setStatus(StatusConstants.SUCCESS);
 			if (null == login) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(InspectionTypeMasterConstants.CREATE_INSPECTION_STAGE_FAILED);
 			} else {
 				responseDTO = inspTypeMasterDTO;
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(InspectionTypeMasterConstants.CREATE_INSPECTION_STAGE_SUCCESS);
 			}
 		} else if(null != inspTypeMasterDTO && null == inspTypeMasterDTO.getInspStageId()) {

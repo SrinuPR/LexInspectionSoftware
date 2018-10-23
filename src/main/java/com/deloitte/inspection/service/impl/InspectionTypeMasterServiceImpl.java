@@ -61,11 +61,12 @@ public class InspectionTypeMasterServiceImpl implements InspectionTypeMasterServ
 		logger.info("Inspection ID, name "+inspTypeMasterDTO.getInspTypeId()+" , "+inspTypeMasterDTO.getInspTypeName());
 		if(null != inspTypeMasterDTO && null != inspTypeMasterDTO.getInspTypeId() && null != inspTypeMasterDTO.getInspTypeName()) {
 			InspectionTypeMasterDTO login = inspTypeMasterDAO.createInspectionType(inspTypeMasterDTO);
-			responseDTO.setStatus(StatusConstants.SUCCESS);
 			if (null == login) {
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(InspectionTypeMasterConstants.CREATE_INSPECTION_TYPE_FAILED);
 			} else {
 				responseDTO = inspTypeMasterDTO;
+				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(InspectionTypeMasterConstants.CREATE_INSPECTION_TYPE_SUCCESS);
 			}
 		} else if(null != inspTypeMasterDTO && null == inspTypeMasterDTO.getInspTypeId()) {
