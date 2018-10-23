@@ -258,7 +258,7 @@ public class WorkJobOrderController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/componentData", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getComponentData(@PathParam("subscriberId") Integer subscriberId){
-		logger.info("Entered into validateManufacturerBatchNumber ");
+		logger.info("Entered into getComponentData ");
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			workJobOrderResponseDTO = workJobOrderService.getComponentData(subscriberId);
@@ -271,6 +271,27 @@ public class WorkJobOrderController {
 			logger.error("Exception while getting component data from DB 1 : "+workJobOrderException.getMessage());
 		}catch(Exception exception){
 			logger.error("Exception while getting component data from DB 2 : "+exception.getMessage());
+		}
+		return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.EXPECTATION_FAILED);
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/customerpo", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getCustomerPOData(@PathParam("subscriberId") Integer subscriberId){
+		logger.info("Entered into getCustomerPOData ");
+		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
+		try{
+			workJobOrderResponseDTO = workJobOrderService.getCustomerPOData(subscriberId);
+			if(null != workJobOrderResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(workJobOrderResponseDTO.getStatus())){
+				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.OK);
+			}else{
+				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.EXPECTATION_FAILED);
+			}
+		}catch(WorkJobOrderException workJobOrderException){
+			logger.error("Exception while getting customer PO data from DB 1 : "+workJobOrderException.getMessage());
+		}catch(Exception exception){
+			logger.error("Exception while getting customer PO data from DB 2 : "+exception.getMessage());
 		}
 		return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.EXPECTATION_FAILED);
 	}

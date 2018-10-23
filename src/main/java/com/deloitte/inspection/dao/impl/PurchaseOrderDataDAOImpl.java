@@ -48,7 +48,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	public List<LISPurchaseOrderMaster> getAllByUserId(String userId)
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllByUserId");	
-		Query query = getSession().createQuery("SELECT i FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY i.createdTimestamp DESC ");
+		Query query = getSession().createQuery("FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId = :userId and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
 		query.setParameter("userId", userId);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();
@@ -84,7 +84,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	@Override
 	public LISPurchaseOrderMaster getByCustomerPONumber(String customerPONumber) throws PurchaseOrderMasterException {
 		logger.info("Entered into validatePoNumber");	
-		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where lower(CPMCS.customerPONumber) = :customerPONumber and isActive = :isActive");
+		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where lower(CPMCS.customerPONumber) = :customerPONumber and CPMCS.isActive = :isActive");
 		query.setParameter("customerPONumber", customerPONumber);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();
@@ -92,6 +92,16 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 			return LISPurchaseOrderMaster.get(0);
 		}
 		return null;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<LISPurchaseOrderMaster> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException {
+		logger.info("Entered into getCustomerPOData DAO");	
+		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where CPMCS.subscriberMaster.subscriberId = :subscriberId and CPMCS.isActive = :isActive ");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
 	}
 	
 }

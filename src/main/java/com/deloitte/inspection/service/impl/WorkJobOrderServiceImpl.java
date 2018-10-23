@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -351,6 +353,28 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 			}
 			workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 			workJobOrderResponseDTO.setComponentData(componentData);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_NUMBER_VALIDATION_SUCCESS);
+		}catch(Exception exception){
+			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.UN_EXPECTED_EXCEPTION);
+			logger.error("While validating the validatelotManufacturerBatchSize "+exception.getMessage());
+		}
+		return workJobOrderResponseDTO;
+	}
+
+	@Override
+	public WorkJobOrderResponseDTO getCustomerPOData(Integer subscriberId) throws WorkJobOrderException {
+		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
+		try{
+			List<LISPurchaseOrderMaster> lisPurchaseOrderMasters = purchaseOrderDataDAO.getCustomerPOData(subscriberId);
+			Set<String> customerPONumber = new TreeSet<String>();
+			if(null != lisPurchaseOrderMasters && lisPurchaseOrderMasters.size() > 0){
+				for(LISPurchaseOrderMaster purchaseOrderMaster : lisPurchaseOrderMasters){
+					customerPONumber.add(purchaseOrderMaster.getCustomerPONumber());
+				}
+			}
+			workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+			workJobOrderResponseDTO.setCustomerPONumberList(customerPONumber);
 			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_NUMBER_VALIDATION_SUCCESS);
 		}catch(Exception exception){
 			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
