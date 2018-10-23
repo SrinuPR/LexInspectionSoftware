@@ -74,6 +74,9 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	
 	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<LISInspectionMaster> inspectionMaster;
+	
+	@OneToMany(mappedBy="componentMasterData", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<LISWorkJobOrderMaster> workJobOrderMasters;
 		
 	@Column(name = "IS_ACTIVE")
 	private char isActive;	
@@ -219,4 +222,13 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	public void setInspectionMaster(Set<LISInspectionMaster> inspectionMaster) {
 		this.inspectionMaster = inspectionMaster;
 	}
+
+	public List<LISWorkJobOrderMaster> getWorkJobOrderMasters() {
+		return workJobOrderMasters;
+	}
+
+	public void setWorkJobOrderMasters(List<LISWorkJobOrderMaster> workJobOrderMasters) {
+		this.workJobOrderMasters = workJobOrderMasters;
+	}
+	
 }

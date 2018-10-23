@@ -60,6 +60,9 @@ public class LISSubscriberMaster implements Serializable {
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISPurchaseOrderMaster> purchaseOrderMaster;
 	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISWorkJobOrderMaster> workJobOrderMasters;
+	
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
@@ -252,4 +255,13 @@ public class LISSubscriberMaster implements Serializable {
 	public void setInspMaster(Set<LISInspectionMaster> inspMaster) {
 		this.inspMaster = inspMaster;
 	}
+
+	public Set<LISWorkJobOrderMaster> getWorkJobOrderMasters() {
+		return workJobOrderMasters;
+	}
+
+	public void setWorkJobOrderMasters(Set<LISWorkJobOrderMaster> workJobOrderMasters) {
+		this.workJobOrderMasters = workJobOrderMasters;
+	}
+	
 }

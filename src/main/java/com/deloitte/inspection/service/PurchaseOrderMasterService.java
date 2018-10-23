@@ -22,7 +22,7 @@ public interface PurchaseOrderMasterService {
 
 	public String updatePurchaseOrderData(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName, String userId) throws PurchaseOrderMasterException,SubscriberMasterException,CreateUserException;
 
-	public String deletePurchaseOrder(String customerPoId) throws PurchaseOrderMasterException;
+	public String deletePurchaseOrder(Integer customerPoId) throws PurchaseOrderMasterException;
 
 	public List<String> getAllComponentDrawingNumber() throws PurchaseOrderMasterException; 
 	

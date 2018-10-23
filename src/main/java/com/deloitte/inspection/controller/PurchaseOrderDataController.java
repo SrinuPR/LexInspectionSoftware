@@ -184,7 +184,7 @@ public class PurchaseOrderDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/delete/{customerPoId}", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<PurchaseOrderResponseDataDTO> deletePurchaseOrder(@PathVariable("customerPoId") String customerPoId){
+	public @ResponseBody ResponseEntity<PurchaseOrderResponseDataDTO> deletePurchaseOrder(@PathVariable("customerPoId") Integer customerPoId){
 		PurchaseOrderResponseDataDTO purchaseOrderResponseDataDTO = new PurchaseOrderResponseDataDTO();
 		try{
 			String status = purchaseOrderDataService.deletePurchaseOrder(customerPoId);
