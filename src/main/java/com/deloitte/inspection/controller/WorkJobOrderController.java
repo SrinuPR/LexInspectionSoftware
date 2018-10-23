@@ -26,7 +26,7 @@ import com.deloitte.inspection.response.dto.WorkJobOrderResponseDTO;
 import com.deloitte.inspection.service.WorkJobOrderService;
 
 @RestController
-@RequestMapping(value = "/workJobOrder")
+@RequestMapping(value = "/workjoborder")
 public class WorkJobOrderController {
 	
 	private static final Logger logger = LogManager.getLogger(WorkJobOrderController.class);

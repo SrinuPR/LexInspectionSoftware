@@ -20,11 +20,11 @@ public class LISWorkJobOrderMaster implements Serializable{
 
 	private static final long serialVersionUID = 917212548437079358L;
 	
-	@Column(name = "WOMCS_ID", unique= true)
+	@Id
+	@Column(name = "WOMCS_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer wjOrderId;
 	
-	@Id
 	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
 	private String workJobOrderNumber;
 	
@@ -40,7 +40,7 @@ public class LISWorkJobOrderMaster implements Serializable{
 	@Column(name = "LOT_SIZE_UNITS" , length = 5)
 	private String lotSizeUnits;
 	
-	@Column(name = "MANUFACTURING_BATCH_NUMBER" , length = 50)
+	@Column(name = "MANUFACTURING_BATCH_NUMBER" , length = 30)
 	private String manufacturingBatchNumber;
 	
 	@Column(name = "MANUFACTURING_BATCH_SIZE" , length = 5)
