@@ -9,8 +9,8 @@ public interface CreateUserService {
 	
 	public CreateUserDTO createUser (CreateUserDTO createuserDTO) throws CreateUserException ;
 	
-	public List<CreateUserDTO> fetchData () throws CreateUserException ;
-	
-	public String validateUserId(CreateUserDTO createuserDTO) throws CreateUserException ;
+	public String validateUserId(String userId) throws CreateUserException ;
+
+	public List<com.deloitte.inspection.dto.UserTypeMasterDTO> getUserTypeBySubscriberId(Integer subscriberId) throws CreateUserException;
 
 }

@@ -80,6 +80,5 @@ public class UserTypeMasterController {
 		}
 		return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 	
 }

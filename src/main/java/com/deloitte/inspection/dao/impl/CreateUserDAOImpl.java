@@ -1,10 +1,7 @@
 package com.deloitte.inspection.dao.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,14 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deloitte.inspection.component.CryptoComponent;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
 import com.deloitte.inspection.exception.CreateUserException;
+import com.deloitte.inspection.exception.CryptoException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
 import com.deloitte.inspection.model.LISLogin;
-import com.deloitte.inspection.model.LISStaticUserType;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.model.LISUserTypeMaster;
@@ -38,42 +36,46 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	
 	@Autowired
 	private SubscriberMasterDAO subscriberMasterDAO;
+	
+	@Autowired
+	private CryptoComponent cryptoComponent;
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 
-	public CreateUserDTO createUser(CreateUserDTO createuserDTO) throws CreateUserException {
+	public String createUser(CreateUserDTO createuserDTO) throws CreateUserException {
 		logger.info("Entered into createUser");	
 		try {
 			LISSubscriberMaster subscriberMaster=new LISSubscriberMaster();
 			subscriberMaster = subscriberMasterDAO.validateSubscriber(createuserDTO.getSubscriberId());
 			LISUserMasterCreate userMaster=new LISUserMasterCreate();
-			userMaster.setActivePassword(createuserDTO.getPassword());
+			userMaster.setActivePassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
 			userMaster.setCreatedBy(createuserDTO.getUserName());
 			userMaster.setCreatedTimestamp(new Date());
 			userMaster.setOldPassword1(null);
 			userMaster.setOldPassword2(null);
 			userMaster.setSubscriberMaster(subscriberMaster);
 			userMaster.setUserId(createuserDTO.getUserId());
-			userMaster.setUserName(createuserDTO.getUserName());
+			userMaster.setUserName(createuserDTO.getCreatedBy());
 			userMaster.setUserTypeId(createuserDTO.getUserTypeId());
 			userMaster.setIsActive(StatusConstants.IS_ACTIVE);
 			LISLogin lisLogin=new LISLogin();
-			lisLogin.setCreatedBy(createuserDTO.getUserName());
+			lisLogin.setCreatedBy(createuserDTO.getCreatedBy());
 			lisLogin.setCreatedTimestamp(new Date());
-			lisLogin.setPassword(createuserDTO.getPassword());
+			lisLogin.setPassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
 			lisLogin.setUserMasterCreate(userMaster);
 			lisLogin.setSubscriberMaster(subscriberMaster);
 			lisLogin.setIsActive(StatusConstants.IS_ACTIVE);
+			userMaster.setLoginDetails(lisLogin);
+			userMaster.setSubscriberMaster(subscriberMaster);
 			getSession().save(userMaster);
 			
-				return createuserDTO;
-		} catch (HibernateException | SubscriberMasterException ex) {
-			//if(trans != null)
-				//trans.rollback();
+			return StatusConstants.SUCCESS;
+		} catch (HibernateException | SubscriberMasterException | CryptoException ex) {
+			ex.printStackTrace();
 		} 
-		return null;
+		return StatusConstants.FAILURE;
 	}
 
    
@@ -81,46 +83,24 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public LISUserMasterCreate validateUserId(String userId) throws CreateUserException {
 		logger.info("Entered into validateUserId");	
-		LISUserMasterCreate userMasterCreate=null;
-		Query query = getSession().createQuery(" From LISUserMasterCreate UMACS where UMACS.userId = :userId");
+		Query query = getSession().createQuery(" From LISUserMasterCreate UMACS where lower(UMACS.userId) = :userId and UMACS.isActive = :isActive ");
 		query.setParameter("userId", userId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISUserMasterCreate> userMaster = query.list();
-		
 		if(null != userMaster && userMaster.size() > 0) {
-			userMasterCreate= userMaster.get(0);
+			return userMaster.get(0);
 		}
-		return userMasterCreate;
+		return null;
 	}
 
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<CreateUserDTO> fetchData() throws CreateUserException {
-		logger.info("Entered into fetchData");	
-		List<CreateUserDTO> userList=new ArrayList<CreateUserDTO>();
-		Query query = getSession().createQuery(" From LISUserTypeMaster USERTYP WHERE ACTIVE_SW='Y' ");
-		List<LISUserTypeMaster> usersList = query.list();
-		if(null != usersList && usersList.size() > 0) {
-			for(LISUserTypeMaster user:usersList) {
-				CreateUserDTO createuserDTO=new CreateUserDTO();
-				createuserDTO.setUserTypeId(user.getUserTypeId());
-				createuserDTO.setUserName(user.getUserTypeName());
-				createuserDTO.setActiveSw(user.getIsActive());
-				userList.add(createuserDTO);
-			}
-		}
-		
-		return userList;
+	public List<LISUserTypeMaster> getUserTypeBySubscriberId(Integer subscriberId) throws CreateUserException {
+		logger.info("Entered into getUserTypeBySubscriberId ");	
+		Query query = getSession().createQuery(" From LISUserTypeMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return  query.list();
 	}
-    
-	/*@SuppressWarnings({ "unchecked", "rawtypes" })
-	public LISUserMasterCreate getByUserID(String userId) {
-		logger.info("Entered into getByUserName");
-		LISUserMasterCreate userMaster = null;
-		Query query = getSession().createQuery(" From LISUserMasterCreate SUMAS where SUMAS.userId = :userId");
-		query.setParameter("userName", userId);
-		List<LISUserMasterCreate> userMasterlist = query.list();
-		if (null != userMasterlist && userMasterlist.size() > 0) {
-			userMaster = userMasterlist.get(0);
-		}
-		return userMaster;
-	}*/
 }

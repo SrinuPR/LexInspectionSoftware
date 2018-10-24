@@ -1,7 +1,5 @@
 package com.deloitte.inspection.dto;
 
-import java.util.Map;
-
 public class CreateUserDTO extends AbstractDTO{
 	
 	private Integer subscriberId;
@@ -10,11 +8,10 @@ public class CreateUserDTO extends AbstractDTO{
 	private String password;
 	private String confirmPassword;
 	private String userId;
-	private Map<Integer,String > subscriberMap;
-	private Map<Integer,String> userTypeMap;
 	private String errorMessage;
 	private String status; 
 	private char activeSw;
+	private String createdBy;
 	
 	public String getUserId() {
 		return userId;
@@ -65,23 +62,17 @@ public class CreateUserDTO extends AbstractDTO{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Map<Integer, String> getSubscriberMap() {
-		return subscriberMap;
-	}
-	public void setSubscriberMap(Map<Integer, String> subscriberMap) {
-		this.subscriberMap = subscriberMap;
-	}
-	public Map<Integer, String> getUserTypeMap() {
-		return userTypeMap;
-	}
-	public void setUserTypeMap(Map<Integer, String> userTypeMap) {
-		this.userTypeMap = userTypeMap;
-	}
 	public char getActiveSw() {
 		return activeSw;
 	}
 	public void setActiveSw(char activeSw) {
 		this.activeSw = activeSw;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	

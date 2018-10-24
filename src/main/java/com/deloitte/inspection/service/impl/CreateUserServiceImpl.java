@@ -13,46 +13,29 @@ import com.deloitte.inspection.constant.SubscriberConstants;
 import com.deloitte.inspection.constant.UserTypeMasterConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
+import com.deloitte.inspection.dto.UserTypeMasterDTO;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.model.LISUserMasterCreate;
+import com.deloitte.inspection.model.LISUserTypeMaster;
 import com.deloitte.inspection.service.CreateUserService;
 
 @Service
 public class CreateUserServiceImpl implements CreateUserService {
+	
 	private static final Logger logger = LogManager.getLogger(CreateUserServiceImpl.class);  
 	
 	@Autowired
 	 private CreateUserDAO createUserDAO ;
-	
-	
-	@Override
-	public List<CreateUserDTO> fetchData() throws CreateUserException {
-		logger.info("Inside fetchData ");
-		List<CreateUserDTO> resCreateUserDTO=new ArrayList<CreateUserDTO>();
-		try {
-			resCreateUserDTO=createUserDAO.fetchData();
-			
-		}catch(CreateUserException cue) {
-			cue.printStackTrace();
-			throw cue;
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-		return resCreateUserDTO;
-		
-	}
 
 	@Override
-	public String validateUserId(CreateUserDTO createuserDTO) {
+	public String validateUserId(String userId) {
 		LISUserMasterCreate userMaster=new LISUserMasterCreate();
 		try {
-			userMaster=createUserDAO.validateUserId(createuserDTO.getUserId());
-			if(null!=createuserDTO && !createuserDTO.getUserId().isEmpty()) {
-				if(null!=userMaster && null!= userMaster.getUserId() ) {
-					return StatusConstants.USER_EXISTS;
-				}
-			}
+			userMaster=createUserDAO.validateUserId(userId.toLowerCase());
+			if(null != userMaster)
+				return StatusConstants.ERROR;
+			else
+				return StatusConstants.SUCCESS;
 		}catch(CreateUserException cue) {
 			cue.printStackTrace();
 		}catch(Exception e) {
@@ -63,12 +46,12 @@ public class CreateUserServiceImpl implements CreateUserService {
 
 	@Override
 	public CreateUserDTO createUser(CreateUserDTO createuserDTO) {
-		CreateUserDTO resCreateUserDTO=new CreateUserDTO();
+		String respose = null;
+		CreateUserDTO resCreateUserDTO = new CreateUserDTO();
 		try {
-			
 			if(null!=createuserDTO && null!=createuserDTO.getUserTypeId()) {
-				resCreateUserDTO=createUserDAO.createUser(createuserDTO);
-				if(null!=resCreateUserDTO) {
+				respose = createUserDAO.createUser(createuserDTO);
+				if(null!=respose && StatusConstants.SUCCESS.equalsIgnoreCase(respose)) {
 					resCreateUserDTO.setStatus(StatusConstants.USER_CREATE_SUCCESS);
 				}
 			}else if(null!=createuserDTO && null==createuserDTO.getSubscriberId()){
@@ -82,6 +65,25 @@ public class CreateUserServiceImpl implements CreateUserService {
 			e.printStackTrace();
 		}
 		return resCreateUserDTO;
+	}
+
+	@Override
+	public List<UserTypeMasterDTO> getUserTypeBySubscriberId(Integer subscriberId) throws CreateUserException {
+		List<UserTypeMasterDTO> userTypeMasterDTOs = new ArrayList<UserTypeMasterDTO>();
+		try{
+			List<LISUserTypeMaster> userTypeMasters = createUserDAO.getUserTypeBySubscriberId(subscriberId);
+			if(null != userTypeMasters && userTypeMasters.size() > 0){
+				for(LISUserTypeMaster lisUserTypeMaster : userTypeMasters){
+					UserTypeMasterDTO userTypeMasterDTO = new UserTypeMasterDTO();
+					userTypeMasterDTO.setUserTypeId(lisUserTypeMaster.getUserTypeId());
+					userTypeMasterDTO.setUserTypeName(lisUserTypeMaster.getUserTypeName());
+					userTypeMasterDTOs.add(userTypeMasterDTO);
+				}
+			}
+		}catch(Exception exception){
+			logger.error("Exception occured in "+exception.getMessage());
+		}
+		return userTypeMasterDTOs;
 	}
 
 }
