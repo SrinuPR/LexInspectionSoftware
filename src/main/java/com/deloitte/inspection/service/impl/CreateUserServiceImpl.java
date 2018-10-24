@@ -1,5 +1,8 @@
 package com.deloitte.inspection.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,9 @@ public class CreateUserServiceImpl implements CreateUserService {
 	
 	
 	@Override
-	public CreateUserDTO fetchData() throws CreateUserException {
+	public List<CreateUserDTO> fetchData() throws CreateUserException {
 		logger.info("Inside fetchData ");
-		CreateUserDTO resCreateUserDTO=new CreateUserDTO();
+		List<CreateUserDTO> resCreateUserDTO=new ArrayList<CreateUserDTO>();
 		try {
 			resCreateUserDTO=createUserDAO.fetchData();
 			

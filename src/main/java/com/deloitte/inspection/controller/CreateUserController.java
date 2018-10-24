@@ -1,5 +1,7 @@
 package com.deloitte.inspection.controller;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import com.deloitte.inspection.service.CreateUserService;
 
 
 @RestController
-@RequestMapping(value = "/createUser")
+@RequestMapping(value = "/user")
 public class CreateUserController {
 	
 	private static final Logger logger = LogManager.getLogger(CreateUserController.class);
@@ -33,9 +35,9 @@ public class CreateUserController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/fetchData", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<CreateUserDTO> fetchData(){
+	public @ResponseBody ResponseEntity<List<CreateUserDTO>> fetchData(){
 		try{
-			CreateUserDTO response = createUserService.fetchData();
+			List<CreateUserDTO> response = createUserService.fetchData();
 			if(null != response)
 				return new ResponseEntity(response, HttpStatus.OK);
 			else

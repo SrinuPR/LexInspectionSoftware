@@ -5,7 +5,7 @@ import java.util.Map;
 public class CreateUserDTO extends AbstractDTO{
 	
 	private Integer subscriberId;
-	private String userTypeId;
+	private Integer userTypeId;
 	private String userName;
 	private String password;
 	private String confirmPassword;
@@ -14,6 +14,7 @@ public class CreateUserDTO extends AbstractDTO{
 	private Map<Integer,String> userTypeMap;
 	private String errorMessage;
 	private String status; 
+	private char activeSw;
 	
 	public String getUserId() {
 		return userId;
@@ -27,10 +28,10 @@ public class CreateUserDTO extends AbstractDTO{
 	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
-	public String getUserTypeId() {
+	public Integer getUserTypeId() {
 		return userTypeId;
 	}
-	public void setUserTypeId(String userTypeId) {
+	public void setUserTypeId(Integer userTypeId) {
 		this.userTypeId = userTypeId;
 	}
 	public String getUserName() {
@@ -75,6 +76,12 @@ public class CreateUserDTO extends AbstractDTO{
 	}
 	public void setUserTypeMap(Map<Integer, String> userTypeMap) {
 		this.userTypeMap = userTypeMap;
+	}
+	public char getActiveSw() {
+		return activeSw;
+	}
+	public void setActiveSw(char activeSw) {
+		this.activeSw = activeSw;
 	}
 
 	

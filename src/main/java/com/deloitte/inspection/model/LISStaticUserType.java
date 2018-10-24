@@ -26,7 +26,7 @@ public class LISStaticUserType implements Serializable {
 	@Id
 	/*@GeneratedValue(strategy = GenerationType.AUTO)*/
 	@Column(name = "USER_TYPE_ID")
-	private Integer userTypeId;
+	private String userTypeId;
 	
 	@Column(name = "USER_TYPE_NAME")
 	private String userTypeName;
@@ -40,11 +40,11 @@ public class LISStaticUserType implements Serializable {
 	@Column(name = "EFF_END_DT")
 	private Timestamp effEndDt;
 
-	public Integer getUserTypeId() {
+	public String getUserTypeId() {
 		return userTypeId;
 	}
 
-	public void setUserTypeId(Integer userTypeId) {
+	public void setUserTypeId(String userTypeId) {
 		this.userTypeId = userTypeId;
 	}
 

@@ -38,7 +38,7 @@ public class LISUserMasterCreate implements Serializable{
 	private String activePassword;
 	
 	@Column(name = "USER_TYPE_ID", length =30)
-	private String userTypeId;
+	private Integer userTypeId;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;
@@ -119,11 +119,11 @@ public class LISUserMasterCreate implements Serializable{
 		this.createdBy = createdBy;
 	}
 	
-	public String getUserTypeId() {
+	public Integer getUserTypeId() {
 		return userTypeId;
 	}
 
-	public void setUserTypeId(String userTypeId) {
+	public void setUserTypeId(Integer userTypeId) {
 		this.userTypeId = userTypeId;
 	}
 

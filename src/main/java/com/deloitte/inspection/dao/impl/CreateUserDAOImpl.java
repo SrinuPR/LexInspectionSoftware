@@ -1,5 +1,6 @@
 package com.deloitte.inspection.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISStaticUserType;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
+import com.deloitte.inspection.model.LISUserTypeMaster;
 
 @Repository
 @Transactional
@@ -74,33 +76,7 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 		return null;
 	}
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public CreateUserDTO fetchData() throws CreateUserException {
-		logger.info("Entered into fetchData");	
-		CreateUserDTO createuserDTO=new CreateUserDTO();
-		Map<Integer,String> subscriberMap=new HashMap<Integer,String>();
-		Map<Integer,String> userTypeMap=new HashMap<Integer,String>();
-		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS ");
-		List<LISSubscriberMaster> subscriberList = query.list();
-		if(null != subscriberList && subscriberList.size() > 0) {
-			for(LISSubscriberMaster subscriber:subscriberList) {
-				subscriberMap.put(subscriber.getSubscriberId(), subscriber.getSubscriberName());
-			}
-		}
-		
-		query = getSession().createQuery(" From LISStaticUserType USERTYP WHERE ACTIVE_SW='Y' ");
-		List<LISStaticUserType> usertypes = query.list();
-		if(null != usertypes && usertypes.size() > 0) {
-			for(LISStaticUserType userType:usertypes) {
-				userTypeMap.put(userType.getUserTypeId(), userType.getUserTypeName());
-			}
-		}
-		
-		createuserDTO.setSubscriberMap(subscriberMap);
-		createuserDTO.setUserTypeMap(userTypeMap);
-		
-		return createuserDTO;
-	}
+   
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public LISUserMasterCreate validateUserId(String userId) throws CreateUserException {
@@ -114,6 +90,25 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 			userMasterCreate= userMaster.get(0);
 		}
 		return userMasterCreate;
+	}
+
+	@Override
+	public List<CreateUserDTO> fetchData() throws CreateUserException {
+		logger.info("Entered into fetchData");	
+		List<CreateUserDTO> userList=new ArrayList<CreateUserDTO>();
+		Query query = getSession().createQuery(" From LISUserTypeMaster USERTYP WHERE ACTIVE_SW='Y' ");
+		List<LISUserTypeMaster> usersList = query.list();
+		if(null != usersList && usersList.size() > 0) {
+			for(LISUserTypeMaster user:usersList) {
+				CreateUserDTO createuserDTO=new CreateUserDTO();
+				createuserDTO.setUserTypeId(user.getUserTypeId());
+				createuserDTO.setUserName(user.getUserTypeName());
+				createuserDTO.setActiveSw(user.getIsActive());
+				userList.add(createuserDTO);
+			}
+		}
+		
+		return userList;
 	}
     
 	/*@SuppressWarnings({ "unchecked", "rawtypes" })
