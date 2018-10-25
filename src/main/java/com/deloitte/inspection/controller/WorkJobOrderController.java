@@ -1,7 +1,6 @@
 package com.deloitte.inspection.controller;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

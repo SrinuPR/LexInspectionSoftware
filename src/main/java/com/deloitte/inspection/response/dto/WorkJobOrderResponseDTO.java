@@ -1,7 +1,6 @@
 package com.deloitte.inspection.response.dto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.deloitte.inspection.dto.CommonDTO;

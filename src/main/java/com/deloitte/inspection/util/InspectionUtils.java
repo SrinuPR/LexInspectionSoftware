@@ -3,7 +3,6 @@ package com.deloitte.inspection.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,9 +25,8 @@ public class InspectionUtils {
 	}
 	
 	public static String convertDateToString(Date dateToConvert) throws ParseException {
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		Date today = Calendar.getInstance().getTime();   
-		String date = df.format(today);
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		String date = df.format(dateToConvert);
 		 return date;
 	}
 }
