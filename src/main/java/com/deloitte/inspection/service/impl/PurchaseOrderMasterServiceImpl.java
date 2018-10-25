@@ -79,7 +79,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			purchaseOrderMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
 			purchaseOrderMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
 			purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
-			purchaseOrderMaster.setIsActive(StatusConstants.IN_ACTIVE);
+			purchaseOrderMaster.setIsActive(StatusConstants.IS_ACTIVE);
 			purchaseOrderDataDAO.savePurchaseOrderData(purchaseOrderMaster);
 			status = StatusConstants.SUCCESS;
 		}

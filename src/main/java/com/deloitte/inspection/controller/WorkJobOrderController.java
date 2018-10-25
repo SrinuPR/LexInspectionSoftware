@@ -256,8 +256,8 @@ public class WorkJobOrderController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/componentData", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getComponentData(@PathParam("subscriberId") Integer subscriberId){
+	@RequestMapping(value = "/componentData/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getComponentData(@PathVariable("subscriberId") Integer subscriberId){
 		logger.info("Entered into getComponentData ");
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
@@ -277,8 +277,8 @@ public class WorkJobOrderController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/customerpo", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getCustomerPOData(@PathParam("subscriberId") Integer subscriberId){
+	@RequestMapping(value = "/customerpo/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getCustomerPOData(@PathVariable("subscriberId") Integer subscriberId){
 		logger.info("Entered into getCustomerPOData ");
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{

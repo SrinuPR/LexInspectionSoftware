@@ -23,7 +23,7 @@ public class WorkJobOrderConstants {
 	public static final String LOT_NUMBER_VALIDATION_SUCCESS = "Lot Number for selected Work/Job Order does not Exists";
 	
 	public static final String MANUFACTURER_BATCH_NUMBER_VALIDATION_FAILED = "Data exists. Please check Work/Job Order Number or Lot Number or Batch Number";
-	public static final String MANUFACTURER_BATCH_NUMBER_VALIDATION_SUCCESS = "Data does not exists.";
+	public static final String MANUFACTURER_BATCH_NUMBER_VALIDATION_SUCCESS = "Data Pulled Successfully";
 	
 	public static final String LOT_SIZE_VALIDATION_SUCCESS = "Lot Size have positive Quantity";
 	public static final String LOT_SIZE_VALIDATION_FAILED = "Lot Size exceeds P.O. Quantity";

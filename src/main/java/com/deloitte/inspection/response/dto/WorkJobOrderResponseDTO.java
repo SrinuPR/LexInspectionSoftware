@@ -5,13 +5,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.deloitte.inspection.dto.CommonDTO;
+import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.WorkJobOrderDTO;
 
 public class WorkJobOrderResponseDTO extends CommonDTO{
 	
 	private List<WorkJobOrderDTO> results;
 	private Integer lotSize;
-	private Map<String,String> componentData;
+	private List<ComponentMasterDataDTO> componentData;
 	private Set<String> customerPONumberList;
 
 	public List<WorkJobOrderDTO> getResults() {
@@ -30,14 +31,6 @@ public class WorkJobOrderResponseDTO extends CommonDTO{
 		this.lotSize = lotSize;
 	}
 
-	public Map<String, String> getComponentData() {
-		return componentData;
-	}
-
-	public void setComponentData(Map<String, String> componentData) {
-		this.componentData = componentData;
-	}
-
 	public Set<String> getCustomerPONumberList() {
 		return customerPONumberList;
 	}
@@ -45,4 +38,13 @@ public class WorkJobOrderResponseDTO extends CommonDTO{
 	public void setCustomerPONumberList(Set<String> customerPONumberList) {
 		this.customerPONumberList = customerPONumberList;
 	}
+
+	public List<ComponentMasterDataDTO> getComponentData() {
+		return componentData;
+	}
+
+	public void setComponentData(List<ComponentMasterDataDTO> componentData) {
+		this.componentData = componentData;
+	}
+	
 }

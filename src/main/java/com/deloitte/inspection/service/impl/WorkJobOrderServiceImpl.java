@@ -21,6 +21,7 @@ import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dao.WorkJobOrderDAO;
+import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.WorkJobOrderDTO;
 import com.deloitte.inspection.exception.WorkJobOrderException;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
@@ -345,10 +346,13 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			List<LISMaintainMasterDataComponent> lisMaintainMasterDataComponents = componentMasterDataDAO.getComponentData(subscriberId);
-			Map<String,String> componentData = new TreeMap<String,String>();
+			List<ComponentMasterDataDTO> componentData = new ArrayList<ComponentMasterDataDTO>();
 			if(null != lisMaintainMasterDataComponents && lisMaintainMasterDataComponents.size() > 0){
 				for(LISMaintainMasterDataComponent masterDataComponent : lisMaintainMasterDataComponents){
-					componentData.put(masterDataComponent.getComponentProductDrawNumber(), masterDataComponent.getComponentProductManufacturerUnits());
+					ComponentMasterDataDTO component = new ComponentMasterDataDTO();
+					component.setComponentProductDrawNumber(masterDataComponent.getComponentProductDrawNumber());
+					component.setComponentProductManufacturerUnits(masterDataComponent.getComponentProductManufacturerUnits());
+					componentData.add(component);
 				}
 			}
 			workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
