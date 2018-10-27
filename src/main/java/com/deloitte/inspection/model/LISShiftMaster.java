@@ -20,10 +20,10 @@ public class LISShiftMaster implements Serializable{
 
 	@Id
 	@Column(name = "SHIFT_ID", length = 10)
-	private String facilityNumber;
+	private String shiftId;
 	
 	@Column(name = "SHIFT_NAME" , length = 150)
-	private String facilityName;
+	private String shiftName;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;
@@ -44,4 +44,71 @@ public class LISShiftMaster implements Serializable{
 	@JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
 
+	
+
+	public String getShiftId() {
+		return shiftId;
+	}
+
+	public void setShiftId(String shiftId) {
+		this.shiftId = shiftId;
+	}
+
+	public String getShiftName() {
+		return shiftName;
+	}
+
+	public void setShiftName(String shiftName) {
+		this.shiftName = shiftName;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
+	}
+
+	public void setCreatedTimestamp(Date createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedTimestamp() {
+		return updatedTimestamp;
+	}
+
+	public void setUpdatedTimestamp(Date updatedTimestamp) {
+		this.updatedTimestamp = updatedTimestamp;
+	}
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
+	}
+
+	public LISSubscriberMaster getSubscriberMaster() {
+		return subscriberMaster;
+	}
+
+	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
+		this.subscriberMaster = subscriberMaster;
+	}
+
+	
 }
