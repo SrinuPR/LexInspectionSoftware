@@ -4,13 +4,12 @@
 package com.deloitte.inspection.dto;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author rnarne
  *
  */
-public class FacilityMasterDTO extends CommonDTO{
+public class FacilityMasterDTO{
 	
 	private String facilityNumber;
 	private String facilityName;
@@ -20,7 +19,6 @@ public class FacilityMasterDTO extends CommonDTO{
 	private Date updatedTimestamp;
 	private String createdBy;
 	private String updatedBy;
-	private List<FacilityMasterDTO> facilityMasterList;
 	
 	/**
 	 * @return the facilityNumber
@@ -117,17 +115,5 @@ public class FacilityMasterDTO extends CommonDTO{
 	 */
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
-	}
-	/**
-	 * @return the facilityMasterList
-	 */
-	public List<FacilityMasterDTO> getFacilityMasterList() {
-		return facilityMasterList;
-	}
-	/**
-	 * @param facilityMasterList the facilityMasterList to set
-	 */
-	public void setFacilityMasterList(List<FacilityMasterDTO> facilityMasterList) {
-		this.facilityMasterList = facilityMasterList;
 	}
 }

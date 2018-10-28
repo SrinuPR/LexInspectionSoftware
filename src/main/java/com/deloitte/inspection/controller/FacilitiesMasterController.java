@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
+import com.deloitte.inspection.response.dto.FacilityMasterResponseDataDTO;
 import com.deloitte.inspection.service.FacilitiesMasterService;
 
 /**
@@ -42,7 +43,7 @@ public class FacilitiesMasterController {
 	@SuppressWarnings({ "unchecked", "rawtypes"})
 	@RequestMapping(value = "/{facilityNumber}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<FacilityMasterDTO> validateFacilityNumber(@PathVariable("facilityNumber") String facilityNumber){
-		FacilityMasterDTO responseDTO = new FacilityMasterDTO();
+		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		try{
 			responseDTO = facilitiesMasterService.getFacilityNumber(facilityNumber);
 			if(null != responseDTO)
@@ -50,6 +51,7 @@ public class FacilitiesMasterController {
 			else
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
+			responseDTO.setStatus(StatusConstants.ERROR);
 			exception.printStackTrace();
 			logger.error("Exception While validateFacilityNumber " + exception.getMessage());
 		}
@@ -64,7 +66,7 @@ public class FacilitiesMasterController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<FacilityMasterDTO> createFacilities(@RequestBody FacilityMasterDTO facilityMasDTO){
-		FacilityMasterDTO responseDTO = new FacilityMasterDTO();
+		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		try{
 			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO);
 			if(null != responseDTO)
@@ -72,6 +74,7 @@ public class FacilitiesMasterController {
 			else
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
+			responseDTO.setStatus(StatusConstants.ERROR);
 			exception.printStackTrace();
 			logger.error("Exception in createFacilities "+exception.getMessage());
 		}
@@ -84,23 +87,20 @@ public class FacilitiesMasterController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<FacilityMasterDTO>> facilitiesMasterList(){
+	public @ResponseBody ResponseEntity<FacilityMasterResponseDataDTO> facilitiesMasterList(){
 		logger.info("Entered into facilitiesMasterList");
-		FacilityMasterDTO responseDTO = new FacilityMasterDTO();
+		FacilityMasterResponseDataDTO repsonseDto = new FacilityMasterResponseDataDTO();
 		List<FacilityMasterDTO> facilityMasDTOList = null;
 		try{
 			facilityMasDTOList = facilitiesMasterService.getFacilitiesMasterData();
-			if(null != facilityMasDTOList && facilityMasDTOList.size() > 0) {
-				responseDTO.setStatus(StatusConstants.SUCCESS);
-				responseDTO.setFacilityMasterList(facilityMasDTOList);
-				return new ResponseEntity(responseDTO, HttpStatus.OK);
-			} else {
-				responseDTO.setStatus(StatusConstants.SUCCESS);
-				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
-			}
+			repsonseDto.setResult(facilityMasDTOList);
+			repsonseDto.setStatus(StatusConstants.SUCCESS);
+			repsonseDto.setMessage(StatusConstants.SUCCESS);
+			return new ResponseEntity(repsonseDto, HttpStatus.OK);
 		}catch(Exception exception){
+			repsonseDto.setStatus(StatusConstants.ERROR);
 			logger.error("Error while fetching the data : "+exception.getMessage());
 		}
-		return new ResponseEntity(responseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(repsonseDto,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

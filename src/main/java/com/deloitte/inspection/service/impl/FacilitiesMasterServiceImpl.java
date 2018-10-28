@@ -15,6 +15,7 @@ import com.deloitte.inspection.dao.FacilitiesMasterDAO;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
 import com.deloitte.inspection.exception.FacilityMasterException;
 import com.deloitte.inspection.model.LISFacilityMaster;
+import com.deloitte.inspection.response.dto.FacilityMasterResponseDataDTO;
 import com.deloitte.inspection.service.FacilitiesMasterService;
 
 /**
@@ -30,9 +31,9 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	private FacilitiesMasterDAO facilityMasterDAO;
 
 	@Override
-	public FacilityMasterDTO getFacilityNumber(String facilityNum) throws FacilityMasterException {
+	public FacilityMasterResponseDataDTO getFacilityNumber(String facilityNum) throws FacilityMasterException {
 		logger.info("facilityNum : " + facilityNum);
-		FacilityMasterDTO responseDTO = new FacilityMasterDTO();
+		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		if(null != facilityNum && !facilityNum.isEmpty()) {
 			LISFacilityMaster response = facilityMasterDAO.getFacilityNumber(facilityNum);
 			responseDTO.setStatus(StatusConstants.SUCCESS);
@@ -40,7 +41,6 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 				responseDTO.setMessage(FacilityMasterConstants.FACILITY_NUMBER_NOT_AVAILABLE);
 				return responseDTO;
 			} else {
-				responseDTO.setFacilityNumber(facilityNum);
 				responseDTO.setMessage(FacilityMasterConstants.FACILITY_NUMBER_AVAILABLE);
 				return responseDTO;
 			}
@@ -53,10 +53,10 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	}
 	
 	@Override
-	public FacilityMasterDTO createFacilities(FacilityMasterDTO facilityMasterDTO)
+	public FacilityMasterResponseDataDTO createFacilities(FacilityMasterDTO facilityMasterDTO)
 			throws FacilityMasterException {
 
-		FacilityMasterDTO responseDTO = new FacilityMasterDTO();
+		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		logger.info("Facility Number, name :"+facilityMasterDTO.getFacilityNumber() + " , " + facilityMasterDTO.getFacilityName());
 		if(null != facilityMasterDTO && null != facilityMasterDTO.getFacilityNumber() && null != facilityMasterDTO.getFacilityName()) {
 			FacilityMasterDTO login = facilityMasterDAO.createFacility(facilityMasterDTO);
@@ -64,7 +64,9 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_FAILED);
 			} else {
-				responseDTO = facilityMasterDTO;
+				List<FacilityMasterDTO> resultList = new ArrayList<FacilityMasterDTO>();
+				resultList.add(facilityMasterDTO);
+				responseDTO.setResult(resultList);
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_SUCCESS);
 			}
