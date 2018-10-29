@@ -2,11 +2,11 @@ package com.deloitte.inspection.constant;
 
 public class WorkJobOrderConstants {
 	
-	public static final String WORK_JOB_ORDER_DELETE_FAILED = "Work/Job Order Deletion Failed";
-	public static final String WORK_JOB_ORDER_DELETE_SUCCESS = "Work/Job Order Deleted Successfully";
+	public static final String WORK_JOB_ORDER_DELETE_FAILED = "Work/Job Order NOT Deleted. Please try again";
+	public static final String WORK_JOB_ORDER_DELETE_SUCCESS = "Work/Job Order Deleted";
 	
-	public static final String WORK_JOB_ORDER_SAVE_FAILED = "Work/Job Order Save Failed";
-	public static final String WORK_JOB_ORDER_SAVE_SUCCESS = "Work/Job Order Save Successfully";
+	public static final String WORK_JOB_ORDER_SAVE_FAILED = "Work/Job Order NOT Saved. Please try again";
+	public static final String WORK_JOB_ORDER_SAVE_SUCCESS = "Work/Job Order Saved";
 	
 	public static final String WORK_JOB_ORDER_NUMBER_EXIST = "Work/Job Order Number Alredy Exist";
 	public static final String WORK_JOB_ORDER_DATE_ISSUE = "Work/Job Order date is in invalid format";

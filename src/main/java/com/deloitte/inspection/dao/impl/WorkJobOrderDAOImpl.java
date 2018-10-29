@@ -66,6 +66,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 
 	@Override
 	public void saveWorkJobOrderData(LISWorkJobOrderMaster workJobOrderMaster) throws WorkJobOrderException {
+		logger.info("Entered into saveWorkJobOrderData DAO");	
 		getSession().saveOrUpdate(workJobOrderMaster);			
 	}
 

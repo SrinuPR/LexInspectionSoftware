@@ -69,7 +69,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 							workJobOrderMaster.setUpdatedBy(userName);
 							workJobOrderMaster.setUpdatedTimestamp(new Date());
 						}
-						setForeignKeys(workJobOrderDTO,workJobOrderMaster,userId);
+						workJobOrderMaster = setForeignKeys(workJobOrderDTO,workJobOrderMaster,userId);
 						workJobOrderMaster.setLotSize(workJobOrderDTO.getLotSize());
 						workJobOrderMaster.setLotNumber(workJobOrderDTO.getLotNumber());
 						workJobOrderMaster.setLotSizeUnits(workJobOrderDTO.getLotSizeUnits());
@@ -325,10 +325,10 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 				int finalResult = (lotSize - manufacturingBatchSize) - (workJobOrderDTO.getManufacturingBatchSize()!=null?workJobOrderDTO.getManufacturingBatchSize():0);
 				if(finalResult >= 0){
 					workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
-					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_NUMBER_VALIDATION_SUCCESS);
+					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_SUCCESS);
 				}else{
 					workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
-					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_NUMBER_VALIDATION_FAILED);
+					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_FAILED);
 				}
 			}
 		}catch(Exception exception){
