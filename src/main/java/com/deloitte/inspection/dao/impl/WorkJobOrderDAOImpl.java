@@ -50,9 +50,9 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	public LISWorkJobOrderMaster getWorkJobOrderByNumber(String workJobOrderNumber,String lotNumber,String batchNumber) throws WorkJobOrderException {
 		logger.info("Inside getWorkJobOrderByNumber DAO");
 		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where lower(l.workJobOrderNumber) = :workJobOrderNumber "
-				+ " and lower(l.lotNumber) = :lotNumber and "
-				+ " and lower(l.manufacturingBatchNumber) = :batchNumber and"
-				+ " l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+				+ " and lower(l.lotNumber) = :lotNumber "
+				+ " and lower(l.manufacturingBatchNumber) = :batchNumber "
+				+ " and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("workJobOrderNumber", workJobOrderNumber);
 		query.setParameter("lotNumber", lotNumber);
 		query.setParameter("batchNumber", batchNumber);
@@ -83,7 +83,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISWorkJobOrderMaster validateWorkJobOrderNumber(String workJobOrderNumber, String customerPONumber)	throws WorkJobOrderException {
-		logger.info("Inside getWorkJobOrderByNumber DAO");
+		logger.info("Inside validateWorkJobOrderNumber DAO");
 		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where lower(l.workJobOrderNumber) = :workJobOrderNumber and lower(l.purchaseOrderMaster.customerPONumber) = :customerPONumber  and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("workJobOrderNumber", workJobOrderNumber);
 		query.setParameter("customerPONumber",customerPONumber);
@@ -160,13 +160,15 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	@Override
 	public LISWorkJobOrderMaster getWorkJobOrderBy4(String componentProductDrawNumber, String customerPONumber,
 			String lotNumber, String workJobOrderNumber) throws WorkJobOrderException {
-		logger.info("Inside getCustomerPOQuantity DAO");
-		Query query = getSession().createQuery(" From LISPurchaseOrderMaster l where lower(l.customerPONumber) = :customerPONumber and "
+		logger.info("Inside getWorkJobOrderBy4 DAO");
+		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where lower(l.purchaseOrderMaster.customerPONumber) = :customerPONumber and "
 				+ "lower(l.componentMasterData.componentProductDrawNumber) = :componentProductDrawNumber and "
 				+ "lower(l.lotNumber) = :lotNumber and "
+				+ "lower(l.workJobOrderNumber) = :workJobOrderNumber and "
 				+ "l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("componentProductDrawNumber", componentProductDrawNumber);
 		query.setParameter("customerPONumber",customerPONumber);
+		query.setParameter("workJobOrderNumber",workJobOrderNumber);
 		query.setParameter("lotNumber",lotNumber);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISWorkJobOrderMaster> list = query.list();
