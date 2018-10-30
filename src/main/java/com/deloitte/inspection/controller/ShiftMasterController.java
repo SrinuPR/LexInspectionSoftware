@@ -1,7 +1,5 @@
 package com.deloitte.inspection.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.deloitte.inspection.constant.ComponentConstants;
 import com.deloitte.inspection.constant.ShiftMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.CommonDTO;
@@ -94,11 +91,10 @@ public class ShiftMasterController {
 
 @CrossOrigin
 @SuppressWarnings({ "unchecked", "rawtypes" })
-@RequestMapping(value = "/all", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 public @ResponseBody ResponseEntity<ShiftMasterResponseDTO> getShiftMasterData(@RequestBody ShiftMasterDTO shiftMasterDTO){
 	logger.info("Entered into getShiftMasterData");
 	ShiftMasterResponseDTO ShiftMasterResponseDTO = new ShiftMasterResponseDTO();
-	List<ShiftMasterDTO> ShiftMasterDTOs = null;
 	try{
 		
 		ShiftMasterResponseDTO = shiftMasterService.getAllShifts(shiftMasterDTO.getSubscriberId());
@@ -118,7 +114,6 @@ public @ResponseBody ResponseEntity<ShiftMasterResponseDTO> getShiftMasterData(@
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @RequestMapping(value = "/delete/{shiftId}", method = RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
 public @ResponseBody ResponseEntity<ShiftMasterResponseDTO> deleteShift(@PathVariable("shiftId") String shiftId,HttpSession httpSession){
-	ShiftMasterDTO ShiftMasterDTO = new ShiftMasterDTO();
 	ShiftMasterResponseDTO shiftMasterResponseDTO=new ShiftMasterResponseDTO();
 	shiftMasterResponseDTO.setStatus(StatusConstants.ERROR);
 	try{

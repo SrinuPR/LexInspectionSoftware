@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ShiftMasterDAO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
-import com.deloitte.inspection.exception.FacilityMasterException;
 import com.deloitte.inspection.exception.ShiftMasterException;
-import com.deloitte.inspection.model.LISFacilityMaster;
 import com.deloitte.inspection.model.LISShiftMaster;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 
@@ -36,7 +34,6 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
     }
 
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ShiftMasterDTO createShiftMaster(ShiftMasterDTO createShiftMasterDTO) throws ShiftMasterException {
 		logger.info("Entered into createShiftMaster");	
@@ -92,7 +89,7 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	public String deleteByShiftId(String shiftId,String userId) throws ShiftMasterException {
 		logger.info("Entered into deleteByShiftId");
@@ -110,7 +107,6 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 		return status;	
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Override
 	public ShiftMasterDTO updateShiftMaster(ShiftMasterDTO createShiftMasterDTO) throws ShiftMasterException {
 		logger.info("Entered into updateShiftMaster");	

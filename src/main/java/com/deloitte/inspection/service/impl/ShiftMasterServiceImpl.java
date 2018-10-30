@@ -115,26 +115,18 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 	
 	@Override
 	public ShiftMasterResponseDTO deleteShift(String shiftId,String userId) throws ShiftMasterException {
-		ShiftMasterResponseDTO shiftMasterResponseDTO=new ShiftMasterResponseDTO();
-		LISShiftMaster shiftMasater = new LISShiftMaster();
-		shiftMasater = ShiftMasterDAO.getShiftId(shiftId);
-		String deleteStatus=ShiftMasterDAO.deleteByShiftId(shiftId,userId) ;
-		shiftMasterResponseDTO.setMessage(ShiftMasterConstants.SHIFT_DELETE_FAILURE);
-		if(StatusConstants.SUCCESS.equals(deleteStatus)) {
-			if(0!=shiftMasater.getSubscriberMaster().getSubscriberId()) {
-				List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
-				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(shiftMasater.getSubscriberMaster().getSubscriberId());
-				for(LISShiftMaster tempMaster:shiftMasterList) {
-					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
-					masterDTO.setShiftId(tempMaster.getShiftId());
-					masterDTO.setShiftName(tempMaster.getShiftName());
-					masterDTO.setSubscriberId(tempMaster.getSubscriberMaster().getSubscriberId());
-					shiftMasterDTOList.add(masterDTO);
-				}
-				shiftMasterResponseDTO.setResult(shiftMasterDTOList);	
+		ShiftMasterResponseDTO shiftMasterResponseDTO = new ShiftMasterResponseDTO();
+		try{
+			String deleteStatus=ShiftMasterDAO.deleteByShiftId(shiftId,userId) ;
+			if(StatusConstants.SUCCESS.equalsIgnoreCase(deleteStatus)){
+				shiftMasterResponseDTO.setMessage(ShiftMasterConstants.SHIFT_DELETE_SUCCESS);
+			}else{
+				shiftMasterResponseDTO.setMessage(ShiftMasterConstants.SHIFT_DELETE_FAILURE);
 			}
-			
-			shiftMasterResponseDTO.setMessage(ShiftMasterConstants.SHIFT_DELETE_SUCCESS);
+		}catch(Exception exception){
+			shiftMasterResponseDTO.setStatus(StatusConstants.ERROR);
+			shiftMasterResponseDTO.setMessage(ShiftMasterConstants.SHIFT_DELETE_FAILURE);
+			logger.error("Error while deleting the shift master "+exception.getMessage());
 		}
 		return shiftMasterResponseDTO;
 	}
