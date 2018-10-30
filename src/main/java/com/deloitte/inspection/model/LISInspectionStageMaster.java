@@ -26,6 +26,10 @@ public class LISInspectionStageMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132210L;
 
 	@Id
+	@Column(name = "INSPECTION_STAGE_UNIQUE_ID", unique = true)
+	private Integer inspStageUniqueId;
+	
+	@Id
 	@Column(name = "INSPECTION_STAGE_ID", length = 5)
 	private Integer inspStageId;
 	
@@ -162,4 +166,13 @@ public class LISInspectionStageMaster implements Serializable{
 	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
 		this.subscriberMaster = subscriberMaster;
 	}
+
+	public Integer getInspStageUniqueId() {
+		return inspStageUniqueId;
+	}
+
+	public void setInspStageUniqueId(Integer inspStageUniqueId) {
+		this.inspStageUniqueId = inspStageUniqueId;
+	}
+	
 }

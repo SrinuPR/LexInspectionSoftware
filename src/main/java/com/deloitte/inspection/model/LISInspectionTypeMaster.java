@@ -25,6 +25,9 @@ public class LISInspectionTypeMaster implements Serializable{
 	
 	private static final long serialVersionUID = 382945870712132280L;
 
+	@Column(name = "INSPECTION_TYPE_UNIQUE_ID" , unique = true)
+	private Integer inspTypeUniqueId;
+	
 	@Id
 	@Column(name = "INSPECTION_TYPE_ID", length = 5)
 	private Integer inspTypeId;
@@ -161,5 +164,14 @@ public class LISInspectionTypeMaster implements Serializable{
 	 */
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
-	}	
+	}
+
+	public Integer getInspTypeUniqueId() {
+		return inspTypeUniqueId;
+	}
+
+	public void setInspTypeUniqueId(Integer inspTypeUniqueId) {
+		this.inspTypeUniqueId = inspTypeUniqueId;
+	}
+	
 }

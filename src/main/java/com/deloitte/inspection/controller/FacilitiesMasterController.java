@@ -4,6 +4,9 @@
 package com.deloitte.inspection.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
+import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.response.dto.FacilityMasterResponseDataDTO;
 import com.deloitte.inspection.service.FacilitiesMasterService;
 
@@ -65,10 +69,17 @@ public class FacilitiesMasterController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<FacilityMasterDTO> createFacilities(@RequestBody FacilityMasterDTO facilityMasDTO){
+	public @ResponseBody ResponseEntity<FacilityMasterDTO> createFacilities(@RequestBody FacilityMasterDTO facilityMasDTO, HttpSession httpSession){
 		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		try{
-			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO);
+			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
+			String userName = null;
+			if(null != userDto){
+				userName = userDto.getUserName();
+			}else{
+				userName = StatusConstants.DEFAULT_USER_NAME;
+			}
+			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO,userName);
 			if(null != responseDTO)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else

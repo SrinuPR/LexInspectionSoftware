@@ -63,11 +63,11 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 	 * @throws FacilityMasterException
 	 */
 	@Override
-	public FacilityMasterDTO createFacility(FacilityMasterDTO facilityMasterDTO) throws FacilityMasterException {
+	public FacilityMasterDTO createFacility(FacilityMasterDTO facilityMasterDTO, String userName) throws FacilityMasterException {
 		logger.info("Entered into createFacility");	
 		try {
 			LISFacilityMaster facilityMaster = new LISFacilityMaster();
-			facilityMaster.setCreatedBy(facilityMasterDTO.getCreatedBy());
+			facilityMaster.setCreatedBy(userName);
 			facilityMaster.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
 			facilityMaster.setFacilityNumber(facilityMasterDTO.getFacilityNumber());
 			facilityMaster.setFacilityName(facilityMasterDTO.getFacilityName());

@@ -17,7 +17,7 @@ public interface FacilitiesMasterDAO {
 
 	public LISFacilityMaster getFacilityNumber(String facilityNum) throws FacilityMasterException;
 	
-	public FacilityMasterDTO createFacility(FacilityMasterDTO inspTypeMasterDTO) throws FacilityMasterException;
+	public FacilityMasterDTO createFacility(FacilityMasterDTO inspTypeMasterDTO, String userName) throws FacilityMasterException;
 	
 	public List<LISFacilityMaster> getFacilitiesMasterData() throws FacilityMasterException;
 }
