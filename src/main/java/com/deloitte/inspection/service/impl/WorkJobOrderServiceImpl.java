@@ -189,6 +189,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 				workJobOrderDTO.setManufacturingBatchSize(workJobOrderMaster.getManufacturingBatchSize());
 				workJobOrderDTO.setManufacturingBatchUnits(workJobOrderMaster.getManufacturingBatchUnits());
 				workJobOrderDTO.setWjOrderId(workJobOrderMaster.getWjOrderId());
+				workJobOrderDTO.setWorkOrderJobNotes(workJobOrderMaster.getWorkOrderJobNotes());
 				workJobOrderDTO.setWorkJobOrderDate(InspectionUtils.convertDateToString(workJobOrderMaster.getWorkJobOrderDate()));
 				workJobOrderDTOs.add(workJobOrderDTO);
 			}

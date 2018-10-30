@@ -1,7 +1,5 @@
 package com.deloitte.inspection.service;
 
-import java.util.List;
-
 import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
 import com.deloitte.inspection.exception.ShiftMasterException;

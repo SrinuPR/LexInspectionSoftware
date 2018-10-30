@@ -1,6 +1,5 @@
 package com.deloitte.inspection.dao.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
