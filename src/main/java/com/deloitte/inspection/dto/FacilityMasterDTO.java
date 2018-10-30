@@ -12,6 +12,7 @@ import java.util.Date;
 public class FacilityMasterDTO{
 	
 	private String facilityNumber;
+	private Integer facilityId;
 	private String facilityName;
 	private Integer subscriberId;
 	private String subscriberName;
@@ -116,4 +117,11 @@ public class FacilityMasterDTO{
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+	public Integer getFacilityId() {
+		return facilityId;
+	}
+	public void setFacilityId(Integer facilityId) {
+		this.facilityId = facilityId;
+	}
+	
 }
