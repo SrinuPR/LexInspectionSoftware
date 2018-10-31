@@ -71,7 +71,7 @@ private static final Logger logger = LogManager.getLogger(InspectionStageMasterD
 			subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
 			inspStageMaster.setSubscriberMaster(subMaster);
 			inspStageMaster.setIsActive(StatusConstants.IS_ACTIVE);
-			Integer value = (Integer) getSession().save(inspStageMaster);
+			LISInspectionStageMaster value = (LISInspectionStageMaster)getSession().save(inspStageMaster);		
 			if(value != null)
 				return inspTypeMasterDTO;
 		} catch (HibernateException ex) {
