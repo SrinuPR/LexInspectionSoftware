@@ -188,5 +188,19 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public LISWorkJobOrderMaster getWorkJobOrderById(Integer wjOrderId) throws WorkJobOrderException {
+		logger.info("Inside getWorkJobOrderById DAO");
+		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where l.wjOrderId = :wjOrderId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("wjOrderId", wjOrderId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		List<LISWorkJobOrderMaster> list = query.list();
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
 	
 }
