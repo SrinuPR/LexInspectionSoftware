@@ -31,4 +31,6 @@ public interface WorkJobOrderDAO {
 
 	public List<LISWorkJobOrderMaster> getAllWorkJobOrderListByLotNumber(String LotNumber) throws WorkJobOrderException;
 
+	public LISWorkJobOrderMaster getWorkJobOrderById(Integer wjOrderId) throws WorkJobOrderException;
+
 }

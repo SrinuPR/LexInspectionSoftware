@@ -64,22 +64,22 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 							workJobOrderMaster =  new LISWorkJobOrderMaster();
 							workJobOrderMaster.setCreatedTimestamp(new Date());
 							workJobOrderMaster.setCreatedBy(userName);
+							workJobOrderMaster.setIsActive(StatusConstants.IS_ACTIVE);
+							workJobOrderMaster = setForeignKeys(workJobOrderDTO,workJobOrderMaster,userId);
+							workJobOrderMaster.setLotNumber(workJobOrderDTO.getLotNumber());
+							workJobOrderMaster.setLotSizeUnits(workJobOrderDTO.getLotSizeUnits());
+							workJobOrderMaster.setManufacturingBatchNumber(workJobOrderDTO.getManufacturingBatchNumber());
+							workJobOrderMaster.setManufacturingBatchUnits(workJobOrderDTO.getManufacturingBatchUnits());
+							workJobOrderMaster.setWorkJobOrderNumber(workJobOrderDTO.getWorkJobOrderNumber());
+							workJobOrderMaster.setWorkJobOrderDate(InspectionUtils.convertStringToDate(workJobOrderDTO.getWorkJobOrderDate()));
 						}else{
-							workJobOrderMaster =  new LISWorkJobOrderMaster();
+							workJobOrderMaster =  workJobOrderDAO.getWorkJobOrderById(workJobOrderDTO.getWjOrderId());
 							workJobOrderMaster.setUpdatedBy(userName);
 							workJobOrderMaster.setUpdatedTimestamp(new Date());
 						}
-						workJobOrderMaster = setForeignKeys(workJobOrderDTO,workJobOrderMaster,userId);
 						workJobOrderMaster.setLotSize(workJobOrderDTO.getLotSize());
-						workJobOrderMaster.setLotNumber(workJobOrderDTO.getLotNumber());
-						workJobOrderMaster.setLotSizeUnits(workJobOrderDTO.getLotSizeUnits());
-						workJobOrderMaster.setManufacturingBatchNumber(workJobOrderDTO.getManufacturingBatchNumber());
 						workJobOrderMaster.setManufacturingBatchSize(workJobOrderDTO.getManufacturingBatchSize());
-						workJobOrderMaster.setManufacturingBatchUnits(workJobOrderDTO.getManufacturingBatchUnits());
-						workJobOrderMaster.setWorkJobOrderNumber(workJobOrderDTO.getWorkJobOrderNumber());
 						workJobOrderMaster.setWorkOrderJobNotes(workJobOrderDTO.getWorkOrderJobNotes());
-						workJobOrderMaster.setIsActive(StatusConstants.IS_ACTIVE);
-						workJobOrderMaster.setWorkJobOrderDate(InspectionUtils.convertStringToDate(workJobOrderDTO.getWorkJobOrderDate()));
 						workJobOrderDAO.saveWorkJobOrderData(workJobOrderMaster);
 						workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_SAVE_SUCCESS);
