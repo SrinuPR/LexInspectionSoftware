@@ -7,6 +7,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,6 +20,11 @@ public class LISInspectionReportMaster implements Serializable{
 
 	private static final long serialVersionUID = 382945870712132210L;
 	
+	@Id
+	@Column(name = "IRMCS_ID", unique= true)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer inspRptMasterId;
+	
 	@Column(name = "SUBSCRIBER_ID" , length = 5)
 	private Integer subscriberId;
 	
@@ -26,17 +34,11 @@ public class LISInspectionReportMaster implements Serializable{
 	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
 	private String workJobOrderNumber;
 	
-	/*@Column(name = "WORK_JOB_ORDER_DATE")
-	private Date workJobOrderDate;*/
-	
 	@Column(name = "LOT_NUMBER" , length = 10)
 	private String lotNumber;
 	
 	@Column(name = "LOT_SIZE" , length = 5)
 	private Integer lotSize;
-	
-	/*@Column(name = "LOT_SIZE_UNITS" , length = 5)
-	private String lotSizeUnits;*/
 	
 	@Column(name = "MANUFACTURING_BATCH_NUMBER" , length = 30)
 	private String manufacturingBatchNumber;
@@ -51,7 +53,7 @@ public class LISInspectionReportMaster implements Serializable{
 	private Date customerPoDate;
 	
 	@Column(name = "CUSTOMER_PO_QUANTITY" , length = 5)
-	private Integer customer_Po_Quantity;
+	private Integer customerPoQuantity;
 	
 	@Column(name = "CUST_NAME_ADDR" , length = 250)
 	private String customerNameAddress;
@@ -205,17 +207,31 @@ public class LISInspectionReportMaster implements Serializable{
 	}
 
 	/**
-	 * @return the customer_Po_Quantity
+	 * @return the subscriberId
 	 */
-	public Integer getCustomer_Po_Quantity() {
-		return customer_Po_Quantity;
+	public Integer getSubscriberId() {
+		return subscriberId;
 	}
 
 	/**
-	 * @param customer_Po_Quantity the customer_Po_Quantity to set
+	 * @param subscriberId the subscriberId to set
 	 */
-	public void setCustomer_Po_Quantity(Integer customer_Po_Quantity) {
-		this.customer_Po_Quantity = customer_Po_Quantity;
+	public void setSubscriberId(Integer subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+
+	/**
+	 * @return the customerPoQuantity
+	 */
+	public Integer getCustomerPoQuantity() {
+		return customerPoQuantity;
+	}
+
+	/**
+	 * @param customerPoQuantity the customerPoQuantity to set
+	 */
+	public void setCustomerPoQuantity(Integer customerPoQuantity) {
+		this.customerPoQuantity = customerPoQuantity;
 	}
 
 	/**
@@ -373,16 +389,16 @@ public class LISInspectionReportMaster implements Serializable{
 	}
 
 	/**
-	 * @return the workJobOrderMaster
+	 * @return the inspRptMasterId
 	 */
-	/*public LISWorkJobOrderMaster getWorkJobOrderMaster() {
-		return workJobOrderMaster;
+	public Integer getInspRptMasterId() {
+		return inspRptMasterId;
 	}
 
-	*//**
-	 * @param workJobOrderMaster the workJobOrderMaster to set
-	 *//*
-	public void setWorkJobOrderMaster(LISWorkJobOrderMaster workJobOrderMaster) {
-		this.workJobOrderMaster = workJobOrderMaster;
+	/**
+	 * @param inspRptMasterId the inspRptMasterId to set
+	 */
+	public void setInspRptMasterId(Integer inspRptMasterId) {
+		this.inspRptMasterId = inspRptMasterId;
 	}
-*/}
+}
