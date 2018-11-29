@@ -24,13 +24,7 @@ public class LISInspectionReportMaster implements Serializable{
 	@Column(name = "IRMCS_ID", unique= true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer inspRptMasterId;
-	
-	@Column(name = "SUBSCRIBER_ID" , length = 5)
-	private Integer subscriberId;
-	
-	@Column(name = "COMP_PROD_DRAW_NUM" , length = 50)
-	private String componentProductDrawNumber;
-	
+		
 	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
 	private String workJobOrderNumber;
 	
@@ -93,20 +87,6 @@ public class LISInspectionReportMaster implements Serializable{
 	/*@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name="WOMCS_ID")
     private LISWorkJobOrderMaster workJobOrderMaster;*/
-
-	/**
-	 * @return the componentProductDrawNumber
-	 */
-	public String getComponentProductDrawNumber() {
-		return componentProductDrawNumber;
-	}
-
-	/**
-	 * @param componentProductDrawNumber the componentProductDrawNumber to set
-	 */
-	public void setComponentProductDrawNumber(String componentProductDrawNumber) {
-		this.componentProductDrawNumber = componentProductDrawNumber;
-	}
 
 	/**
 	 * @return the workJobOrderNumber
@@ -206,19 +186,6 @@ public class LISInspectionReportMaster implements Serializable{
 		this.customerPoDate = customerPoDate;
 	}
 
-	/**
-	 * @return the subscriberId
-	 */
-	public Integer getSubscriberId() {
-		return subscriberId;
-	}
-
-	/**
-	 * @param subscriberId the subscriberId to set
-	 */
-	public void setSubscriberId(Integer subscriberId) {
-		this.subscriberId = subscriberId;
-	}
 
 	/**
 	 * @return the customerPoQuantity

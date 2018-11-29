@@ -24,7 +24,7 @@ public interface WorkJobOrderDAO {
 
 	public LISPurchaseOrderMaster getCustomerPOQuantity(String componentProdDrawNum, String customerPONumber) throws WorkJobOrderException;
 
-	public List<LISWorkJobOrderMaster> getAllWorkJobOrderListByNumber(String workJobOrderNumber) throws WorkJobOrderException;
+	public List<LISWorkJobOrderMaster> getAllWorkJobOrderListByNumber(String workJobOrderNumber, String customerPONumber) throws WorkJobOrderException;
 
 	public LISWorkJobOrderMaster getWorkJobOrderBy4(String componentProductDrawNumber, String customerPONumber, String lotNumber,
 			String workJobOrderNumber) throws WorkJobOrderException;
@@ -32,5 +32,7 @@ public interface WorkJobOrderDAO {
 	public List<LISWorkJobOrderMaster> getAllWorkJobOrderListByLotNumber(String LotNumber) throws WorkJobOrderException;
 
 	public LISWorkJobOrderMaster getWorkJobOrderById(Integer wjOrderId) throws WorkJobOrderException;
+
+	public LISWorkJobOrderMaster getWorkOrderByBatchNumber(String manufacturingBatchNumber) throws WorkJobOrderException;
 
 }

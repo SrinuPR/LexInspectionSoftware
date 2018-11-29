@@ -149,11 +149,18 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISWorkJobOrderMaster> getAllWorkJobOrderListByNumber(String workJobOrderNumber) throws WorkJobOrderException {
+	public List<LISWorkJobOrderMaster> getAllWorkJobOrderListByNumber(String workJobOrderNumber, String customerPONumber) throws WorkJobOrderException {
 		logger.info("Inside getAllWorkJobOrderListByNumber DAO");
-		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where lower(l.workJobOrderNumber) = :workJobOrderNumber and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		StringBuffer hqlQuery = new StringBuffer();
+		hqlQuery.append(" From LISWorkJobOrderMaster l where lower(l.workJobOrderNumber) = :workJobOrderNumber and l.isActive = :isActive ");
+		if(null != customerPONumber)
+			hqlQuery.append(" and lower( l.purchaseOrderMaster.customerPONumber) = :customerPONumber ");
+		hqlQuery.append(" ORDER BY l.createdTimestamp DESC ");
+		Query query = getSession().createQuery(hqlQuery.toString());
 		query.setParameter("workJobOrderNumber", workJobOrderNumber);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		if(null != customerPONumber)
+			query.setParameter("customerPONumber", customerPONumber);
 		return query.list();
 	}
 
@@ -195,6 +202,21 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 		logger.info("Inside getWorkJobOrderById DAO");
 		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where l.wjOrderId = :wjOrderId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("wjOrderId", wjOrderId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		List<LISWorkJobOrderMaster> list = query.list();
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public LISWorkJobOrderMaster getWorkOrderByBatchNumber(String manufacturingBatchNumber)
+			throws WorkJobOrderException {
+		logger.info("Inside getWorkOrderByBatchNumber DAO");
+		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where lower(l.manufacturingBatchNumber) = :manufacturingBatchNumber and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("manufacturingBatchNumber", manufacturingBatchNumber);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISWorkJobOrderMaster> list = query.list();
 		if(list.size() > 0){

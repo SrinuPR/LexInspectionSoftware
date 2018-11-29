@@ -30,5 +30,16 @@ public class WorkJobOrderConstants {
 	
 	public static final String MANUFACTURER_BATCH_SIZE_VALIDATION_SUCCESS = "Batch Size not exceeds the Lot Size";
 	public static final String MANUFACTURER_BATCH_SIZE_VALIDATION_FAILED = "Batch Size exceeds the Lot Size";
-
+	
+	public static final String MANDATORY_DETAILS_MISSED = "Mandatory details are missed";
+	public static final String WORK_JOB_ORDER_UPDATE_FAILED = "Full Work / Job Order Quantity Produced. Cannot change the Work/Job Order";
+	public static final String WORK_JOB_ORDER_UPDATE_SUCCESS = "Entry accepted"; 
+	
+	public static final String LOT_SIZE_UPDATE_FAILED = "Full Lot Size Produced. Cannot change Lot Size";
+	public static final String LOT_SIZE_UPDATE_SUCCESS = "Entry accepted";
+	
+	public static final String BATCH_SIZE_UPDATE_FAILED = "Full Batch Size Produced. Cannot change Batch Size";
+	public static final String BATCH_SIZE_UPDATE_SUCCESS = "Entry accepted";
+	
+	
 }

@@ -56,11 +56,11 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			if(null != workJobOrderDTO){
-				if(null != workJobOrderDTO.getWorkOrderJobNotes()){
-					if(!isWorkRecordExist(workJobOrderDTO.getWorkJobOrderNumber(),workJobOrderDTO.getLotNumber(),workJobOrderDTO.getManufacturingBatchNumber())){
-						logger.info(" Subscriber Id "+workJobOrderDTO.getSubscriberId());
-						LISWorkJobOrderMaster workJobOrderMaster =null;
-						if(StatusConstants.INSERT.equalsIgnoreCase(action)){
+				if(null != workJobOrderDTO.getWorkJobOrderNumber() && null != workJobOrderDTO.getLotNumber() && null != workJobOrderDTO.getManufacturingBatchNumber()){
+					logger.info(" Subscriber Id "+workJobOrderDTO.getSubscriberId());
+					LISWorkJobOrderMaster workJobOrderMaster =null;
+					if(StatusConstants.INSERT.equalsIgnoreCase(action)){
+						if(!isWorkRecordExist(workJobOrderDTO.getWorkJobOrderNumber(),workJobOrderDTO.getLotNumber(),workJobOrderDTO.getManufacturingBatchNumber())){
 							workJobOrderMaster =  new LISWorkJobOrderMaster();
 							workJobOrderMaster.setCreatedTimestamp(new Date());
 							workJobOrderMaster.setCreatedBy(userName);
@@ -72,21 +72,35 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 							workJobOrderMaster.setManufacturingBatchUnits(workJobOrderDTO.getManufacturingBatchUnits());
 							workJobOrderMaster.setWorkJobOrderNumber(workJobOrderDTO.getWorkJobOrderNumber());
 							workJobOrderMaster.setWorkJobOrderDate(InspectionUtils.convertStringToDate(workJobOrderDTO.getWorkJobOrderDate()));
+							workJobOrderMaster.setLotSize(workJobOrderDTO.getLotSize());
+							workJobOrderMaster.setManufacturingBatchSize(workJobOrderDTO.getManufacturingBatchSize());
+							workJobOrderMaster.setWorkOrderJobNotes(workJobOrderDTO.getWorkOrderJobNotes());
+							workJobOrderDAO.saveWorkJobOrderData(workJobOrderMaster);
+							workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+							workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_SAVE_SUCCESS);
 						}else{
+							workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+							workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_NUMBER_EXIST);
+						}
+					}else{
+						if(changeValidation(workJobOrderDTO.getWorkJobOrderNumber(),workJobOrderDTO.getCustomerPONumber())){
 							workJobOrderMaster =  workJobOrderDAO.getWorkJobOrderById(workJobOrderDTO.getWjOrderId());
 							workJobOrderMaster.setUpdatedBy(userName);
 							workJobOrderMaster.setUpdatedTimestamp(new Date());
+							workJobOrderMaster.setLotSize(workJobOrderDTO.getLotSize());
+							workJobOrderMaster.setManufacturingBatchSize(workJobOrderDTO.getManufacturingBatchSize());
+							workJobOrderMaster.setWorkOrderJobNotes(workJobOrderDTO.getWorkOrderJobNotes());
+							workJobOrderDAO.saveWorkJobOrderData(workJobOrderMaster);
+							workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+							workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_UPDATE_SUCCESS);
+						}else{
+							workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+							workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_UPDATE_FAILED);
 						}
-						workJobOrderMaster.setLotSize(workJobOrderDTO.getLotSize());
-						workJobOrderMaster.setManufacturingBatchSize(workJobOrderDTO.getManufacturingBatchSize());
-						workJobOrderMaster.setWorkOrderJobNotes(workJobOrderDTO.getWorkOrderJobNotes());
-						workJobOrderDAO.saveWorkJobOrderData(workJobOrderMaster);
-						workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
-						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_SAVE_SUCCESS);
-					}else{
-						workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
-						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_NUMBER_EXIST);
 					}
+				}else{
+					workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANDATORY_DETAILS_MISSED);
 				}
 			}
 		}catch(ParseException parseException){
@@ -99,6 +113,26 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		return workJobOrderResponseDTO;
 	}
 	
+	private boolean changeValidation(String workJobOrderNumber, String customerPONumber) {
+		boolean flag = false;
+		try{
+			List<LISWorkJobOrderMaster> lisWorkJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderNumber.toLowerCase(),customerPONumber.toLowerCase());
+			int lotSize = 0;
+			if(null != lisWorkJobOrderMasters && lisWorkJobOrderMasters.size() > 0 ){
+				for(LISWorkJobOrderMaster workJobOrderMaster : lisWorkJobOrderMasters){
+					lotSize = lotSize + (workJobOrderMaster.getLotSize() != null ? workJobOrderMaster.getLotSize() : 0);
+				}
+			}
+			int producedQuantity = 0;
+			if((lotSize-producedQuantity) >= 0){
+				flag = true;
+			}
+		}catch (Exception exception) {
+			logger.error("Error while checking the Work/Job Order Number "+exception.getMessage());
+		}
+		return flag;
+	}
+
 	@Override
 	public String deleteWorkJobOrder(Integer workJobOrderId) throws WorkJobOrderException {
 		try{
@@ -272,27 +306,31 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	public WorkJobOrderResponseDTO validateLotSize(WorkJobOrderDTO workJobOrderDTO) throws WorkJobOrderException {
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
-			if(null != workJobOrderDTO && null != workJobOrderDTO.getComponentProductDrawNumber() && null != workJobOrderDTO.getCustomerPONumber()){
-				LISPurchaseOrderMaster lisPurchaseOrderMaster = workJobOrderDAO.getCustomerPOQuantity(workJobOrderDTO.getComponentProductDrawNumber().toLowerCase(),workJobOrderDTO.getCustomerPONumber().toLowerCase());
-				int customerPOQuantity = 0;
-				int workOrderLotSize = 0;
-				if(null != lisPurchaseOrderMaster){
-					customerPOQuantity = lisPurchaseOrderMaster.getCustomerPOQuantity() != null ? lisPurchaseOrderMaster.getCustomerPOQuantity() :0;
-				}
-				List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderDTO.getWorkJobOrderNumber().toLowerCase());
-				if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
-					for(LISWorkJobOrderMaster workJobOrderMaster : workJobOrderMasters){
-						workOrderLotSize = workOrderLotSize + (workJobOrderMaster.getLotSize() != null ? workJobOrderMaster.getLotSize() : 0);
+			if(null == workJobOrderDTO.getWjOrderId()){
+				if(null != workJobOrderDTO && null != workJobOrderDTO.getComponentProductDrawNumber() && null != workJobOrderDTO.getCustomerPONumber()){
+					LISPurchaseOrderMaster lisPurchaseOrderMaster = workJobOrderDAO.getCustomerPOQuantity(workJobOrderDTO.getComponentProductDrawNumber().toLowerCase(),workJobOrderDTO.getCustomerPONumber().toLowerCase());
+					int customerPOQuantity = 0;
+					int workOrderLotSize = 0;
+					if(null != lisPurchaseOrderMaster){
+						customerPOQuantity = lisPurchaseOrderMaster.getCustomerPOQuantity() != null ? lisPurchaseOrderMaster.getCustomerPOQuantity() :0;
+					}
+					List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderDTO.getWorkJobOrderNumber().toLowerCase(),null);
+					if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
+						for(LISWorkJobOrderMaster workJobOrderMaster : workJobOrderMasters){
+							workOrderLotSize = workOrderLotSize + (workJobOrderMaster.getLotSize() != null ? workJobOrderMaster.getLotSize() : 0);
+						}
+					}
+					int finalLotSize = customerPOQuantity - workOrderLotSize;
+					if(finalLotSize >= 0){
+						workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_VALIDATION_SUCCESS);
+					}else{
+						workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_VALIDATION_FAILED);
 					}
 				}
-				int finalLotSize = customerPOQuantity - workOrderLotSize;
-				if(finalLotSize >= 0){
-					workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
-					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_VALIDATION_SUCCESS);
-				}else{
-					workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
-					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_VALIDATION_FAILED);
-				}
+			}else{
+				workJobOrderResponseDTO = lotSizeChangeValidation(workJobOrderResponseDTO,workJobOrderDTO);
 			}
 		}catch(Exception exception){
 			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
@@ -302,40 +340,94 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		return workJobOrderResponseDTO;
 	}
 	
+	private WorkJobOrderResponseDTO lotSizeChangeValidation(WorkJobOrderResponseDTO workJobOrderResponseDTO,
+			WorkJobOrderDTO workJobOrderDTO) {
+		logger.info("Inside lotSizeChangeValidation ");
+		try{
+			int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber().toLowerCase());
+			int producedQuantity = 0;
+			if((manufacturingBatchSize - producedQuantity) > 0){
+				workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_UPDATE_SUCCESS);
+			}else{
+				workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_UPDATE_FAILED);
+			}
+		}catch(Exception exception){
+			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.UN_EXPECTED_EXCEPTION);
+			logger.error("Exception while doing the lotsize change validation "+exception.getMessage());
+		}
+		return workJobOrderResponseDTO;
+	}
+	
+	private int getManufacturerBatchSize(String lotNumber) throws WorkJobOrderException{
+		int manufacturingBatchSize = 0;
+		List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByLotNumber(lotNumber);
+		if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
+			for(LISWorkJobOrderMaster workJobOrderMaster1 : workJobOrderMasters){
+				manufacturingBatchSize = manufacturingBatchSize + (workJobOrderMaster1.getManufacturingBatchSize() != null ? workJobOrderMaster1.getManufacturingBatchSize() : 0);
+			}
+		}
+		return manufacturingBatchSize;
+	}
+
 	@Override
 	public WorkJobOrderResponseDTO validateManufacturerBatchSize(WorkJobOrderDTO workJobOrderDTO) throws WorkJobOrderException {
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
-			if(null != workJobOrderDTO && null != workJobOrderDTO.getComponentProductDrawNumber() && null != workJobOrderDTO.getCustomerPONumber()
-					&& null != workJobOrderDTO.getLotNumber() && null != workJobOrderDTO.getWorkJobOrderNumber()){
-				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkJobOrderBy4(workJobOrderDTO.getComponentProductDrawNumber().toLowerCase(),
-																							  workJobOrderDTO.getCustomerPONumber().toLowerCase(),
-																							  workJobOrderDTO.getLotNumber().toLowerCase(),
-																							  workJobOrderDTO.getWorkJobOrderNumber().toLowerCase());
-				int lotSize = 0;
-				if(null != workJobOrderMaster){
-					lotSize = workJobOrderMaster.getLotSize() != null?workJobOrderMaster.getLotSize():0;
-				}
-				int manufacturingBatchSize = 0;
-				List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByLotNumber(workJobOrderDTO.getLotNumber().toLowerCase());
-				if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
-					for(LISWorkJobOrderMaster workJobOrderMaster1 : workJobOrderMasters){
-						manufacturingBatchSize = manufacturingBatchSize + (workJobOrderMaster1.getManufacturingBatchSize() != null ? workJobOrderMaster1.getManufacturingBatchSize() : 0);
+			if(null == workJobOrderDTO.getWjOrderId()){
+				if(null != workJobOrderDTO && null != workJobOrderDTO.getComponentProductDrawNumber() && null != workJobOrderDTO.getCustomerPONumber()
+						&& null != workJobOrderDTO.getLotNumber() && null != workJobOrderDTO.getWorkJobOrderNumber()){
+					LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkJobOrderBy4(workJobOrderDTO.getComponentProductDrawNumber().toLowerCase(),
+																								  workJobOrderDTO.getCustomerPONumber().toLowerCase(),
+																								  workJobOrderDTO.getLotNumber().toLowerCase(),
+																								  workJobOrderDTO.getWorkJobOrderNumber().toLowerCase());
+					int lotSize = 0;
+					if(null != workJobOrderMaster){
+						lotSize = workJobOrderMaster.getLotSize() != null?workJobOrderMaster.getLotSize():0;
+					}
+					int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber().toLowerCase());
+					
+					int finalResult = (lotSize - manufacturingBatchSize) - (workJobOrderDTO.getManufacturingBatchSize()!=null?workJobOrderDTO.getManufacturingBatchSize():0);
+					if(finalResult >= 0){
+						workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_SUCCESS);
+					}else{
+						workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_FAILED);
 					}
 				}
-				int finalResult = (lotSize - manufacturingBatchSize) - (workJobOrderDTO.getManufacturingBatchSize()!=null?workJobOrderDTO.getManufacturingBatchSize():0);
-				if(finalResult >= 0){
-					workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
-					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_SUCCESS);
-				}else{
-					workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
-					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_FAILED);
-				}
+			}else{
+				workJobOrderResponseDTO = manfBatchSizeChangeValidation(workJobOrderResponseDTO,workJobOrderDTO);
 			}
 		}catch(Exception exception){
 			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
 			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.UN_EXPECTED_EXCEPTION);
 			logger.error("While validating the validatelotManufacturerBatchSize "+exception.getMessage());
+		}
+		return workJobOrderResponseDTO;
+	}
+
+	private WorkJobOrderResponseDTO manfBatchSizeChangeValidation(WorkJobOrderResponseDTO workJobOrderResponseDTO,
+			WorkJobOrderDTO workJobOrderDTO) {
+		try{
+			LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkOrderByBatchNumber(workJobOrderDTO.getManufacturingBatchNumber().toLowerCase());
+			int batchSize = 0;
+			if(null != workJobOrderMaster)
+				batchSize = null != workJobOrderMaster.getManufacturingBatchSize()?workJobOrderMaster.getManufacturingBatchSize() :0;
+			int producedQuantity = 0;
+			if((batchSize - producedQuantity) > 0){
+				workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.BATCH_SIZE_UPDATE_SUCCESS);
+			}else{
+				workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.BATCH_SIZE_UPDATE_FAILED);
+			}
+		}catch(Exception exception){
+			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.UN_EXPECTED_EXCEPTION);
+			logger.error("While validating the manfBatchSizeChangeValidation "+exception.getMessage());
 		}
 		return workJobOrderResponseDTO;
 	}
