@@ -46,34 +46,58 @@ public class LoginServiceImpl implements LoginService{
 			System.out.println(loginDTO.getUserId()+" , "+loginDTO.getPassword());
 			try{
 				LISLogin login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
-				if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
-					responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
-				}else if(null != login.getUserMasterCreate() && login.getUserMasterCreate().getIsActive() != 'Y'){
-					responseDTO.setErrorMessage(StatusConstants.IN_ACTIVE_LOGIN_USER);
+				if(null != login && null == login.getSubscriberMaster() && null == login.getUserMasterCreate()){
+					responseDTO = checkLoggedinUserRole(login,StatusConstants.ADMIN_ROLE,responseDTO,loginDTO);
 				}else{
-					if(null != login.getSubscriberMaster()){
-						responseDTO.setSubscriberId(login.getSubscriberMaster().getSubscriberId());
-						responseDTO.setSubscriberName(login.getSubscriberMaster().getSubscriberName());
-					}
-					if(null != login.getUserMasterCreate()){
-						System.out.println(login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
-						responseDTO.setUserId(login.getUserMasterCreate().getUserId());
-						responseDTO.setUserName(login.getUserMasterCreate().getUserName());
-						if(null == login.getUserMasterCreate().getOldPassword1() && null == login.getUserMasterCreate().getOldPassword2() 
-								&& null != login.getUserMasterCreate().getActivePassword()){
-							responseDTO.setFirstTimeLogin(true);
-						}
-					}
-					responseDTO.setStatus(StatusConstants.LOGIN_SUCCESS);
-					httpSession.setAttribute("user", responseDTO);
+					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
-			}catch(CryptoException cryptoException){
-				logger.error("Error while decrypting credentails "+cryptoException.getMessage());
+				httpSession.setAttribute("user", responseDTO);
+			}catch(Exception exception){
+				logger.error("Error while validating credentails "+exception.getMessage());
 			}
 		}else if(null != loginDTO && null != loginDTO.getUserId() && null == loginDTO.getPassword()){
 			responseDTO.setErrorMessage(StatusConstants.PASSWORD_EMPTY);
 		}else if(null != loginDTO && null == loginDTO.getUserId() && null != loginDTO.getPassword()){
 			responseDTO.setErrorMessage(StatusConstants.USER_ID_EMPTY);
+		}
+		return responseDTO;
+	}
+
+	private LoginDTO checkLoggedinUserRole(LISLogin login, String otherRole, LoginDTO responseDTO, LoginDTO loginDTO) {
+		try{
+			boolean adminFlag = false;
+			if(null != otherRole && StatusConstants.ADMIN_ROLE.equalsIgnoreCase(otherRole)){
+				adminFlag = true;
+			}
+			if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
+				responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
+			}else if(null != login.getUserMasterCreate() && login.getUserMasterCreate().getIsActive() != 'Y' && !adminFlag){
+				responseDTO.setErrorMessage(StatusConstants.IN_ACTIVE_LOGIN_USER);
+			}else{
+				if(null != login.getSubscriberMaster()){
+					responseDTO.setSubscriberId(login.getSubscriberMaster().getSubscriberId());
+					responseDTO.setSubscriberName(login.getSubscriberMaster().getSubscriberName());
+				}
+				if(null != login.getUserMasterCreate()){
+					logger.info("login credentails "+login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
+					responseDTO.setUserId(login.getUserMasterCreate().getUserId());
+					responseDTO.setUserName(login.getUserMasterCreate().getUserName());
+					responseDTO.setIsAdmin('N');
+					if(null == login.getUserMasterCreate().getOldPassword1() && null == login.getUserMasterCreate().getOldPassword2() 
+							&& null != login.getUserMasterCreate().getActivePassword()){
+						responseDTO.setFirstTimeLogin(true);
+					}
+				}else if(adminFlag){
+					logger.info("admin credentails "+login.getAdminId()+" , "+login.getPassword());
+					responseDTO.setUserId(login.getAdminId());
+					responseDTO.setUserName(login.getAdminId());
+					responseDTO.setIsAdmin('Y');
+					responseDTO.setFirstTimeLogin(false);
+				}
+				responseDTO.setStatus(StatusConstants.LOGIN_SUCCESS);
+			}
+		}catch(CryptoException cryptoException){
+			logger.error("Error while decrypting credentails "+cryptoException.getMessage());
 		}
 		return responseDTO;
 	}

@@ -48,6 +48,9 @@ public class LISLogin implements Serializable{
     @JoinColumn(name="USER_ID")
 	private LISUserMasterCreate userMasterCreate;
 	
+	@Column(name = "ADMIN_ID", length = 10)
+	private String adminId;
+	
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
@@ -121,6 +124,14 @@ public class LISLogin implements Serializable{
 
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
 	}
 
 }

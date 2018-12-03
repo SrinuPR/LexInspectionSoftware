@@ -35,7 +35,7 @@ public class LoginDAOImpl implements LoginDAO{
 	@Override
 	public LISLogin validateLoginCredentials(String userId) throws LoginException {
 		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISLogin l where l.userMasterCreate.userId = :userId ");
+		Query query = getSession().createQuery(" From LISLogin l where l.userMasterCreate.userId = :userId or l.adminId = :userId");
 		query.setParameter("userId", userId);
 		List<LISLogin> loginList = query.list();
 		if(null != loginList && loginList.size() > 0){

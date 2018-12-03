@@ -36,5 +36,8 @@ public class StatusConstants {
 	
 	public static final String UPDATE ="Update";
 	public static final String INSERT ="Insert";
+	
+	public static final String ADMIN_ROLE = "ADMIN";
+	public static final String OTHER_ROLE = "USER/SUBSCRIBER";
 
 }
