@@ -104,100 +104,139 @@ public class LoginServiceImpl implements LoginService{
 
 	@Override
 	public String forgotPassword(PasswordMaintenanceDTO passwordMaintenanceDTO) throws LoginException {
-		
 		logger.info("Inside forgotPassword of ForgotPasswordServiceImpl for " + passwordMaintenanceDTO.getUserId());
 		String response = new String();
-		Boolean emailSent = false;
 		LISUserMasterCreate userMasterModel = new LISUserMasterCreate();
 		if (null != passwordMaintenanceDTO && null != passwordMaintenanceDTO.getUserId()) {
 			userMasterModel = loginDAO.validateUser(passwordMaintenanceDTO.getUserId());
 		}
 		if (null == userMasterModel) {
-			response = StatusConstants.INVALID_USER;
+			LISLogin login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
+			if(null != login && null == login.getSubscriberMaster() && null != login.getAdminId()){
+				response = passwordReset(null,passwordMaintenanceDTO,login,StatusConstants.ADMIN_ROLE);
+			}else{
+				response = StatusConstants.INVALID_USER;
+			}
 			return response;
 		} else {
-			RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
-			String randomPassword = new String();
+			response = passwordReset(userMasterModel,passwordMaintenanceDTO,null,StatusConstants.OTHER_ROLE);
+		}
+		return response;
+	}
+	
+	private String passwordReset(LISUserMasterCreate userMasterModel,PasswordMaintenanceDTO passwordMaintenanceDTO,LISLogin login,String role) throws LoginException{
+		String response = new String();
+		Boolean emailSent = false;
+		RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
+		boolean adminFlag = false;
+		if(null != role && StatusConstants.ADMIN_ROLE.equalsIgnoreCase(role)){
+			adminFlag = true;
+		}
+		String randomPassword = new String();
+		try {
+			randomPassword = randomPasswordGenerator.generateRandomPassword(StatusConstants.RANDOM_PASSWORD_LENGTH).substring(0, 20);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		}	
+		logger.info("Random Password generated for" + passwordMaintenanceDTO.getUserId());
+					
+		if(null != passwordMaintenanceDTO && null != passwordMaintenanceDTO.getEmailId() 
+				&& null != passwordMaintenanceDTO.getUserId()) {
+			logger.info("Sending mail to " + passwordMaintenanceDTO.getEmailId());
+			String messageBody = new String (StatusConstants.FORGOT_PASSWORD_MAIL_BODY + randomPassword);
+			String subject = new String ("New Password for " + passwordMaintenanceDTO.getUserId());
 			try {
-				randomPassword = randomPasswordGenerator.generateRandomPassword(StatusConstants.RANDOM_PASSWORD_LENGTH).substring(0, 20);
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} catch (NoSuchProviderException e) {
-				e.printStackTrace();
-			}	
-			logger.info("Random Password generated for" + passwordMaintenanceDTO.getUserId());
-						
-			if(null != passwordMaintenanceDTO && null != passwordMaintenanceDTO.getEmailId() 
-					&& null != passwordMaintenanceDTO.getUserId()) {
-				logger.info("Sending mail to " + passwordMaintenanceDTO.getEmailId());
-				String messageBody = new String (StatusConstants.FORGOT_PASSWORD_MAIL_BODY + randomPassword);
-				String subject = new String ("New Password for " + passwordMaintenanceDTO.getUserId());
-				try {
-					emailService.sendEmail(passwordMaintenanceDTO.getEmailId(), messageBody, subject);
-					logger.info("Email Sent Successfully");
-					emailSent = true;
-				} catch (Exception ex) {
-					logger.info("Email sending Failed");
-					response = StatusConstants.EMAIL_SENT_FAILED;
-				}
-				if (emailSent) {
-					passwordMaintenanceDTO.setNewPassword(randomPassword);
-					response = updatePassword(passwordMaintenanceDTO,userMasterModel);
-				}
-			}else {
-				logger.error("Mail cannot be send as emailId is null");
+				emailService.sendEmail(passwordMaintenanceDTO.getEmailId(), messageBody, subject);
+				logger.info("Email Sent Successfully");
+				emailSent = true;
+			} catch (Exception ex) {
+				logger.info("Email sending Failed");
+				response = StatusConstants.EMAIL_SENT_FAILED;
 			}
+			if (emailSent) {
+				passwordMaintenanceDTO.setNewPassword(randomPassword);
+				if(adminFlag){
+					response = updatePassword(passwordMaintenanceDTO,null,login);
+				}else{
+					response = updatePassword(passwordMaintenanceDTO,userMasterModel,null);
+				}
+			}
+		}else {
+			logger.error("Mail cannot be send as emailId is null");
 		}
 		return response;
 	}
 
 	@Override
 	public String changePassword(PasswordMaintenanceDTO passwordMaintenanceDTO) throws LoginException {
-
 		logger.info("Inside changePassword of ChangePasswordServiceImpl for ");
+		LISLogin login = null;
 		String response = new String();
 		boolean correctPass = false;
 		LISUserMasterCreate userMasterModel = new LISUserMasterCreate();
 		if (null != passwordMaintenanceDTO && null != passwordMaintenanceDTO.getUserId()
 				&& null != passwordMaintenanceDTO.getActivePassword()) {
 			userMasterModel = loginDAO.validateUser(passwordMaintenanceDTO.getUserId());
-			try {
-				correctPass = cryptoComponent.decrypt(userMasterModel.getActivePassword())
-						.equals(passwordMaintenanceDTO.getActivePassword());
-			} catch (CryptoException e) {
-				logger.error(e.getMessage());
+			if(null != userMasterModel){
+				try {
+					correctPass = cryptoComponent.decrypt(userMasterModel.getActivePassword())
+							.equals(passwordMaintenanceDTO.getActivePassword());
+				} catch (CryptoException e) {
+					logger.error(e.getMessage());
+				}
+			}else{
+				login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
+				if(null != login){
+					try {
+						correctPass = cryptoComponent.decrypt(login.getPassword())
+								.equals(passwordMaintenanceDTO.getActivePassword());
+					} catch (CryptoException e) {
+						logger.error(e.getMessage());
+					}
+				}
 			}
 		}
-		if (null == userMasterModel || !correctPass) {
+		if ((null == login || null == userMasterModel) || !correctPass) {
 			response = StatusConstants.INVALID_USER;
 			return response;
 		} else {
 			if (null != passwordMaintenanceDTO.getNewPassword()) {
-				response = updatePassword(passwordMaintenanceDTO, userMasterModel);
+				response = updatePassword(passwordMaintenanceDTO, userMasterModel,login);
 			}
 			return response;
 		}
-
 	}
 	
-	private String updatePassword(PasswordMaintenanceDTO passwordMaintenanceDTO, LISUserMasterCreate userMasterModel)
+	private String updatePassword(PasswordMaintenanceDTO passwordMaintenanceDTO, LISUserMasterCreate userMasterModel, LISLogin login)
 			throws LoginException {
 
 		String response = new String();
 		String status = new String();
-		try {
-			userMasterModel.setOldPassword2(userMasterModel.getOldPassword1());
-			userMasterModel.setOldPassword1(userMasterModel.getActivePassword());
-			userMasterModel.setActivePassword(cryptoComponent.encrypt(passwordMaintenanceDTO.getNewPassword()));
-		} catch (CryptoException cryptoException) {
-			logger.error("Error while encrypting Password " + cryptoException.getMessage());
-			response = StatusConstants.PASSWORD_CHANGED_FAIL;
-		}
-		status = loginDAO.changePassword(userMasterModel);
-		if(status.equalsIgnoreCase(StatusConstants.SUCCESS)){
+		if(null != userMasterModel){
+			try {
+				userMasterModel.setOldPassword2(userMasterModel.getOldPassword1());
+				userMasterModel.setOldPassword1(userMasterModel.getActivePassword());
+				userMasterModel.setActivePassword(cryptoComponent.encrypt(passwordMaintenanceDTO.getNewPassword()));
+			} catch (CryptoException cryptoException) {
+				logger.error("Error while encrypting Password " + cryptoException.getMessage());
+				response = StatusConstants.PASSWORD_CHANGED_FAIL;
+			}
+			status = loginDAO.changePassword(userMasterModel);
+			if(status.equalsIgnoreCase(StatusConstants.SUCCESS)){
+				try{
+					String password = cryptoComponent.encrypt(passwordMaintenanceDTO.getNewPassword());
+					loginDAO.updateLoginPassword(userMasterModel.getUserId(), password);
+				}catch(LoginException |CryptoException loginException){
+					logger.error("Exception While updating the password in login table "+loginException.getMessage());
+				}
+			}
+		}else if(null != login){
 			try{
 				String password = cryptoComponent.encrypt(passwordMaintenanceDTO.getNewPassword());
-				loginDAO.updateLoginPassword(userMasterModel.getUserId(), password);
+				loginDAO.updateLoginPassword(login.getAdminId(), password);
+				status = StatusConstants.SUCCESS;
 			}catch(LoginException |CryptoException loginException){
 				logger.error("Exception While updating the password in login table "+loginException.getMessage());
 			}
