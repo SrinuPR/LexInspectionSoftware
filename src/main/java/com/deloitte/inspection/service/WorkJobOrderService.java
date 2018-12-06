@@ -29,5 +29,7 @@ public interface WorkJobOrderService {
 	public WorkJobOrderResponseDTO getComponentData(Integer subscriberId) throws WorkJobOrderException;
 
 	public WorkJobOrderResponseDTO getCustomerPOData(Integer subscriberId) throws WorkJobOrderException;
+	
+	public WorkJobOrderResponseDTO getComponentDataFromWO(Integer subscriberId) throws WorkJobOrderException;
 
 }

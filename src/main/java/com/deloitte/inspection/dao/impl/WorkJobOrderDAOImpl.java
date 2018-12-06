@@ -225,4 +225,15 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 		return null;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISWorkJobOrderMaster> getComponentDataFromWJOBySubscriberId(Integer subscriberId) throws WorkJobOrderException {
+		logger.info("Retrieving ComponentData from WorkJobOrder bt SubscriberId");
+		Query query = getSession().createQuery("select wjo From LISWorkJobOrderMaster wjo inner join wjo.componentMasterData as compData where lower(wjo.subscriberMaster.subscriberId) = :SUBSCRIBER_ID and wjo.isActive = :isActive ORDER BY wjo.createdTimestamp DESC");
+		query.setParameter("SUBSCRIBER_ID", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		List<LISWorkJobOrderMaster> list = query.list();
+		return list;
+	}
+	
 }

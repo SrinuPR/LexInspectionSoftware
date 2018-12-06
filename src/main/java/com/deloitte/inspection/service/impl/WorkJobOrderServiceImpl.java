@@ -3,7 +3,9 @@ package com.deloitte.inspection.service.impl;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -477,6 +479,36 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 			logger.error("While validating the validatelotManufacturerBatchSize "+exception.getMessage());
 		}
 		return workJobOrderResponseDTO;
+	}
+	
+	@Override
+	public WorkJobOrderResponseDTO getComponentDataFromWO(Integer subscriberId) throws WorkJobOrderException {
+		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
+		try{
+			List<LISWorkJobOrderMaster> lisWorkJobOrderMasterList = (List<LISWorkJobOrderMaster>) this.workJobOrderDAO.getComponentDataFromWJOBySubscriberId(subscriberId);
+			Map<String, ComponentMasterDataDTO> componentDataMap = new HashMap<String, ComponentMasterDataDTO>();
+			if(lisWorkJobOrderMasterList != null && lisWorkJobOrderMasterList.size() > 0){
+				for(LISWorkJobOrderMaster masterDataComponent : lisWorkJobOrderMasterList){
+					LISMaintainMasterDataComponent  componentData = masterDataComponent.getComponentMasterData();
+					if (componentData != null && !componentDataMap.containsKey(componentData.getComponentProductDrawNumber())) {
+						ComponentMasterDataDTO component = new ComponentMasterDataDTO();
+						component.setComponentProductDrawNumber(componentData.getComponentProductDrawNumber());
+						component.setComponentProductName(componentData.getComponentProductName());
+						component.setComponentProductNumber(componentData.getComponentProductNumber());
+						component.setComponentProductNotes(componentData.getComponentProductNotes());
+						component.setComponentProductMeterial(componentData.getComponentProductMeterial());
+						componentDataMap.put(component.getComponentProductDrawNumber(), component);
+					}
+				}
+			}
+			workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+			workJobOrderResponseDTO.setComponentData(new ArrayList<ComponentMasterDataDTO>(componentDataMap.values()));
+		} catch (Exception exception) {
+			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.UN_EXPECTED_EXCEPTION);
+			logger.error("Unable to retrieve Component Data by Subscriber Id : " + subscriberId);
+		}
+		return workJobOrderResponseDTO;		
 	}
 	
 }

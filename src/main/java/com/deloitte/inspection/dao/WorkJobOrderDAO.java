@@ -34,5 +34,7 @@ public interface WorkJobOrderDAO {
 	public LISWorkJobOrderMaster getWorkJobOrderById(Integer wjOrderId) throws WorkJobOrderException;
 
 	public LISWorkJobOrderMaster getWorkOrderByBatchNumber(String manufacturingBatchNumber) throws WorkJobOrderException;
+	
+	public List<LISWorkJobOrderMaster> getComponentDataFromWJOBySubscriberId(Integer subscriberId) throws WorkJobOrderException;
 
 }

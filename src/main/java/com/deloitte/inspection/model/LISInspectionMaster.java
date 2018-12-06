@@ -30,7 +30,7 @@ public class LISInspectionMaster implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "INSPECTION_ID", length = 10)
-	private String inspId;
+	private Integer inspId;
 	
 	@Column(name = "COMPONENT_NAME" , length = 150)
 	private String facilityName;
@@ -76,14 +76,14 @@ public class LISInspectionMaster implements Serializable{
 	/**
 	 * @return the inspId
 	 */
-	public String getInspId() {
+	public Integer getInspId() {
 		return inspId;
 	}
 
 	/**
 	 * @param inspId the inspId to set
 	 */
-	public void setInspId(String inspId) {
+	public void setInspId(Integer inspId) {
 		this.inspId = inspId;
 	}
 

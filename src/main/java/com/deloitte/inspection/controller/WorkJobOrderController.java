@@ -295,4 +295,25 @@ public class WorkJobOrderController {
 		return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.EXPECTATION_FAILED);
 	}
 	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/compProdData/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getWJOComponentData(@PathVariable("subscriberId") Integer subscriberId){
+		logger.info("Entered into getComponentData ");
+		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
+		try {
+			workJobOrderResponseDTO = workJobOrderService.getComponentDataFromWO(subscriberId);
+			if(null != workJobOrderResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(workJobOrderResponseDTO.getStatus())){
+				return new ResponseEntity(workJobOrderResponseDTO, HttpStatus.OK);
+			}else{
+				return new ResponseEntity(workJobOrderResponseDTO, HttpStatus.EXPECTATION_FAILED);
+			}
+		} catch (WorkJobOrderException workJobOrderException){
+			logger.error("Exception while getting component data from DB 1 : "+workJobOrderException.getMessage());
+		} catch (Exception exception){
+			logger.error("Exception while getting component data from DB 2 : "+exception.getMessage());
+		}
+		return new ResponseEntity(workJobOrderResponseDTO, HttpStatus.EXPECTATION_FAILED);
+	}
+	
 }
