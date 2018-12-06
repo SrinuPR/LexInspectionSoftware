@@ -37,8 +37,16 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 			if(null != inspectionLineItemDTOs && inspectionLineItemDTOs.size() > 0){
 				List<LISInspectionLineItemMaster> lineMasterList = new ArrayList<LISInspectionLineItemMaster>();
 				for(InspectionLineItemDTO inspectionLineItemDTO : inspectionLineItemDTOs){
-					LISInspectionLineItemMaster inspectionLineItemMaster = new LISInspectionLineItemMaster();
-					inspectionLineItemMaster = transformToModel(inspectionLineItemMaster,inspectionLineItemDTO, userId, userName,InspectionLineItemConstants.INSERT);
+					LISInspectionLineItemMaster inspectionLineItemMaster = null;
+					if(inspectionLineItemDTO.getInspectionLineItemId() != null){
+						inspectionLineItemMaster = inspectionLineMasterDAO.getInspectionItem(inspectionLineItemDTO.getInspectionLineItemId());
+						if(null != inspectionLineItemMaster){
+							inspectionLineItemMaster = transformToModel(inspectionLineItemMaster, inspectionLineItemDTO, null, userName, InspectionLineItemConstants.UPDATE);
+						}
+					}else{
+						inspectionLineItemMaster = new LISInspectionLineItemMaster();
+						inspectionLineItemMaster = transformToModel(inspectionLineItemMaster,inspectionLineItemDTO, userId, userName,InspectionLineItemConstants.INSERT);
+					}
 					lineMasterList.add(inspectionLineItemMaster);
 				}
 				inspectionLineMasterDAO.saveInspectionLineItem(lineMasterList);

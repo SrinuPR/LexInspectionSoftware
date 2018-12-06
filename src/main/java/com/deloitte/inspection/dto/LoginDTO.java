@@ -10,6 +10,7 @@ public class LoginDTO {
 	private String status;
 	private String errorMessage;
 	private boolean firstTimeLogin;
+	private char isAdmin;
 	
 	public String getUserId() {
 		return userId;
@@ -58,6 +59,12 @@ public class LoginDTO {
 	}
 	public void setFirstTimeLogin(boolean firstTimeLogin) {
 		this.firstTimeLogin = firstTimeLogin;
+	}
+	public char getIsAdmin() {
+		return isAdmin;
+	}
+	public void setIsAdmin(char isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 	
 }
