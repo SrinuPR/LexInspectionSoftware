@@ -55,7 +55,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<LISInspectionMaster> getInspectionMasterList(String userId) {
 		logger.info("Entered into getInspectionMasterList DAO");	
-		Query<LISInspectionMaster> query = getSession().createQuery("select master From LISInspectionMaster master inner join master.componentMasterData as compData where master.createdBy = :createdBy and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
+		Query<LISInspectionMaster> query = getSession().createQuery("select master From LISInspectionMaster master where master.createdBy = :createdBy and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		query.setParameter("createdBy", userId);
 		return query.list();
