@@ -86,7 +86,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		query.setParameter("componentProductDrawNumber", inspectionDTO.getComponentProductDrawNumber());
 		query.setParameter("inspTypeId", inspectionDTO.getInspectionType());
 		query.setParameter("inspStageId", inspectionDTO.getInspectionStage());
-		query.setParameter("inspId", inspectionDTO.getInspectionStage());
+		query.setParameter("inspId", inspectionDTO.getInspectionMasterId());
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISInspectionMaster> list = query.list();
 		if (list != null && list.size() > 0) {
