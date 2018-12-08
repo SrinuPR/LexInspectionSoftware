@@ -13,8 +13,16 @@ public class InspectionMasterDTO {
 	private Integer inspectionType;
 	private Integer inspectionStage;
 	private String createdBy;
+	private String updatedBy;
 	private Integer userId;
 	
+		
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -54,7 +62,7 @@ public class InspectionMasterDTO {
 	public String getComponentProductName() {
 		return componentProductName;
 	}
-	public void setComponentProductDrawName(String componentProductName) {
+	public void setComponentProductName(String componentProductName) {
 		this.componentProductName = componentProductName;
 	}
 	public String getComponentProductNumber() {

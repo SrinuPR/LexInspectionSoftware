@@ -7,10 +7,12 @@ public interface InspectionMasterService {
 	
 	public InspectionMasterResponseDataDTO validateInspectionStage(InspectionMasterDTO masterDTO);
 	
-	public InspectionMasterResponseDataDTO saveInspectionMaster(InspectionMasterDTO masterDTO, String userName, String userId, String action);
+	public InspectionMasterResponseDataDTO saveInspectionMaster(InspectionMasterDTO masterDTO);
 	
 	public InspectionMasterResponseDataDTO updateInspectionMaster(InspectionMasterDTO masterDTO);
 	
 	public InspectionMasterResponseDataDTO getInspectionMasterData(String userId);
+	
+	public String deleteInspectionMaster(Integer inspectionMasterId);
 
 }

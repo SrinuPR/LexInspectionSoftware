@@ -12,17 +12,14 @@ import org.springframework.stereotype.Service;
 import com.deloitte.inspection.constant.InspectionMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
-import com.deloitte.inspection.dao.CreateUserDAO;
 import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
-import com.deloitte.inspection.dao.UserTypeMasterDAO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISSubscriberMaster;
-import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.response.dto.InspectionMasterResponseDataDTO;
 import com.deloitte.inspection.service.InspectionMasterService;
 
@@ -43,7 +40,12 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		InspectionMasterResponseDataDTO inspectionResponseDTO = new InspectionMasterResponseDataDTO();
 		try {
 			if (masterDTO != null) {
-				LISInspectionMaster inspectionMaster = inspectionDAO.getInspectionStage(masterDTO);
+				LISInspectionMaster inspectionMaster = null;
+				if (masterDTO.getInspectionMasterId() == null) {
+					inspectionMaster = inspectionDAO.getInspectionStage(masterDTO);
+				} else {
+					inspectionMaster = inspectionDAO.getInspectionStageOtherThanCurrent(masterDTO);
+				}
 				if (inspectionMaster != null) {
 					inspectionResponseDTO.setStatus(StatusConstants.ERROR);
 					inspectionResponseDTO.setMessage(InspectionMasterConstants.INSPECTION_MASTER_EXISTS);
@@ -61,11 +63,11 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 	}
 
 	@Override
-	public InspectionMasterResponseDataDTO saveInspectionMaster(InspectionMasterDTO masterDTO, String userName, String userId, String action) {		
+	public InspectionMasterResponseDataDTO saveInspectionMaster(InspectionMasterDTO masterDTO) {		
 		InspectionMasterResponseDataDTO responseDTO = new InspectionMasterResponseDataDTO();
 		LISInspectionMaster master = toLISInspectionMaster(masterDTO);
 		master.setCreatedTimestamp(new Date());
-		master.setCreatedBy(userName);
+		master.setCreatedBy(masterDTO.getCreatedBy());
 		inspectionDAO.saveInspectionMaster(master);
 		masterDTO.setInspectionMasterId(master.getInspId());
 		responseDTO.setStatus(StatusConstants.SUCCESS);
@@ -78,10 +80,18 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 
 	@Override
 	public InspectionMasterResponseDataDTO updateInspectionMaster(InspectionMasterDTO masterDTO) {
-		LISInspectionMaster master = toLISInspectionMaster(masterDTO);
-		master.setInspId(masterDTO.getInspectionMasterId());
+		LISInspectionMaster master = this.inspectionDAO.getInspectionMasterById(masterDTO.getInspectionMasterId());
+		/* if(masterDTO.getComponentProductDrawNumber() != null){
+			try {
+				LISMaintainMasterDataComponent maintainMasterDataComponent = componentMasterDataDAO.getComponentDataByDrwNum(masterDTO.getComponentProductDrawNumber());
+				master.setComponentMasterData(maintainMasterDataComponent);
+			} catch (ComponentMasterDataException exception) {
+				logger.error("Error while retrieving Component Master Data " + exception.getMessage());
+			}
+		} */
+		master.setInspStageId(masterDTO.getInspectionStage());
 		master.setUpdatedTimestamp(new Date());
-		master.setUpdatedBy(masterDTO.getCreatedBy());
+		master.setUpdatedBy(masterDTO.getUpdatedBy());
 		inspectionDAO.saveInspectionMaster(master);
 		InspectionMasterResponseDataDTO responseDTO = new InspectionMasterResponseDataDTO();
 		responseDTO.setStatus(StatusConstants.SUCCESS);
@@ -134,7 +144,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 	
 	public InspectionMasterDTO toInspectionMasterDTO(LISInspectionMaster master) {
 		InspectionMasterDTO masterDTO = new InspectionMasterDTO();
-		masterDTO.setComponentProductDrawName(master.getFacilityName());
+		masterDTO.setComponentProductName(master.getFacilityName());
 		LISMaintainMasterDataComponent componentData = master.getComponentMasterData();
 		masterDTO.setComponentProductDrawNumber(componentData.getComponentProductDrawNumber());
 		masterDTO.setComponentProductMaterial(componentData.getComponentProductMeterial());
@@ -147,6 +157,16 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		masterDTO.setSubscriberId(master.getSubscriberMaster().getSubscriberId());
 		masterDTO.setSubscriberName(master.getSubscriberMaster().getSubscriberName());
 		return masterDTO;
+	}
+
+	@Override
+	public String deleteInspectionMaster(Integer inspectionMasterId) {
+		try{
+			return inspectionDAO.deleteInspectionMaster(inspectionMasterId);
+		}catch(Exception exception){
+			logger.error("Exception while deleting Inspection Master "+exception.getMessage());
+		}
+		return StatusConstants.FAILURE;
 	}
 
 }
