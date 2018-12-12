@@ -93,4 +93,61 @@ public class CreateUserController {
 		}
 	}
 	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/admin/create", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<CreateUserDTO> saveAdmin(@RequestBody CreateUserDTO createUserDTO){
+		CreateUserDTO  UserDTO = new CreateUserDTO();
+		try{
+			UserDTO = createUserService.saveAdmin(createUserDTO);
+			if(null != UserDTO  && StatusConstants.SUCCESS.equalsIgnoreCase(UserDTO.getStatus()))
+				return new ResponseEntity(UserDTO, HttpStatus.OK);
+			else
+				return new ResponseEntity(StatusConstants.ERROR, HttpStatus.EXPECTATION_FAILED);
+		}catch(Exception exception){
+			exception.printStackTrace();
+			logger.error("Exception While saving admin " + exception.getMessage());
+			return new ResponseEntity(UserDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/admin/delete/{adminId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<CreateUserDTO> deleteAdmin(@PathVariable("adminId") String adminId){
+		CreateUserDTO  createAdmin = new CreateUserDTO();
+		try{
+			createAdmin = createUserService.deleteAdmin(adminId.toLowerCase());
+			if(null != createAdmin  && StatusConstants.SUCCESS.equalsIgnoreCase(createAdmin.getStatus())){
+				return new ResponseEntity(createAdmin, HttpStatus.OK);
+			}else{
+				return new ResponseEntity(createAdmin, HttpStatus.EXPECTATION_FAILED);
+			}
+				
+		}catch(Exception exception){
+			exception.printStackTrace();
+			logger.error("Exception While delete admin " + exception.getMessage());
+			return new ResponseEntity(createAdmin, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/admin/vaidate/{adminId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<CreateUserDTO> validateAdminId(@PathVariable("adminId") String adminId){
+		CreateUserDTO  createAdmin = new CreateUserDTO();
+		try{
+			createAdmin = createUserService.validateAdminId(adminId.toLowerCase());
+			if(null != createAdmin  && StatusConstants.SUCCESS.equalsIgnoreCase(createAdmin.getStatus())){
+				return new ResponseEntity(createAdmin, HttpStatus.OK);
+			}else{
+				return new ResponseEntity(createAdmin, HttpStatus.EXPECTATION_FAILED);
+			}
+		}catch(Exception exception){
+			exception.printStackTrace();
+			logger.error("Exception While validate admin " + exception.getMessage());
+			return new ResponseEntity(createAdmin, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }

@@ -77,7 +77,6 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Override
 	public List<LISShiftMaster> findBySubscriberId(int subscriberId) throws ShiftMasterException {
-		
 		logger.info("Entered into getAllShifts");	
 		Query query = getSession().createQuery(" From LISShiftMaster SHMCS where SHMCS.subscriberMaster.subscriberId = :subscriberId AND SHMCS.isActive = :isactive");
 		query.setInteger("subscriberId", subscriberId);

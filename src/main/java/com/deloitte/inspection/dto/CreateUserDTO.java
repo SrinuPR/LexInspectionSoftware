@@ -12,6 +12,7 @@ public class CreateUserDTO extends AbstractDTO{
 	private String status; 
 	private char activeSw;
 	private String createdBy;
+	private String adminId;
 	
 	public String getUserId() {
 		return userId;
@@ -74,6 +75,11 @@ public class CreateUserDTO extends AbstractDTO{
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-
+	public String getAdminId() {
+		return adminId;
+	}
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
+	}
 	
 }

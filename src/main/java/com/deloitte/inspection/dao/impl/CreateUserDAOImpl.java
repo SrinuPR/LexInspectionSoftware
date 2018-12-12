@@ -115,4 +115,35 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return  query.list();
 	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public LISLogin validateAdminId(String adminId) throws CreateUserException {
+		logger.info("Entered into validateLoginCredentials");	
+		Query query = getSession().createQuery(" From LISLogin l where lower(l.adminId) = :adminId");
+		query.setParameter("adminId", adminId);
+		List<LISLogin> loginList = query.list();
+		if(null != loginList && loginList.size() > 0){
+			return loginList.get(0);
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@Override
+	public boolean deleteAdmin(String adminId) throws CreateUserException {
+		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET IS_ACTIVE = :inactive WHERE lower(ADMIN_ID) = :adminId ");
+		query.setParameter("adminId", adminId);
+		query.setParameter("inactive", StatusConstants.IN_ACTIVE);
+		int result = query.executeUpdate();
+		if(result > 0)
+			return true;
+		return false;
+	}
+
+	@Override
+	public void saveAdmin(LISLogin login) throws CreateUserException {
+		getSession().save(login);
+		
+	}
 }

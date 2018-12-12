@@ -105,11 +105,10 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 				masterDTO.setSubscriberId(tempMaster.getSubscriberMaster().getSubscriberId());
 				shiftMasterDTOList.add(masterDTO);
 			}
-			shiftMasterResponseDTO.setResult(shiftMasterDTOList);
-			shiftMasterResponseDTO.setMessage(ShiftMasterConstants.FETCH_SHIFT_LIST_SUCCESS);
-			return shiftMasterResponseDTO;
 		}
-		shiftMasterResponseDTO.setMessage(ShiftMasterConstants.FETCH_SHIFT_LIST_FAILURE);
+		shiftMasterResponseDTO.setResult(shiftMasterDTOList);
+		shiftMasterResponseDTO.setStatus(StatusConstants.SUCCESS);
+		shiftMasterResponseDTO.setMessage(ShiftMasterConstants.FETCH_SHIFT_LIST_SUCCESS);
 		return shiftMasterResponseDTO;
 	}
 	

@@ -39,5 +39,14 @@ public class StatusConstants {
 	
 	public static final String ADMIN_ROLE = "ADMIN";
 	public static final String OTHER_ROLE = "USER/SUBSCRIBER";
+	
+	public static final String VALIDATE_ADMIN_SUCCESS = "Admin Id is not exist";
+	public static final String VALIDATE_ADMIN_FAILURE = "Admin Id Exist";
+	
+	public static final String ADMIN_DELETE_SUCCESS = "Admin delete successfully";
+	public static final String ADMIN_DELETE_FAILURE = "Admin deletion failed";
+	
+	public static final String ADMIN_SAVE_SUCCESS = "Admin saved";
+	public static final String ADMIN_SAVE_FAILURE = "Admin not saved";
 
 }
