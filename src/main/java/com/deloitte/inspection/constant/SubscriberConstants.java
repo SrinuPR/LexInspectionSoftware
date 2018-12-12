@@ -16,5 +16,6 @@ public class SubscriberConstants {
 	public static final String CREATE_SUBSCRIBER_SUCCESS = "Subscriber Saved";
 	public static final String SUBSCRIBER_AVAILABLE="Subscriber ID exists";
 	public static final String SUBSCRIBER_NOT_AVAILABLE="Subscriber ID doesn't exist";
+	public static final String EACH_SUBSCRIBER_USER_COUNT_MESSAGE="Subscriber already have the users of ";
 	
 }

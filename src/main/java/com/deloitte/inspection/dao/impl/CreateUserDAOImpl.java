@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deloitte.inspection.component.ApplicationProperties;
 import com.deloitte.inspection.component.CryptoComponent;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
@@ -39,14 +40,25 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	
 	@Autowired
 	private CryptoComponent cryptoComponent;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String createUser(CreateUserDTO createuserDTO) throws CreateUserException {
 		logger.info("Entered into createUser");	
 		try {
+			Query query = getSession().createQuery(" From LISUserMasterCreate UMACS where UMACS.subscriberMaster.subscriberId = :subscriberId and UMACS.isActive = :isActive ");
+			query.setParameter("subscriberId", createuserDTO.getSubscriberId());
+			query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+			List<LISUserMasterCreate> userMasterList = query.list();
+			if(null != userMasterList && userMasterList.size() >= applicationProperties.EACH_SUBSCRIBER_USER_COUNT){
+				return StatusConstants.FAILURE;
+			}
 			LISSubscriberMaster subscriberMaster=new LISSubscriberMaster();
 			subscriberMaster = subscriberMasterDAO.validateSubscriber(createuserDTO.getSubscriberId());
 			LISUserMasterCreate userMaster=new LISUserMasterCreate();

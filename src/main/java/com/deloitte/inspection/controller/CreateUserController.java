@@ -42,7 +42,7 @@ public class CreateUserController {
 	public @ResponseBody ResponseEntity<CreateUserDTO> CreateUser(@RequestBody CreateUserDTO createUserDTO){
 		try{
 			CreateUserDTO response = createUserService.createUser(createUserDTO);
-			if(null != response)
+			if(null != response && StatusConstants.SUCCESS.equalsIgnoreCase(response.getStatus()))
 				return new ResponseEntity(response, HttpStatus.OK);
 			else
 				return new ResponseEntity(response, HttpStatus.EXPECTATION_FAILED);

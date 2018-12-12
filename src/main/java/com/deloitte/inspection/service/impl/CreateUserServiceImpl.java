@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.deloitte.inspection.component.ApplicationProperties;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.constant.SubscriberConstants;
 import com.deloitte.inspection.constant.UserTypeMasterConstants;
@@ -25,8 +26,11 @@ public class CreateUserServiceImpl implements CreateUserService {
 	private static final Logger logger = LogManager.getLogger(CreateUserServiceImpl.class);  
 	
 	@Autowired
-	 private CreateUserDAO createUserDAO ;
+	private CreateUserDAO createUserDAO ;
 
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 	@Override
 	public String validateUserId(String userId) {
 		LISUserMasterCreate userMaster=new LISUserMasterCreate();
@@ -53,6 +57,8 @@ public class CreateUserServiceImpl implements CreateUserService {
 				respose = createUserDAO.createUser(createuserDTO);
 				if(null!=respose && StatusConstants.SUCCESS.equalsIgnoreCase(respose)) {
 					resCreateUserDTO.setStatus(StatusConstants.USER_CREATE_SUCCESS);
+				}else{
+					resCreateUserDTO.setErrorMessage(SubscriberConstants.EACH_SUBSCRIBER_USER_COUNT_MESSAGE+" "+applicationProperties.EACH_SUBSCRIBER_USER_COUNT);
 				}
 			}else if(null!=createuserDTO && null==createuserDTO.getSubscriberId()){
 				resCreateUserDTO.setErrorMessage(SubscriberConstants.SUBSCRIBER_ID_EMPTY);
