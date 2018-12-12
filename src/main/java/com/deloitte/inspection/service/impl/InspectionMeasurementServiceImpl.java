@@ -1,11 +1,13 @@
 package com.deloitte.inspection.service.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionMeasurementDAO;
@@ -17,6 +19,7 @@ import com.deloitte.inspection.model.LISWorkJobOrderMaster;
 import com.deloitte.inspection.response.dto.WorkJobOrderResponseDTO;
 import com.deloitte.inspection.service.InspectionMeasurementService;
 
+@Service
 public class InspectionMeasurementServiceImpl implements InspectionMeasurementService{
 
 	private static final Logger logger = LogManager.getLogger(InspectionMeasurementServiceImpl.class);

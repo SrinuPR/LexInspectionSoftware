@@ -8,12 +8,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionMeasurementDAO;
 import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.model.LISInspectionReportMaster;
 
+@Repository
+@Transactional
 public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 
 	private static final Logger logger = LogManager.getLogger(InspectionMeasurementDAOImpl.class);
