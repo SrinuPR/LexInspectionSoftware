@@ -1,5 +1,7 @@
 package com.deloitte.inspection.service;
 
+import java.util.List;
+
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.response.dto.InspectionMasterResponseDataDTO;
 
@@ -14,5 +16,9 @@ public interface InspectionMasterService {
 	public InspectionMasterResponseDataDTO getInspectionMasterData(String userId);
 	
 	public String deleteInspectionMaster(Integer inspectionMasterId);
+
+	public InspectionMasterResponseDataDTO getInspectionTypesByCompProdDrawNum(String compProdDrawNum);
+
+	public List<String> getCompDrawNumsBySubscriberId(Integer subscriberId);
 
 }

@@ -235,5 +235,15 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 		List<LISWorkJobOrderMaster> list = query.list();
 		return list;
 	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<LISWorkJobOrderMaster> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException {
+		logger.info("Retrieving getWorkJobOrderByCompDrawNum ");
+		Query query = getSession().createQuery("From LISWorkJobOrderMaster wjo where lower(wjo.componentMasterData.componentProductDrawNumber) = :compProdDrawNum and wjo.isActive = :isActive ORDER BY wjo.createdTimestamp DESC");
+		query.setParameter("compProdDrawNum", compProdDrawNum);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
+	}
 	
 }

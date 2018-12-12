@@ -12,6 +12,8 @@ public class InspectionMasterDTO {
 	private String componentProductNotes;
 	private Integer inspectionType;
 	private Integer inspectionStage;
+	private String inspectionTypeName;
+	private String inspectionStageName;
 	private String createdBy;
 	private String updatedBy;
 	private Integer userId;
@@ -94,6 +96,18 @@ public class InspectionMasterDTO {
 	}
 	public void setInspectionStage(Integer inspectionStage) {
 		this.inspectionStage = inspectionStage;
+	}
+	public String getInspectionTypeName() {
+		return inspectionTypeName;
+	}
+	public void setInspectionTypeName(String inspectionTypeName) {
+		this.inspectionTypeName = inspectionTypeName;
+	}
+	public String getInspectionStageName() {
+		return inspectionStageName;
+	}
+	public void setInspectionStageName(String inspectionStageName) {
+		this.inspectionStageName = inspectionStageName;
 	}
 
 }

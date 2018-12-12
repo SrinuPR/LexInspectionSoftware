@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.model.LISInspectionMaster;
+import com.deloitte.inspection.model.LISInspectionReportMaster;
 
 public interface InspectionMasterDAO {
 	
@@ -13,5 +14,7 @@ public interface InspectionMasterDAO {
 	public LISInspectionMaster getInspectionMasterById(Integer inspectionMasterId);
 	public LISInspectionMaster getInspectionStageOtherThanCurrent(InspectionMasterDTO inspectionDTO);
 	public String deleteInspectionMaster(Integer inspectionMasterId);
+	public List<LISInspectionReportMaster> getInspectionTypesByCompProdDrawNum(String compProdDrawNum);
+	public List<LISInspectionMaster> getCompDrawNumsBySubscriberId(Integer subscriberId);
 
 }

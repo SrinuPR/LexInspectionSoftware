@@ -32,4 +32,6 @@ public interface WorkJobOrderService {
 	
 	public WorkJobOrderResponseDTO getComponentDataFromWO(Integer subscriberId) throws WorkJobOrderException;
 
+	public WorkJobOrderResponseDTO getWJODataByCompProdDrawNum(String compProdDrawNum) throws WorkJobOrderException;
+
 }

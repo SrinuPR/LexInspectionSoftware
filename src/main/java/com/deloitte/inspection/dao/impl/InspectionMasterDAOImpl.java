@@ -15,6 +15,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.model.LISInspectionMaster;
+import com.deloitte.inspection.model.LISInspectionReportMaster;
 
 @Repository
 @Transactional
@@ -28,7 +29,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		return sessionFactory.getCurrentSession();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public LISInspectionMaster getInspectionStage(InspectionMasterDTO inspectionDTO) {
 		logger.info("Inside getInspectionStage DAO");
@@ -52,7 +53,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public List<LISInspectionMaster> getInspectionMasterList(String userId) {
 		logger.info("Entered into getInspectionMasterList DAO");
 		Query<LISInspectionMaster> query = getSession().createQuery(
@@ -77,7 +78,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public LISInspectionMaster getInspectionStageOtherThanCurrent(InspectionMasterDTO inspectionDTO) {
 		logger.info("Inside getInspectionStage DAO");
@@ -109,5 +110,26 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 			status = StatusConstants.SUCCESS;
 		}
 		return status;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<LISInspectionReportMaster> getInspectionTypesByCompProdDrawNum(String compProdDrawNum) {
+		logger.info("Inside getInspectionTypesByCompProdDrawNum DAO");
+		Query query = getSession().createQuery(" From LISInspectionMaster master where lower(master.componentMasterData.componentProductDrawNumber) = :compProdDrawNum and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
+		query.setParameter("compProdDrawNum",compProdDrawNum);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISInspectionMaster> getCompDrawNumsBySubscriberId(Integer subscriberId) {
+		logger.info("getCompDrawNumsBySubscriberId DAO");
+		Query query = getSession().createQuery("FROM LISInspectionMaster i where i.subscriberMaster.subscriberId = :subscriberId and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
+		
 	}
 }

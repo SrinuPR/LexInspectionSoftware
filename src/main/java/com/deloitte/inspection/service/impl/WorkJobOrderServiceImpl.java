@@ -510,5 +510,25 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		}
 		return workJobOrderResponseDTO;		
 	}
+
+	@Override
+	public WorkJobOrderResponseDTO getWJODataByCompProdDrawNum(String compProdDrawNum) throws WorkJobOrderException {
+		logger.info("Service : getWJODataByCompProdDrawNum");
+		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
+		try{
+			List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getWorkJobOrderByCompDrawNum(compProdDrawNum.toLowerCase());
+			if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
+				List<WorkJobOrderDTO> results = transferModelToDTO(workJobOrderMasters);
+				workJobOrderResponseDTO.setResults(results);
+			}
+			workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_LIST_SUCCESS);
+		}catch(Exception exception){
+			workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
+			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.UN_EXPECTED_EXCEPTION);
+			logger.error("Unable to retrieve getWJODataByCompProdDrawNum : " + exception.getMessage());
+		}
+		return workJobOrderResponseDTO;
+	}
 	
 }

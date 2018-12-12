@@ -1,5 +1,8 @@
 package com.deloitte.inspection.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -152,5 +156,43 @@ public class InspectionMasterController {
 		}
 		return userDto;
 	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/inspData/{compProdDrawNum}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<InspectionMasterResponseDataDTO> getInspectionTypesByCompProdDrawNum(@PathVariable("compProdDrawNum") String compProdDrawNum) {
+		logger.info("Entered into getInspectionTypesByCompProdDrawNum ");
+		InspectionMasterResponseDataDTO inspectionResponseDTO = null;
+		try {
+			inspectionResponseDTO = inspectionMasterService.getInspectionTypesByCompProdDrawNum(compProdDrawNum);
+			if (inspectionResponseDTO != null
+					&& StatusConstants.SUCCESS.equalsIgnoreCase(inspectionResponseDTO.getStatus())) {
+				return new ResponseEntity(inspectionResponseDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(inspectionResponseDTO, HttpStatus.EXPECTATION_FAILED);
+			}
+		} catch (Exception exception) {
+			logger.error("Exception while validating getInspectionTypesByCompProdDrawNum : " + exception.getMessage());
+		}
+		return new ResponseEntity(inspectionResponseDTO, HttpStatus.EXPECTATION_FAILED);
+	}
 
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/componentDrawNum/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<List<String>> getCompDrawNumList(@PathVariable("subscriberId") Integer subscriberId){
+		logger.info("Entered into getCompDrawNumList");
+		List<String> componentDrawNumbers = new ArrayList<String>();
+		try{
+			if(null != subscriberId){
+				componentDrawNumbers = inspectionMasterService.getCompDrawNumsBySubscriberId(subscriberId);
+				return new ResponseEntity(componentDrawNumbers,HttpStatus.OK);
+			}else{
+				return new ResponseEntity(null,HttpStatus.EXPECTATION_FAILED);
+			}
+		}catch(Exception exception){
+			logger.info("Exception At  getCompDrawNumList "+exception.getMessage());
+			return new ResponseEntity(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
