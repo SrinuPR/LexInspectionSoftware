@@ -20,12 +20,15 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.constant.WorkJobOrderConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.dao.CreateUserDAO;
+import com.deloitte.inspection.dao.InspectionMeasurementDAO;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dao.WorkJobOrderDAO;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.WorkJobOrderDTO;
+import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.exception.WorkJobOrderException;
+import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 import com.deloitte.inspection.model.LISSubscriberMaster;
@@ -54,6 +57,9 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	
 	@Autowired
 	private PurchaseOrderDataDAO purchaseOrderDataDAO;
+	
+	@Autowired
+	private InspectionMeasurementDAO inspectionMeasurementDAO;
 	
 	@Override
 	public WorkJobOrderResponseDTO saveWorkJobOrderData(WorkJobOrderDTO workJobOrderDTO, String userName,String userId, String action) throws WorkJobOrderException {
@@ -127,7 +133,13 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 					lotSize = lotSize + (workJobOrderMaster.getLotSize() != null ? workJobOrderMaster.getLotSize() : 0);
 				}
 			}
+			List<LISInspectionMeasurements> inspectionMeasurements =inspectionMeasurementDAO.getProducedQuantityListByWJandPO(workJobOrderNumber.toLowerCase(),customerPONumber.toLowerCase());
 			int producedQuantity = 0;
+			if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
+				for(LISInspectionMeasurements inspectionMeasurements2 : inspectionMeasurements){
+					producedQuantity = producedQuantity + inspectionMeasurements2.getLotSize();
+				}
+			}
 			if((lotSize-producedQuantity) >= 0){
 				flag = true;
 			}
@@ -355,7 +367,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		logger.info("Inside lotSizeChangeValidation ");
 		try{
 			int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber().toLowerCase());
-			int producedQuantity = 0;
+			int producedQuantity = getProducedQuantity(workJobOrderDTO.getLotNumber().toLowerCase());
 			if((manufacturingBatchSize - producedQuantity) > 0){
 				workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_UPDATE_SUCCESS);
@@ -371,6 +383,17 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		return workJobOrderResponseDTO;
 	}
 	
+	private int getProducedQuantity(String lotNumber) throws InspectionMeasurementException {
+		int producedQuantity = 0;
+		List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByLotchNumber(lotNumber.toLowerCase());
+		if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
+			for(LISInspectionMeasurements inspectionMeasurements2 :inspectionMeasurements){
+				producedQuantity = producedQuantity + inspectionMeasurements2.getProducedQuantity();
+			}
+		}
+		return producedQuantity;
+	}
+
 	private int getManufacturerBatchSize(String lotNumber) throws WorkJobOrderException{
 		int manufacturingBatchSize = 0;
 		List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByLotNumber(lotNumber);
@@ -427,6 +450,12 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 			if(null != workJobOrderMaster)
 				batchSize = null != workJobOrderMaster.getManufacturingBatchSize()?workJobOrderMaster.getManufacturingBatchSize() :0;
 			int producedQuantity = 0;
+			List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByBatchNumber(workJobOrderDTO.getManufacturingBatchNumber().toLowerCase());
+			if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
+				for(LISInspectionMeasurements inspectionMeasurements2 :inspectionMeasurements){
+					producedQuantity = producedQuantity + inspectionMeasurements2.getProducedQuantity();
+				}
+			}
 			if((batchSize - producedQuantity) > 0){
 				workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.BATCH_SIZE_UPDATE_SUCCESS);
