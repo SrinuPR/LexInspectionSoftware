@@ -267,23 +267,24 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 	
 	public InspectionLineItemResponseDTO getLineItemByCompDraNum(String compDraNum) 
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into getComponentProductDrawNumbers");
+		logger.info("Entered into getLineItemByCompDraNum ");
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		try{
-			Set<String> componentProductDrawNumList = new HashSet<String>();
-			List<LISInspectionMaster> mastersList = inspectionLineMasterDAO.getComponentProductDrawNumbers(compDraNum);
+			List<InspectionLineItemDTO> inspectionLineItemDTOs = new ArrayList<InspectionLineItemDTO>();
+			List<LISInspectionLineItemMaster> mastersList = inspectionLineMasterDAO.getComponentProductDrawNumbers(compDraNum.toLowerCase());
 			if(null != mastersList && mastersList.size() > 0){
-				for(LISInspectionMaster lisInspectionMaster : mastersList){
-					componentProductDrawNumList.add(lisInspectionMaster.getComponentMasterData().getComponentProductDrawNumber());
+				for(LISInspectionLineItemMaster lineItemMaster : mastersList){
+					InspectionLineItemDTO inspectionLineItemDTO = new InspectionLineItemDTO();
+					inspectionLineItemDTO = transformToDTO(inspectionLineItemDTO,lineItemMaster);
+					inspectionLineItemDTOs.add(inspectionLineItemDTO);
 				}
 			}
-			List<String> ProductDrawNumList = new ArrayList<String>(componentProductDrawNumList);
-			inspectionLineItemResponseDTO.setComponentDrawNumbers(ProductDrawNumList);
+			inspectionLineItemResponseDTO.setResults(inspectionLineItemDTOs);
 			inspectionLineItemResponseDTO.setStatus(StatusConstants.SUCCESS);
 			inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.FETCH_COMPONENT_PROD_DRAW_NUM_SUCCESS);
 			return inspectionLineItemResponseDTO;
 		}catch(Exception exception){
-			logger.error("Exception while fetching component Drawing Numbers "+exception.getMessage());
+			logger.error("Exception while getLineItemByCompDraNum "+exception.getMessage());
 			inspectionLineItemResponseDTO.setStatus(StatusConstants.ERROR);
 			inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.UN_EXPECTED_EXCEPTION);
 		}
