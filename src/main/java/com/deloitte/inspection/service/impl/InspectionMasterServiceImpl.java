@@ -188,12 +188,12 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 				List<InspectionMasterDTO> inspectionMasterDTOs = new ArrayList<InspectionMasterDTO>();
 				for(LISInspectionReportMaster lisInspectionReportMaster : list){
 					InspectionMasterDTO inspectionMasterDTO = new InspectionMasterDTO();
-					LISInspectionStageMaster stageMaster = inspectionStageMasterDAO.getInspSatgeId(lisInspectionReportMaster.getInspStageId());
+					LISInspectionStageMaster stageMaster = inspectionStageMasterDAO.getInspSatgeId(lisInspectionReportMaster.getInspectionStageId());
 					if(null != stageMaster){
 						inspectionMasterDTO.setInspectionStage(stageMaster.getInspStageId());
 						inspectionMasterDTO.setInspectionStageName(stageMaster.getInspStageName());
 					}
-					LISInspectionTypeMaster inspectionTypeMaster = inspectionTypeMasterDAO.getInspTypeId(lisInspectionReportMaster.getInspTypeId());
+					LISInspectionTypeMaster inspectionTypeMaster = inspectionTypeMasterDAO.getInspTypeId(lisInspectionReportMaster.getInspectionTypeId());
 					if(null != inspectionTypeMaster){
 						inspectionMasterDTO.setInspectionType(inspectionTypeMaster.getInspTypeId());
 						inspectionMasterDTO.setInspectionTypeName(inspectionTypeMaster.getInspTypeName());

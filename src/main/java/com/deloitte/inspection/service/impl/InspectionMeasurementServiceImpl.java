@@ -41,7 +41,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			if(null != inspectionReportMasters){
 				list = new ArrayList<String>();
 				for(LISInspectionReportMaster inspctionReport : inspectionReportMasters){
-					list.add(inspctionReport.getComponentMasterData().getComponentProductDrawNumber());
+					list.add(inspctionReport.getCompProdDrawNum());
 				}
 			}
 		}catch(Exception exception){
