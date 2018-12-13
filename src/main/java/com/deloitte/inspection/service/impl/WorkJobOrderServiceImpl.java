@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,6 +210,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		return workJobOrderDTOs;
 	}
 	
+	@Transactional
 	private List<WorkJobOrderDTO> transferModelToDTO(List<LISWorkJobOrderMaster> workJobOrderMasters) throws ParseException{
 		List<WorkJobOrderDTO> workJobOrderDTOs = new ArrayList<WorkJobOrderDTO>();
 		if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
@@ -227,6 +230,11 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 				workJobOrderDTO.setWjOrderId(workJobOrderMaster.getWjOrderId());
 				workJobOrderDTO.setWorkOrderJobNotes(workJobOrderMaster.getWorkOrderJobNotes());
 				workJobOrderDTO.setWorkJobOrderDate(InspectionUtils.convertDateToString(workJobOrderMaster.getWorkJobOrderDate()));
+				if(null != workJobOrderMaster.getPurchaseOrderMaster()){
+					workJobOrderDTO.setCustomerPONumber(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPONumber());
+					workJobOrderDTO.setCustomerPODate(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPODate());
+					workJobOrderDTO.setCustomerPOQuantity(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPOQuantity());
+				}
 				workJobOrderDTOs.add(workJobOrderDTO);
 			}
 		}
@@ -511,6 +519,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		return workJobOrderResponseDTO;		
 	}
 
+	@Transactional
 	@Override
 	public WorkJobOrderResponseDTO getWJODataByCompProdDrawNum(String compProdDrawNum) throws WorkJobOrderException {
 		logger.info("Service : getWJODataByCompProdDrawNum");

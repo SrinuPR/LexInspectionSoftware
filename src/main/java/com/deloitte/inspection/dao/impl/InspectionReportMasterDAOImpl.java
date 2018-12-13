@@ -28,7 +28,7 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 	@Override
 	public void saveReport(LISInspectionReportMaster inspRptMatser) throws InspectionReportMasterException {
 		Session session = getSession();
-			session.save(inspRptMatser);
+		session.save(inspRptMatser);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

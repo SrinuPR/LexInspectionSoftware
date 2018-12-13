@@ -1,5 +1,7 @@
 package com.deloitte.inspection.dto;
 
+import java.util.Date;
+
 public class WorkJobOrderDTO {
 	
 	private Integer wjOrderId;
@@ -16,6 +18,8 @@ public class WorkJobOrderDTO {
 	private String SubscriberName;
 	private String componentProductDrawNumber;
 	private String customerPONumber;
+	private Date customerPODate;
+	private Integer customerPOQuantity;
 	
 	public Integer getWjOrderId() {
 		return wjOrderId;
@@ -100,5 +104,17 @@ public class WorkJobOrderDTO {
 	}
 	public void setCustomerPONumber(String customerPONumber) {
 		this.customerPONumber = customerPONumber;
+	}
+	public Date getCustomerPODate() {
+		return customerPODate;
+	}
+	public void setCustomerPODate(Date customerPODate) {
+		this.customerPODate = customerPODate;
+	}
+	public Integer getCustomerPOQuantity() {
+		return customerPOQuantity;
+	}
+	public void setCustomerPOQuantity(Integer customerPOQuantity) {
+		this.customerPOQuantity = customerPOQuantity;
 	}
 }
