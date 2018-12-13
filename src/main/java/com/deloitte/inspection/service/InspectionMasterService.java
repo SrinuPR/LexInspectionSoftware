@@ -1,8 +1,7 @@
 package com.deloitte.inspection.service;
 
-import java.util.List;
-
 import com.deloitte.inspection.dto.InspectionMasterDTO;
+import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
 import com.deloitte.inspection.response.dto.InspectionMasterResponseDataDTO;
 
 public interface InspectionMasterService {
@@ -19,6 +18,6 @@ public interface InspectionMasterService {
 
 	public InspectionMasterResponseDataDTO getInspectionTypesByCompProdDrawNum(String compProdDrawNum);
 
-	public List<String> getCompDrawNumsBySubscriberId(Integer subscriberId);
+	public ComponentMasterResponseDataDTO getCompDrawNumsBySubscriberId(Integer subscriberId);
 
 }

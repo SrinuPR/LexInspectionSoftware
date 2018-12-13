@@ -31,6 +31,7 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 			session.save(inspRptMatser);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LISInspectionReportMaster validateInspReportNumber(Integer inspReportNum)
 			throws InspectionReportMasterException {

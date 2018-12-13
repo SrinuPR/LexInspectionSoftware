@@ -3,7 +3,6 @@
  */
 package com.deloitte.inspection.dto;
 
-import java.util.Date;
 
 /**
  * @author rnarne

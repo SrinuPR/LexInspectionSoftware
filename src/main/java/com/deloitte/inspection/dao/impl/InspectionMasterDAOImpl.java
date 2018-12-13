@@ -2,10 +2,14 @@ package com.deloitte.inspection.dao.impl;
 
 import java.util.List;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,7 +19,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.model.LISInspectionMaster;
-import com.deloitte.inspection.model.LISInspectionReportMaster;
+import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 
 @Repository
 @Transactional
@@ -114,7 +118,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List<LISInspectionReportMaster> getInspectionTypesByCompProdDrawNum(String compProdDrawNum) {
+	public List<LISInspectionMaster> getInspectionTypesByCompProdDrawNum(String compProdDrawNum) {
 		logger.info("Inside getInspectionTypesByCompProdDrawNum DAO");
 		Query query = getSession().createQuery(" From LISInspectionMaster master where lower(master.componentMasterData.componentProductDrawNumber) = :compProdDrawNum and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
 		query.setParameter("compProdDrawNum",compProdDrawNum);
@@ -122,13 +126,22 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		return query.list();
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
 	@Override
-	public List<LISInspectionMaster> getCompDrawNumsBySubscriberId(Integer subscriberId) {
+	public List<LISMaintainMasterDataComponent> getCompDrawNumsBySubscriberId(Integer subscriberId) {
 		logger.info("getCompDrawNumsBySubscriberId DAO");
-		Query query = getSession().createQuery("FROM LISInspectionMaster i where i.subscriberMaster.subscriberId = :subscriberId and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
+		Criteria criteria = getSession().createCriteria(LISInspectionMaster.class);
+		criteria.setProjection(Projections.distinct(Projections.property("componentMasterData.componentProductDrawNumber")));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("subscriberMaster.subscriberId", subscriberId));
+		criteria.add(Restrictions.eq("isActive", StatusConstants.IS_ACTIVE));
+		List<String> drawNums = criteria.list();
+		
+		Query query = getSession().createQuery("FROM LISMaintainMasterDataComponent i where i.subscriberMaster.subscriberId = :subscriberId and i.componentProductDrawNumber in (:drawNums) and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
 		query.setParameter("subscriberId", subscriberId);
+		query.setParameterList("drawNums", drawNums);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+			
 		return query.list();
 		
 	}

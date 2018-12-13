@@ -5,6 +5,9 @@ package com.deloitte.inspection.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.exception.SubscriberMasterException;
 import com.deloitte.inspection.model.LISSubscriberMaster;
+import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.service.SubscriberMasterService;
 
 /**
@@ -86,6 +90,7 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 	}
 	
 	@Override
+	@Transactional
 	public List<SubscriberMasterDTO> getAllSubscriberMasterData() throws SubscriberMasterException {
 		try{
 			List<SubscriberMasterDTO> subscriberMasterDTOList = new ArrayList<SubscriberMasterDTO>();
@@ -95,6 +100,19 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 					SubscriberMasterDTO subscriberMasterDTO = new SubscriberMasterDTO();
 					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId());
 					subscriberMasterDTO.setSubscriberName(lisSubscriberMaster.getSubscriberName());
+					if(null != lisSubscriberMaster.getUserMasterCreateList() && lisSubscriberMaster.getUserMasterCreateList().size() > 0){
+						subscriberMasterDTO.setUserCount(lisSubscriberMaster.getUserMasterCreateList().size());
+						List<String> users = new ArrayList<String>();
+						int count = 0;
+						for(LISUserMasterCreate user : lisSubscriberMaster.getUserMasterCreateList()){
+							if(StatusConstants.IS_ACTIVE == user.getIsActive()){
+								users.add(user.getUserId());
+								count = count+1;
+							}
+						}
+						subscriberMasterDTO.setUserCount(count);
+						subscriberMasterDTO.setUserId(users);
+					}
 					subscriberMasterDTOList.add(subscriberMasterDTO);
 				}
 			}

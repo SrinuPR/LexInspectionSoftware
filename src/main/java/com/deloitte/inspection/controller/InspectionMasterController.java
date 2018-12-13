@@ -1,8 +1,5 @@
 package com.deloitte.inspection.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +20,7 @@ import com.deloitte.inspection.constant.InspectionMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.dto.LoginDTO;
+import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
 import com.deloitte.inspection.response.dto.InspectionMasterResponseDataDTO;
 import com.deloitte.inspection.service.InspectionMasterService;
 
@@ -159,7 +157,7 @@ public class InspectionMasterController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/inspData/{compProdDrawNum}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inspData/{compProdDrawNum}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<InspectionMasterResponseDataDTO> getInspectionTypesByCompProdDrawNum(@PathVariable("compProdDrawNum") String compProdDrawNum) {
 		logger.info("Entered into getInspectionTypesByCompProdDrawNum ");
 		InspectionMasterResponseDataDTO inspectionResponseDTO = null;
@@ -180,15 +178,18 @@ public class InspectionMasterController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/componentDrawNum/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<String>> getCompDrawNumList(@PathVariable("subscriberId") Integer subscriberId){
+	public @ResponseBody ResponseEntity<ComponentMasterResponseDataDTO> getCompDrawNumList(@PathVariable("subscriberId") Integer subscriberId){
 		logger.info("Entered into getCompDrawNumList");
-		List<String> componentDrawNumbers = new ArrayList<String>();
+		ComponentMasterResponseDataDTO componentDrawNumbers = new ComponentMasterResponseDataDTO();
 		try{
 			if(null != subscriberId){
 				componentDrawNumbers = inspectionMasterService.getCompDrawNumsBySubscriberId(subscriberId);
-				return new ResponseEntity(componentDrawNumbers,HttpStatus.OK);
+				if(null != componentDrawNumbers && StatusConstants.SUCCESS.equalsIgnoreCase(componentDrawNumbers.getStatus()))
+					return new ResponseEntity(componentDrawNumbers,HttpStatus.OK);
+				else
+					return new ResponseEntity(componentDrawNumbers,HttpStatus.EXPECTATION_FAILED);
 			}else{
-				return new ResponseEntity(null,HttpStatus.EXPECTATION_FAILED);
+				return new ResponseEntity(componentDrawNumbers,HttpStatus.PRECONDITION_FAILED);
 			}
 		}catch(Exception exception){
 			logger.info("Exception At  getCompDrawNumList "+exception.getMessage());

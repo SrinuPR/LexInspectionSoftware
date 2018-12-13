@@ -19,6 +19,15 @@ public class SubscriberMasterDTO extends CommonDTO{
 	private Date updatedTimestamp;
 	private String createdBy;
 	private String updatedBy;
+	private List<String> userId;
+	private int userCount;
+	
+	public int getUserCount() {
+		return userCount;
+	}
+	public void setUserCount(int userCount) {
+		this.userCount = userCount;
+	}
 	List<SubscriberMasterDTO> subMasterList;
 		
 	/**
@@ -117,4 +126,11 @@ public class SubscriberMasterDTO extends CommonDTO{
 	public void setSubMasterList(List<SubscriberMasterDTO> subMasterList) {
 		this.subMasterList = subMasterList;
 	}
+	public List<String> getUserId() {
+		return userId;
+	}
+	public void setUserId(List<String> userId) {
+		this.userId = userId;
+	}
+	
 }

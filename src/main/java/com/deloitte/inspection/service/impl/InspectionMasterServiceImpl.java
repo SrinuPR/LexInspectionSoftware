@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.deloitte.inspection.constant.ComponentConstants;
 import com.deloitte.inspection.constant.InspectionMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
@@ -16,15 +17,16 @@ import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dao.InspectionStageMasterDAO;
 import com.deloitte.inspection.dao.InspectionTypeMasterDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
+import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
 import com.deloitte.inspection.model.LISInspectionMaster;
-import com.deloitte.inspection.model.LISInspectionReportMaster;
 import com.deloitte.inspection.model.LISInspectionStageMaster;
 import com.deloitte.inspection.model.LISInspectionTypeMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISSubscriberMaster;
+import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
 import com.deloitte.inspection.response.dto.InspectionMasterResponseDataDTO;
 import com.deloitte.inspection.service.InspectionMasterService;
 
@@ -183,17 +185,17 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		InspectionMasterResponseDataDTO inspectionMasterResponseDataDTO = new InspectionMasterResponseDataDTO();
 		logger.info("Inside getInspectionTypesByCompProdDrawNum start");
 		try{
-			List<LISInspectionReportMaster> list = inspectionDAO.getInspectionTypesByCompProdDrawNum(compProdDrawNum.toLowerCase());
+			List<LISInspectionMaster> list = inspectionDAO.getInspectionTypesByCompProdDrawNum(compProdDrawNum.toLowerCase());
 			if(null != list && list.size() > 0){
 				List<InspectionMasterDTO> inspectionMasterDTOs = new ArrayList<InspectionMasterDTO>();
-				for(LISInspectionReportMaster lisInspectionReportMaster : list){
+				for(LISInspectionMaster lisInspectionReportMaster : list){
 					InspectionMasterDTO inspectionMasterDTO = new InspectionMasterDTO();
-					LISInspectionStageMaster stageMaster = inspectionStageMasterDAO.getInspSatgeId(lisInspectionReportMaster.getInspectionStageId());
+					LISInspectionStageMaster stageMaster = inspectionStageMasterDAO.getInspSatgeId(lisInspectionReportMaster.getInspStageId());
 					if(null != stageMaster){
 						inspectionMasterDTO.setInspectionStage(stageMaster.getInspStageId());
 						inspectionMasterDTO.setInspectionStageName(stageMaster.getInspStageName());
 					}
-					LISInspectionTypeMaster inspectionTypeMaster = inspectionTypeMasterDAO.getInspTypeId(lisInspectionReportMaster.getInspectionTypeId());
+					LISInspectionTypeMaster inspectionTypeMaster = inspectionTypeMasterDAO.getInspTypeId(lisInspectionReportMaster.getInspTypeId());
 					if(null != inspectionTypeMaster){
 						inspectionMasterDTO.setInspectionType(inspectionTypeMaster.getInspTypeId());
 						inspectionMasterDTO.setInspectionTypeName(inspectionTypeMaster.getInspTypeName());
@@ -211,23 +213,30 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		return inspectionMasterResponseDataDTO;
 	}
 
-	@Override
-	public List<String> getCompDrawNumsBySubscriberId(Integer subscriberId) {
-		List<String> list = null;
+	public ComponentMasterResponseDataDTO getCompDrawNumsBySubscriberId(Integer subscriberId) {
+		ComponentMasterResponseDataDTO componentMasterResponseDataDTO  = new ComponentMasterResponseDataDTO();
 		logger.info("Entered into getCompDrawNumsBySubscriberId service");
 		try{
-			List<LISInspectionMaster> inspectionMasters = inspectionDAO.getCompDrawNumsBySubscriberId(subscriberId);
+			List<LISMaintainMasterDataComponent> inspectionMasters = inspectionDAO.getCompDrawNumsBySubscriberId(subscriberId);
 			if(null != inspectionMasters){
-				list = new ArrayList<String>();
-				for(LISInspectionMaster inspctionReport : inspectionMasters){
-					list.add(inspctionReport.getComponentMasterData().getComponentProductDrawNumber());
+				List<ComponentMasterDataDTO> result= new ArrayList<ComponentMasterDataDTO>();
+				for(LISMaintainMasterDataComponent inspctionReport : inspectionMasters){
+					ComponentMasterDataDTO componentMasterDataDTO = new ComponentMasterDataDTO();
+					componentMasterDataDTO.setComponentId(inspctionReport.getCmdcsId());
+					componentMasterDataDTO.setComponentProductDrawNumber(inspctionReport.getComponentProductDrawNumber());
+					componentMasterDataDTO.setComponentProductName(inspctionReport.getComponentProductName());
+					result.add(componentMasterDataDTO);
 				}
+				componentMasterResponseDataDTO.setResult(result);
 			}
+			componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+			componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_LIST_SUCCESS);
 		}catch(Exception exception){
+			componentMasterResponseDataDTO.setStatus(StatusConstants.ERROR);
+			componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_LIST_FAILED);
 			logger.error("Exception Occured in getCompDrawNumsBySubscriberId service :"+exception.getMessage());
 		}
-		return list;
+		return componentMasterResponseDataDTO;
 	}
-
 }
 

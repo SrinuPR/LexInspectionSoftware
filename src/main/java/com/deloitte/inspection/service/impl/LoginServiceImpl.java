@@ -186,20 +186,19 @@ public class LoginServiceImpl implements LoginService{
 				} catch (CryptoException e) {
 					logger.error(e.getMessage());
 				}
-			}else{
-				login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
-				if(null != login){
-					try {
-						correctPass = cryptoComponent.decrypt(login.getPassword())
+			}
+			login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
+			if(null != login){
+				try {
+					correctPass = cryptoComponent.decrypt(login.getPassword())
 								.equals(passwordMaintenanceDTO.getActivePassword());
-					} catch (CryptoException e) {
-						logger.error(e.getMessage());
-					}
+				} catch (CryptoException e) {
+					logger.error(e.getMessage());
 				}
 			}
 		}
 		if ((null == login || null == userMasterModel) || !correctPass) {
-			response = StatusConstants.INVALID_USER;
+			response = StatusConstants.INCORRECT_CREDENTIALS;
 			return response;
 		} else {
 			if (null != passwordMaintenanceDTO.getNewPassword()) {
