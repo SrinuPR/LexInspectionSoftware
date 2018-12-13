@@ -2,7 +2,9 @@ package com.deloitte.inspection.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,16 +16,12 @@ import com.deloitte.inspection.constant.InspectionMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.dao.InspectionMasterDAO;
-import com.deloitte.inspection.dao.InspectionStageMasterDAO;
-import com.deloitte.inspection.dao.InspectionTypeMasterDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
 import com.deloitte.inspection.model.LISInspectionMaster;
-import com.deloitte.inspection.model.LISInspectionStageMaster;
-import com.deloitte.inspection.model.LISInspectionTypeMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
@@ -41,10 +39,10 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 	private SubscriberMasterDAO subscriberMasterDAO;
 	@Autowired
 	private ComponentMasterDataDAO componentMasterDataDAO;
-	@Autowired
+	/*@Autowired
 	private InspectionStageMasterDAO inspectionStageMasterDAO;
 	@Autowired
-	private InspectionTypeMasterDAO inspectionTypeMasterDAO;
+	private InspectionTypeMasterDAO inspectionTypeMasterDAO;*/
 	
 	@Override
 	public InspectionMasterResponseDataDTO validateInspectionStage(InspectionMasterDTO masterDTO) {
@@ -187,11 +185,13 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		try{
 			List<LISInspectionMaster> list = inspectionDAO.getInspectionTypesByCompProdDrawNum(compProdDrawNum.toLowerCase());
 			if(null != list && list.size() > 0){
-				List<InspectionMasterDTO> inspectionMasterDTOs = new ArrayList<InspectionMasterDTO>();
+				Set<Integer> inspTypeIds = new HashSet<Integer>();
+				Set<Integer> inspStageIds = new HashSet<Integer>();
 				for(LISInspectionMaster lisInspectionReportMaster : list){
-					InspectionMasterDTO inspectionMasterDTO = new InspectionMasterDTO();
-					LISInspectionStageMaster stageMaster = inspectionStageMasterDAO.getInspSatgeId(lisInspectionReportMaster.getInspStageId());
-					if(null != stageMaster){
+					inspStageIds.add(lisInspectionReportMaster.getInspStageId());
+					inspTypeIds.add(lisInspectionReportMaster.getInspTypeId());
+					//LISInspectionStageMaster stageMaster = inspectionStageMasterDAO.getInspSatgeId(lisInspectionReportMaster.getInspStageId());
+					/*if(null != stageMaster){
 						inspectionMasterDTO.setInspectionStage(stageMaster.getInspStageId());
 						inspectionMasterDTO.setInspectionStageName(stageMaster.getInspStageName());
 					}
@@ -199,8 +199,9 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 					if(null != inspectionTypeMaster){
 						inspectionMasterDTO.setInspectionType(inspectionTypeMaster.getInspTypeId());
 						inspectionMasterDTO.setInspectionTypeName(inspectionTypeMaster.getInspTypeName());
-					}
-					inspectionMasterDTOs.add(inspectionMasterDTO);
+					}*/
+					inspectionMasterResponseDataDTO.setInspStageList(inspStageIds);
+					inspectionMasterResponseDataDTO.setInspTypeList(inspTypeIds);
 				}
 			}
 			inspectionMasterResponseDataDTO.setMessage("Inspection Results");

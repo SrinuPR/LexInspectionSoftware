@@ -17,11 +17,9 @@ import com.deloitte.inspection.component.ApplicationProperties;
 import com.deloitte.inspection.component.CryptoComponent;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
-import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.exception.CryptoException;
-import com.deloitte.inspection.exception.SubscriberMasterException;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
@@ -34,9 +32,6 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	
 	@Autowired
     private SessionFactory sessionFactory;
-	
-	@Autowired
-	private SubscriberMasterDAO subscriberMasterDAO;
 	
 	@Autowired
 	private CryptoComponent cryptoComponent;
@@ -52,15 +47,22 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	public String createUser(CreateUserDTO createuserDTO) throws CreateUserException {
 		logger.info("Entered into createUser");	
 		try {
-			Query query = getSession().createQuery(" From LISUserMasterCreate UMACS where UMACS.subscriberMaster.subscriberId = :subscriberId and UMACS.isActive = :isActive ");
+			Session session =  getSession();
+			Query query = session.createQuery(" From LISUserMasterCreate UMACS where UMACS.subscriberMaster.subscriberId = :subscriberId and UMACS.isActive = :isActive ");
 			query.setParameter("subscriberId", createuserDTO.getSubscriberId());
 			query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 			List<LISUserMasterCreate> userMasterList = query.list();
 			if(null != userMasterList && userMasterList.size() >= applicationProperties.EACH_SUBSCRIBER_USER_COUNT){
 				return StatusConstants.FAILURE;
 			}
-			LISSubscriberMaster subscriberMaster=new LISSubscriberMaster();
-			subscriberMaster = subscriberMasterDAO.validateSubscriber(createuserDTO.getSubscriberId());
+			LISSubscriberMaster subscriberMaster=null;
+			query = session.createQuery(" From LISSubscriberMaster SUMAS where SUMAS.subscriberId = :subscriberId and SUMAS.isActive = :isActive");
+			query.setParameter("subscriberId", createuserDTO.getSubscriberId());
+			query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+			List<LISSubscriberMaster> subscriberList = query.list();
+			if(null != subscriberList && subscriberList.size() > 0) {
+				subscriberMaster = subscriberList.get(0);
+			}
 			LISUserMasterCreate userMaster=new LISUserMasterCreate();
 			userMaster.setActivePassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
 			userMaster.setCreatedBy(createuserDTO.getUserName());
@@ -81,10 +83,10 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 			lisLogin.setIsActive(StatusConstants.IS_ACTIVE);
 			userMaster.setLoginDetails(lisLogin);
 			userMaster.setSubscriberMaster(subscriberMaster);
-			getSession().save(userMaster);
+			session.save(userMaster);
 			
 			return StatusConstants.SUCCESS;
-		} catch (HibernateException | SubscriberMasterException | CryptoException ex) {
+		} catch (HibernateException | CryptoException ex) {
 			ex.printStackTrace();
 		} 
 		return StatusConstants.FAILURE;
