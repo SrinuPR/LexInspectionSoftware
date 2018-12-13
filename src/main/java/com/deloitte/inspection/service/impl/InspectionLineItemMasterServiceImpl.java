@@ -264,4 +264,29 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 		}
 		return inspectionLineItemResponseDTO;
 	}
+	
+	public InspectionLineItemResponseDTO getLineItemByCompDraNum(String compDraNum) 
+			throws InspectionLineItemMasterException {
+		logger.info("Entered into getComponentProductDrawNumbers");
+		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
+		try{
+			Set<String> componentProductDrawNumList = new HashSet<String>();
+			List<LISInspectionMaster> mastersList = inspectionLineMasterDAO.getComponentProductDrawNumbers(compDraNum);
+			if(null != mastersList && mastersList.size() > 0){
+				for(LISInspectionMaster lisInspectionMaster : mastersList){
+					componentProductDrawNumList.add(lisInspectionMaster.getComponentMasterData().getComponentProductDrawNumber());
+				}
+			}
+			List<String> ProductDrawNumList = new ArrayList<String>(componentProductDrawNumList);
+			inspectionLineItemResponseDTO.setComponentDrawNumbers(ProductDrawNumList);
+			inspectionLineItemResponseDTO.setStatus(StatusConstants.SUCCESS);
+			inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.FETCH_COMPONENT_PROD_DRAW_NUM_SUCCESS);
+			return inspectionLineItemResponseDTO;
+		}catch(Exception exception){
+			logger.error("Exception while fetching component Drawing Numbers "+exception.getMessage());
+			inspectionLineItemResponseDTO.setStatus(StatusConstants.ERROR);
+			inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.UN_EXPECTED_EXCEPTION);
+		}
+		return inspectionLineItemResponseDTO;
+	}
 }

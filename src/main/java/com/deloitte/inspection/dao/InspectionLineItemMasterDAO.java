@@ -19,4 +19,5 @@ public interface InspectionLineItemMasterDAO {
 
 	public LISInspectionLineItemMaster getInspectionItem(Integer inspectionLineItemId) throws InspectionLineItemMasterException;
 
+	public List<LISInspectionMaster>  getComponentProductDrawNumbers(String compDraNum) throws InspectionLineItemMasterException;
 }

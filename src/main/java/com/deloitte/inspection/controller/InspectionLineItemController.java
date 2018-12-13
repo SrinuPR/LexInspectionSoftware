@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.deloitte.inspection.constant.InspectionLineItemConstants;
+import com.deloitte.inspection.constant.InspectionReportMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.InspectionLineItemDTO;
 import com.deloitte.inspection.dto.LoginDTO;
@@ -194,6 +195,28 @@ public class InspectionLineItemController {
 			inspectionLineItemResponseDTO.setStatus(StatusConstants.ERROR);
 			inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.UN_EXPECTED_EXCEPTION);
 			return new ResponseEntity(inspectionLineItemResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes"})
+	@RequestMapping(value = "/report/{compdrawnum}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<InspectionLineItemResponseDTO> validateInspReportNum(@PathVariable("compdrawnum") String compdrawnum){
+		logger.info("Inside compdrawnum");
+		InspectionLineItemResponseDTO inspLineItemResDto = new InspectionLineItemResponseDTO();
+		try{
+			inspLineItemResDto = inspectionLineItemMasterService.getLineItemByCompDraNum(compdrawnum.toLowerCase());
+			if(null != inspLineItemResDto && StatusConstants.SUCCESS.equalsIgnoreCase(inspLineItemResDto.getStatus())){
+				return new ResponseEntity(inspLineItemResDto, HttpStatus.OK);
+			}else{
+				return new ResponseEntity(inspLineItemResDto, HttpStatus.EXPECTATION_FAILED);
+			}
+		}catch(Exception exception){
+			logger.error("Exception Occurred validateInspReportNum "+exception.getMessage());
+			inspLineItemResDto.setStatus(StatusConstants.ERROR);
+			inspLineItemResDto.setMessage(InspectionReportMasterConstants.UN_EXPECTED_EXCEPTION);
+			return new ResponseEntity(inspLineItemResDto, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

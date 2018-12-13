@@ -25,4 +25,6 @@ public interface InspectionLineItemMasterService {
 
 	public InspectionLineItemResponseDTO updateInspectionData(List<InspectionLineItemDTO> inspectionLineItem, String userName, String userId) throws InspectionLineItemMasterException;
 
+	public InspectionLineItemResponseDTO getLineItemByCompDraNum(String compDraNum) 
+			throws InspectionLineItemMasterException;
 }
