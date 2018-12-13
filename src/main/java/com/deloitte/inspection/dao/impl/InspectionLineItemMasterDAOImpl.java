@@ -93,6 +93,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		return null;
 	}
     
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<LISInspectionMaster>  getComponentProductDrawNumbers(String compDraNum) throws InspectionLineItemMasterException {
 		logger.info("Entered into getComponentProductDrawNumbers DAO");	
 		Query query = getSession().createQuery(" From LISInspectionMaster l where lower(l.componentProductDrawNumber) = :compDraNum and isActive = :isActive ORDER BY l.createdTimestamp DESC");
