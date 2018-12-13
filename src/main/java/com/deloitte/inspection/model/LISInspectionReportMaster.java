@@ -3,15 +3,11 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,9 +17,24 @@ public class LISInspectionReportMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132210L;
 	
 	@Id
-	@Column(name = "IRMCS_ID", unique= true)
+	@Column(name = "IRMCS_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer inspRptMasterId;
+	
+	@Column(name = "INSPECTION_REPORT_NUMBER" , length = 50)
+	private Integer inspReportNumber;
+	
+	@Column(name = "SUBSCRIBER_ID", length = 5, nullable = false)
+	private Integer subscriberId;
+	
+	@Column(name = "SUBSCRIBER_NAME", length = 50, nullable = false)
+	private String subscriberName;
+		
+	@Column(name = "INMDC_COMPONENT_PRODUCT_DRAW_NUM", length = 50, nullable = false)
+	private String compProdDrawNum;
+	
+	@Column(name = "COMP_PROD_NAME" , length = 50)
+	private String componentProdcuctName;
 		
 	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
 	private String workJobOrderNumber;
@@ -33,6 +44,12 @@ public class LISInspectionReportMaster implements Serializable{
 	
 	@Column(name = "LOT_SIZE" , length = 5)
 	private Integer lotSize;
+	
+	@Column(name = "INSPECTION_TYPE_ID", length = 5)
+	private Integer inspectionTypeId;
+	
+	@Column(name = "INSPECTION_STAGE_ID", length = 5)
+	private Integer InspectionStageId;
 	
 	@Column(name = "MANUFACTURING_BATCH_NUMBER" , length = 30)
 	private String manufacturingBatchNumber;
@@ -49,17 +66,8 @@ public class LISInspectionReportMaster implements Serializable{
 	@Column(name = "CUSTOMER_PO_QUANTITY" , length = 5)
 	private Integer customerPoQuantity;
 	
-	@Column(name = "CUST_NAME_ADDR" , length = 250)
-	private String customerNameAddress;
-	
-	@Column(name = "INSPECTION_TYPE_ID")
-	private Integer inspTypeId; 
-	
-	@Column(name = "INSPECTION_STAGE_ID")
-	private Integer inspStageId;
-	
-	@Column(name = "INSPECTION_REPORT_NUMBER" , length = 50)
-	private Integer inspReportNumber;
+	@Column(name = "USER_ID" , nullable = false)
+	private String userID;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;
@@ -76,18 +84,6 @@ public class LISInspectionReportMaster implements Serializable{
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="SUBSCRIBER_ID")
-    private LISSubscriberMaster subscriberMaster;
-	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="COMP_PROD_DRAW_NUM")
-    private LISMaintainMasterDataComponent componentMasterData;
-	
-	/*@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="WOMCS_ID")
-    private LISWorkJobOrderMaster workJobOrderMaster;*/
-
 	/**
 	 * @return the workJobOrderNumber
 	 */
@@ -186,7 +182,6 @@ public class LISInspectionReportMaster implements Serializable{
 		this.customerPoDate = customerPoDate;
 	}
 
-
 	/**
 	 * @return the customerPoQuantity
 	 */
@@ -199,48 +194,6 @@ public class LISInspectionReportMaster implements Serializable{
 	 */
 	public void setCustomerPoQuantity(Integer customerPoQuantity) {
 		this.customerPoQuantity = customerPoQuantity;
-	}
-
-	/**
-	 * @return the customerNameAddress
-	 */
-	public String getCustomerNameAddress() {
-		return customerNameAddress;
-	}
-
-	/**
-	 * @param customerNameAddress the customerNameAddress to set
-	 */
-	public void setCustomerNameAddress(String customerNameAddress) {
-		this.customerNameAddress = customerNameAddress;
-	}
-
-	/**
-	 * @return the inspTypeId
-	 */
-	public Integer getInspTypeId() {
-		return inspTypeId;
-	}
-
-	/**
-	 * @param inspTypeId the inspTypeId to set
-	 */
-	public void setInspTypeId(Integer inspTypeId) {
-		this.inspTypeId = inspTypeId;
-	}
-
-	/**
-	 * @return the inspStageId
-	 */
-	public Integer getInspStageId() {
-		return inspStageId;
-	}
-
-	/**
-	 * @param inspStageId the inspStageId to set
-	 */
-	public void setInspStageId(Integer inspStageId) {
-		this.inspStageId = inspStageId;
 	}
 
 	/**
@@ -328,34 +281,6 @@ public class LISInspectionReportMaster implements Serializable{
 	}
 
 	/**
-	 * @return the subscriberMaster
-	 */
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	/**
-	 * @param subscriberMaster the subscriberMaster to set
-	 */
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
-	/**
-	 * @return the componentMasterData
-	 */
-	public LISMaintainMasterDataComponent getComponentMasterData() {
-		return componentMasterData;
-	}
-
-	/**
-	 * @param componentMasterData the componentMasterData to set
-	 */
-	public void setComponentMasterData(LISMaintainMasterDataComponent componentMasterData) {
-		this.componentMasterData = componentMasterData;
-	}
-
-	/**
 	 * @return the inspRptMasterId
 	 */
 	public Integer getInspRptMasterId() {
@@ -367,5 +292,103 @@ public class LISInspectionReportMaster implements Serializable{
 	 */
 	public void setInspRptMasterId(Integer inspRptMasterId) {
 		this.inspRptMasterId = inspRptMasterId;
+	}
+
+	/**
+	 * @return the subscriberId
+	 */
+	public Integer getSubscriberId() {
+		return subscriberId;
+	}
+
+	/**
+	 * @param subscriberId the subscriberId to set
+	 */
+	public void setSubscriberId(Integer subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+
+	/**
+	 * @return the subscriberName
+	 */
+	public String getSubscriberName() {
+		return subscriberName;
+	}
+
+	/**
+	 * @param subscriberName the subscriberName to set
+	 */
+	public void setSubscriberName(String subscriberName) {
+		this.subscriberName = subscriberName;
+	}
+
+	/**
+	 * @return the componentProdcuctName
+	 */
+	public String getComponentProdcuctName() {
+		return componentProdcuctName;
+	}
+
+	/**
+	 * @param componentProdcuctName the componentProdcuctName to set
+	 */
+	public void setComponentProdcuctName(String componentProdcuctName) {
+		this.componentProdcuctName = componentProdcuctName;
+	}
+
+	/**
+	 * @return the inspectionTypeId
+	 */
+	public Integer getInspectionTypeId() {
+		return inspectionTypeId;
+	}
+
+	/**
+	 * @param inspectionTypeId the inspectionTypeId to set
+	 */
+	public void setInspectionTypeId(Integer inspectionTypeId) {
+		this.inspectionTypeId = inspectionTypeId;
+	}
+
+	/**
+	 * @return the inspectionStageId
+	 */
+	public Integer getInspectionStageId() {
+		return InspectionStageId;
+	}
+
+	/**
+	 * @param inspectionStageId the inspectionStageId to set
+	 */
+	public void setInspectionStageId(Integer inspectionStageId) {
+		InspectionStageId = inspectionStageId;
+	}
+
+	/**
+	 * @return the userID
+	 */
+	public String getUserID() {
+		return userID;
+	}
+
+	/**
+	 * @param userID the userID to set
+	 */
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
+
+	/**
+	 * @return the compProdDrawNum
+	 */
+	public String getCompProdDrawNum() {
+		return compProdDrawNum;
+	}
+
+	/**
+	 * @param compProdDrawNum the compProdDrawNum to set
+	 */
+	public void setCompProdDrawNum(String compProdDrawNum) {
+		this.compProdDrawNum = compProdDrawNum;
 	}
 }
