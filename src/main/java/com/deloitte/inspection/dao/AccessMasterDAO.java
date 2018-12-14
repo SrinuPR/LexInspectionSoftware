@@ -14,4 +14,6 @@ public interface AccessMasterDAO {
 	public List<LISUserTypeMaster> getUserTypeListforSubscriber(Integer subscriberId) throws Exception;
 
 	public LISAccessMaster getAccessMaster(Integer accessMasterId) throws Exception;
+
+	public LISAccessMaster getAccessMasterByUserTypeId(Integer userTypeId) throws Exception;
 }

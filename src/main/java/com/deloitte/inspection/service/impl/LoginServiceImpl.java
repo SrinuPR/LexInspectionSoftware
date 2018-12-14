@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.deloitte.inspection.component.CryptoComponent;
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.AccessMasterDAO;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.dao.impl.LoginDAOImpl;
 import com.deloitte.inspection.dto.LoginDTO;
@@ -19,6 +20,7 @@ import com.deloitte.inspection.dto.PasswordMaintenanceDTO;
 import com.deloitte.inspection.email.EmailService;
 import com.deloitte.inspection.exception.CryptoException;
 import com.deloitte.inspection.exception.LoginException;
+import com.deloitte.inspection.model.LISAccessMaster;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.service.LoginService;
@@ -37,6 +39,9 @@ public class LoginServiceImpl implements LoginService{
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private AccessMasterDAO accessMasterDAO;
 	
 	@Override
 	public LoginDTO validateLoginCredentials(LoginDTO loginDTO, HttpSession httpSession) throws LoginException {
@@ -63,7 +68,7 @@ public class LoginServiceImpl implements LoginService{
 		return responseDTO;
 	}
 
-	private LoginDTO checkLoggedinUserRole(LISLogin login, String otherRole, LoginDTO responseDTO, LoginDTO loginDTO) {
+	private LoginDTO checkLoggedinUserRole(LISLogin login, String otherRole, LoginDTO responseDTO, LoginDTO loginDTO) throws Exception {
 		try{
 			boolean adminFlag = false;
 			if(null != otherRole && StatusConstants.ADMIN_ROLE.equalsIgnoreCase(otherRole)){
@@ -87,6 +92,10 @@ public class LoginServiceImpl implements LoginService{
 							&& null != login.getUserMasterCreate().getActivePassword()){
 						responseDTO.setFirstTimeLogin(true);
 					}
+					Integer userTypeId = login.getUserMasterCreate().getUserTypeId();
+					LISAccessMaster lisAccessMaster = accessMasterDAO.getAccessMasterByUserTypeId(userTypeId);
+					if(null != lisAccessMaster)
+						responseDTO.setScreenList(lisAccessMaster.getScreenNumber());
 				}else if(adminFlag){
 					logger.info("admin credentails "+login.getAdminId()+" , "+login.getPassword());
 					responseDTO.setUserId(login.getAdminId());

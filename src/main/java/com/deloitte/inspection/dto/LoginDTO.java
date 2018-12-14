@@ -11,6 +11,7 @@ public class LoginDTO {
 	private String errorMessage;
 	private boolean firstTimeLogin;
 	private char isAdmin;
+	private String screenList;
 	
 	public String getUserId() {
 		return userId;
@@ -65,6 +66,12 @@ public class LoginDTO {
 	}
 	public void setIsAdmin(char isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+	public String getScreenList() {
+		return screenList;
+	}
+	public void setScreenList(String screenList) {
+		this.screenList = screenList;
 	}
 	
 }
