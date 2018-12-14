@@ -14,4 +14,5 @@ import com.deloitte.inspection.model.LISUserTypeMaster;
 public interface UserTypeMasterDAO {
 	public LISUserTypeMaster validateUserType(UserTypeMasterDTO userTypeMasDTO) throws UserTypeMasterException;
 	public UserTypeMasterDTO createUserTypeMaster(UserTypeMasterDTO userTypeMasDTO) throws UserTypeMasterException;
+	public LISUserTypeMaster getByUserTypeId(Integer userTypeId) throws UserTypeMasterException;
 }

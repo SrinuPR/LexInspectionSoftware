@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,11 +23,8 @@ public class LISAccessMaster implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "SUBSCRIBER_ID")
-	private Integer subsId;
-	
-	@Column(name ="USER_TYPE_ID")
-	private Integer userTypeId;
+	@Column(name = "ACMDS_ID")
+	private Integer accessMasterId;
 	
 	@Column(name = "SCREEN_NUMBER")
 	private String screenNumber;
@@ -42,23 +40,18 @@ public class LISAccessMaster implements Serializable{
 	
 	@Column(name = "UPDATED_BY")
 	private String updatedBy;
-
-	public Integer getSubsId() {
-		return subsId;
-	}
-
-	public void setSubsId(Integer subsId) {
-		this.subsId = subsId;
-	}
-
-	public Integer getUserTypeId() {
-		return userTypeId;
-	}
-
-	public void setUserTypeId(Integer userTypeId) {
-		this.userTypeId = userTypeId;
-	}
-
+	
+	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinColumn(name="SUBSCRIBER_ID")
+	private LISSubscriberMaster subscriberMaster;
+	
+	@OneToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="USER_TYPE_ID")
+	private LISUserTypeMaster userTypeMaster;
+	
+	@Column(name = "IS_ACTIVE")
+	private char isActive;
+	
 	public String getScreenNumber() {
 		return screenNumber;
 	}
@@ -103,7 +96,36 @@ public class LISAccessMaster implements Serializable{
 		this.createdBy = createdBy;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Integer getAccessMasterId() {
+		return accessMasterId;
 	}
+
+	public void setAccessMasterId(Integer accessMasterId) {
+		this.accessMasterId = accessMasterId;
+	}
+
+	public LISSubscriberMaster getSubscriberMaster() {
+		return subscriberMaster;
+	}
+
+	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
+		this.subscriberMaster = subscriberMaster;
+	}
+
+	public LISUserTypeMaster getUserTypeMaster() {
+		return userTypeMaster;
+	}
+
+	public void setUserTypeMaster(LISUserTypeMaster userTypeMaster) {
+		this.userTypeMaster = userTypeMaster;
+	}
+
+	public char getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(char isActive) {
+		this.isActive = isActive;
+	}
+	
 }

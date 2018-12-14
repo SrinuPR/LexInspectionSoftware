@@ -93,4 +93,13 @@ public class UserTypeMasterDAOImpl implements UserTypeMasterDAO {
 		} 
 		return null;
 	}
+
+
+	@Override
+	public LISUserTypeMaster getByUserTypeId(Integer userTypeId) throws UserTypeMasterException {
+		logger.info("Inside getByUserTypeId DAO");
+		Session session = getSession();
+		LISUserTypeMaster userTypeMaster = (LISUserTypeMaster)session.get(LISUserTypeMaster.class,userTypeId);
+		return userTypeMaster;
+	}
 }

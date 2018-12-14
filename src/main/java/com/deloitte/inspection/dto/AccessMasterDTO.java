@@ -1,34 +1,19 @@
 package com.deloitte.inspection.dto;
 
-import java.util.List;
-
 public class AccessMasterDTO {
 	
 	private Integer subscriberId;
 	private Integer userTypeId;
-	private String screenNames;
-	private String status;
-	private String message;
-	private String createdBy;
-	private String updatedBy;
+	private String screenNumbers;
+	private String userTypeName;
+	private String userId;
+	private Integer accessMasterId;
 	
-	public String getMessage() {
-		return message;
+	public String getUserTypeName() {
+		return userTypeName;
 	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
+	public void setUserTypeName(String userTypeName) {
+		this.userTypeName = userTypeName;
 	}
 	public Integer getSubscriberId() {
 		return subscriberId;
@@ -36,23 +21,29 @@ public class AccessMasterDTO {
 	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
 	public Integer getUserTypeId() {
 		return userTypeId;
 	}
 	public void setUserTypeId(Integer userTypeId) {
 		this.userTypeId = userTypeId;
 	}
-	public String getScreenNames() {
-		return screenNames;
+	public String getScreenNumbers() {
+		return screenNumbers;
 	}
-	public void setScreenNames(String screenNames) {
-		this.screenNames = screenNames;
+	public void setScreenNumbers(String screenNumbers) {
+		this.screenNumbers = screenNumbers;
 	}
-
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public Integer getAccessMasterId() {
+		return accessMasterId;
+	}
+	public void setAccessMasterId(Integer accessMasterId) {
+		this.accessMasterId = accessMasterId;
+	}
+	
 }

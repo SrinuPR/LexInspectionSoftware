@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -51,9 +52,12 @@ public class LISUserTypeMaster implements Serializable {
     @JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
 	
+	@OneToOne(mappedBy="userTypeMaster", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private LISAccessMaster lisAccessMaster;
+	
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
-
+	
 	/**
 	 * @return the userTypeId
 	 */
@@ -158,6 +162,14 @@ public class LISUserTypeMaster implements Serializable {
 
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
+	}
+
+	public LISAccessMaster getLisAccessMaster() {
+		return lisAccessMaster;
+	}
+
+	public void setLisAccessMaster(LISAccessMaster lisAccessMaster) {
+		this.lisAccessMaster = lisAccessMaster;
 	}
 	
 }

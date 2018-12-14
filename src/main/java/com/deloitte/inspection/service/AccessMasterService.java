@@ -1,13 +1,13 @@
 package com.deloitte.inspection.service;
 
-import javax.servlet.http.HttpSession;
-
 import com.deloitte.inspection.dto.AccessMasterDTO;
-import com.deloitte.inspection.dto.LoginDTO;
+import com.deloitte.inspection.response.dto.AccessMasterResponseDTO;
 
 public interface AccessMasterService {
 
-	public AccessMasterDTO saveAccess( AccessMasterDTO accessMasterDTO, HttpSession httpSession) throws Exception;
+	public AccessMasterResponseDTO saveAccess( AccessMasterDTO accessMasterDTO) throws Exception;
 	
 	public AccessMasterDTO getAccessMasterScreens (Integer subsId, Integer userTypeId) throws Exception;
+
+	public AccessMasterResponseDTO getUserTypeListforSubscriber(Integer subscriberId) throws Exception;
 }

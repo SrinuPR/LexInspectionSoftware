@@ -50,7 +50,9 @@ public class StatusConstants {
 	public static final String ADMIN_SAVE_FAILURE = "Admin not saved";
 	
 	public static final String ACCESS_MASTER_DATA_NOT_AVAILABLE = "Data not present for this SubsId/UserTypeId";
-
 	public static final String ACCESS_MASTER_DATA_AVAILABLE = "Data present for this SubsId/UserTypeId";
+	
+	public static final String ACCESS_RECORD_SAVED ="Access Record saved";
+	public static final String ACCESS_RECORD_NOT_SAVED= "Access Record NOT saved, please try again";
 
 }

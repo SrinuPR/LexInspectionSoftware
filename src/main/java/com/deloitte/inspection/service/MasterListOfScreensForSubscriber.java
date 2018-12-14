@@ -1,0 +1,16 @@
+package com.deloitte.inspection.service;
+
+import java.util.List;
+
+import com.deloitte.inspection.dto.MasterListOfScreensForSubscriberDTO;
+import com.deloitte.inspection.exception.MasterListOfScreensForSubscriberException;
+import com.deloitte.inspection.response.dto.MasterListOfScreensForSubscriberResponseDTO;
+
+public interface MasterListOfScreensForSubscriber {
+
+	MasterListOfScreensForSubscriberResponseDTO saveScreensData(
+			List<MasterListOfScreensForSubscriberDTO> masterListOfScreensForSubscriberDTO) throws MasterListOfScreensForSubscriberException;
+
+	MasterListOfScreensForSubscriberResponseDTO getScreensforSubscriber(Integer subscriberId) throws MasterListOfScreensForSubscriberException;
+
+}

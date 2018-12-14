@@ -80,6 +80,9 @@ public class LISSubscriberMaster implements Serializable {
 	
 	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
 	private Set<LISInspectionMaster> inspMaster;
+	
+	@OneToMany(mappedBy="subscriberMaster", cascade = CascadeType.ALL)
+	private Set<LISAccessMaster> lisAccessMasters;
 		
 	public Integer getSubscriberId() {
 		return subscriberId;
