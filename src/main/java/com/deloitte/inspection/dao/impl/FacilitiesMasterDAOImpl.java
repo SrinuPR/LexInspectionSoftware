@@ -97,4 +97,15 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 		List<LISFacilityMaster> list = query.list();
 		return list;
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISFacilityMaster> getFacilityDetailsBySubscriberID(Integer subscriberId)
+			throws FacilityMasterException {
+		logger.info("Entered into getFacilityDetailsBySubscriberID DAO");	
+		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE FMACS.isActive = :isActive and FMACS.subscriberMaster.subscriberId = :subscriberId  ORDER BY FMACS.createdTimestamp DESC");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
+	}
 }

@@ -8,13 +8,15 @@ import com.deloitte.inspection.model.LISInspectionReportMaster;
 
 public interface InspectionMeasurementDAO {
 
-	List<LISInspectionReportMaster> getCompDrawNumList(Integer subscriberId) throws InspectionMeasurementException;
+	public List<LISInspectionReportMaster> getCompDrawNumList(Integer subscriberId) throws InspectionMeasurementException;
 
-	List<LISInspectionMeasurements> getProducedQuantityListByBatchNumber(String manufacturingBatchNumber) throws InspectionMeasurementException;
+	public List<LISInspectionMeasurements> getProducedQuantityListByBatchNumber(String manufacturingBatchNumber) throws InspectionMeasurementException;
 
-	List<LISInspectionMeasurements> getProducedQuantityListByLotchNumber(String lotNumber) throws InspectionMeasurementException;
+	public List<LISInspectionMeasurements> getProducedQuantityListByLotchNumber(String lotNumber) throws InspectionMeasurementException;
 
-	List<LISInspectionMeasurements> getProducedQuantityListByWJandPO(String workJobOrderNumber,
+	public List<LISInspectionMeasurements> getProducedQuantityListByWJandPO(String workJobOrderNumber,
 			String customerPONumber) throws InspectionMeasurementException;
+
+	public LISInspectionReportMaster getWorkJobOrderByReportNum(Integer reportNumber)  throws InspectionMeasurementException;
 
 }

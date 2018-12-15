@@ -2,6 +2,8 @@ package com.deloitte.inspection.dao.impl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -20,11 +22,13 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 
 	@Autowired
     private SessionFactory sessionFactory;
+	
+	private static final Logger logger = LogManager.getLogger(InspectionReportMasterDAOImpl.class);
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
-
+    
 	@Override
 	public void saveReport(LISInspectionReportMaster inspRptMatser) throws InspectionReportMasterException {
 		Session session = getSession();
@@ -42,5 +46,16 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 		if(null != list && list.size() > 0)
 			return list.get(0);
 		return null;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISInspectionReportMaster> getInspectionReportList(String compDrawNum)
+			throws InspectionReportMasterException {
+		logger.info("getInspectionReportList DAO");
+		Query query = getSession().createQuery("FROM LISInspectionReportMaster i where i.compProdDrawNum = :compDrawNum and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
+		query.setParameter("compDrawNum", compDrawNum);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
 	}
 }

@@ -121,13 +121,15 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				accessMasterResponseDTO.setResult(accessMasterDTOs);
 			}
 			List<LISMasterListOfScreensForSubscriber> masterListOfScreensForSubscribers = masterListOfScreensForSubscriberDAO.getScreensforSubscriber(subscriberId);
-			String screens = "";
-			for(LISMasterListOfScreensForSubscriber list:masterListOfScreensForSubscribers){
-					screens = screens+list.getScreenNumber() +",";
-			}
-			if(null != screens && !"".equalsIgnoreCase(screens)){
-				screens = screens.replaceAll(",$", "");
-				accessMasterResponseDTO.setSubscriberScreens(screens);
+			if(null != masterListOfScreensForSubscribers && masterListOfScreensForSubscribers.size() > 0){
+				String screens = "";
+				for(LISMasterListOfScreensForSubscriber list:masterListOfScreensForSubscribers){
+						screens = screens+list.getScreenNumber() +",";
+				}
+				if(null != screens && !"".equalsIgnoreCase(screens)){
+					screens = screens.replaceAll(",$", "");
+					accessMasterResponseDTO.setSubscriberScreens(screens);
+				}
 			}
 			accessMasterResponseDTO.setStatus(StatusConstants.SUCCESS);
 			accessMasterResponseDTO.setMessage(StatusConstants.ACCESS_MASTER_DATA_AVAILABLE);

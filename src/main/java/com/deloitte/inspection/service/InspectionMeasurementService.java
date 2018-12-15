@@ -7,6 +7,6 @@ public interface InspectionMeasurementService {
 
 	public InspectionMeasurementResponseDTO getCompDrawNumList(Integer subscriberId) throws InspectionMeasurementException;
 
-	public InspectionMeasurementResponseDTO getWorkJobOrderList(String compDrawNum) throws InspectionMeasurementException;
+	public InspectionMeasurementResponseDTO getInspectionReportList(String compDrawNum) throws InspectionMeasurementException;
 
 }

@@ -16,6 +16,7 @@ public class InspectionReportMasterDTO {
 	private String componentProductDrawNumber;
 	private String componentProdcuctName;
 	private String workJobOrderNumber;
+	private Integer workJobOrderId;
 	private String lotNumber;
 	private Integer lotSize;
 	private Integer inspectionTypeId;
@@ -26,7 +27,13 @@ public class InspectionReportMasterDTO {
 	private String customerPoDate;
 	private Integer customerPoQuantity;
 	private String userID;
+	private Integer inspRptMasterId;
 	//private String userName;
+	
+	//New fields for Inspection Master
+	private String inspectionStageName;
+	private String inspectiontypeName;
+	private String inspectionDate;
 	
 	/**
 	 * @return the inspReportNumber
@@ -224,4 +231,35 @@ public class InspectionReportMasterDTO {
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
+	public Integer getInspRptMasterId() {
+		return inspRptMasterId;
+	}
+	public void setInspRptMasterId(Integer inspRptMasterId) {
+		this.inspRptMasterId = inspRptMasterId;
+	}
+	public Integer getWorkJobOrderId() {
+		return workJobOrderId;
+	}
+	public void setWorkJobOrderId(Integer workJobOrderId) {
+		this.workJobOrderId = workJobOrderId;
+	}
+	public String getInspectionStageName() {
+		return inspectionStageName;
+	}
+	public void setInspectionStageName(String inspectionStageName) {
+		this.inspectionStageName = inspectionStageName;
+	}
+	public String getInspectiontypeName() {
+		return inspectiontypeName;
+	}
+	public void setInspectiontypeName(String inspectiontypeName) {
+		this.inspectiontypeName = inspectiontypeName;
+	}
+	public String getInspectionDate() {
+		return inspectionDate;
+	}
+	public void setInspectionDate(String inspectionDate) {
+		this.inspectionDate = inspectionDate;
+	}
+	
 }

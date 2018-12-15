@@ -13,10 +13,10 @@ import com.deloitte.inspection.model.LISInspectionTypeMaster;
  *
  */
 public interface InspectionTypeMasterDAO {
+	
 	public LISInspectionTypeMaster getInspTypeId(Integer inspTypeId) throws InspectionTypeMasterException;
 	
 	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO) throws InspectionTypeMasterException;
 	
 	public List<LISInspectionTypeMaster> getAllInspTypeMasterData() throws InspectionTypeMasterException;
-	
 }

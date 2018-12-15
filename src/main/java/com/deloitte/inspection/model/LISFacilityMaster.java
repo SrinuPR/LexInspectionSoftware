@@ -25,7 +25,7 @@ import javax.persistence.Table;
  	private static final long serialVersionUID = 382945870712132210L;
 
  	@Column(name = "FACILITY_ID", unique = true)
- 	private String facilityId;
+ 	private Integer facilityId;
  	
  	@Id
  	@Column(name = "FACILITY_NUMBER", length = 10)
@@ -165,11 +165,11 @@ import javax.persistence.Table;
 		this.subscriberMaster = subscriberMaster;
 	}
 
-	public String getFacilityId() {
+	public Integer getFacilityId() {
 		return facilityId;
 	}
 
-	public void setFacilityId(String facilityId) {
+	public void setFacilityId(Integer facilityId) {
 		this.facilityId = facilityId;
 	}
 	

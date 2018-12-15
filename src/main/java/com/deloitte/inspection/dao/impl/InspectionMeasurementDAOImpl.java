@@ -35,7 +35,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	public List<LISInspectionReportMaster> getCompDrawNumList(Integer subscriberId)
 			throws InspectionMeasurementException {
 		logger.info("getCompDrawNumList DAO");
-		Query query = getSession().createQuery("FROM LISInspectionReportMaster i where i.subscriberMaster.subscriberId = :subscriberId and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
+		Query query = getSession().createQuery("FROM LISInspectionReportMaster i where i.subscriberId = :subscriberId and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
 		query.setParameter("subscriberId", subscriberId);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();
@@ -74,6 +74,20 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		query.setParameter("customerPONumber", customerPONumber);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public LISInspectionReportMaster getWorkJobOrderByReportNum(Integer reportNumber)
+			throws InspectionMeasurementException {
+		logger.info("getProducedQuantityListByWJandPO DAO");
+		Query query = getSession().createQuery("FROM LISInspectionReportMaster i where i.inspectionReportNumber = :reportNumber and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
+		query.setParameter("reportNumber", reportNumber);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		List<LISInspectionReportMaster> list = query.list();
+		if(null != list && list.size() > 0)
+			return list.get(0);
+		return null;
 	}
 
 }

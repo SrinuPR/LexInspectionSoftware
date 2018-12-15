@@ -39,6 +39,9 @@ public class LISInspectionReportMaster implements Serializable{
 	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
 	private String workJobOrderNumber;
 	
+	@Column(name = "WORK_JOB_ORDER_ID")
+	private Integer workJobOrderId;
+	
 	@Column(name = "LOT_NUMBER" , length = 10)
 	private String lotNumber;
 	
@@ -391,4 +394,13 @@ public class LISInspectionReportMaster implements Serializable{
 	public void setCompProdDrawNum(String compProdDrawNum) {
 		this.compProdDrawNum = compProdDrawNum;
 	}
+
+	public Integer getWorkJobOrderId() {
+		return workJobOrderId;
+	}
+
+	public void setWorkJobOrderId(Integer workJobOrderId) {
+		this.workJobOrderId = workJobOrderId;
+	}
+	
 }

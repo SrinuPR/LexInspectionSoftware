@@ -54,6 +54,7 @@ public class InspectionReportMasterServiceImpl implements InspectionReportMaster
 					lisInspRptMaster.setCustomerPoDate(InspectionUtils.convertStringToDate(inspRptMasterDto.getCustomerPoDate()));
 					lisInspRptMaster.setUserID(userId);
 					lisInspRptMaster.setIsActive(StatusConstants.IS_ACTIVE);
+					lisInspRptMaster.setWorkJobOrderId(inspRptMasterDto.getWorkJobOrderId());
 					inspReportMasterDAO.saveReport(lisInspRptMaster);
 					inspRptMasResDto.setStatus(StatusConstants.SUCCESS);
 					inspRptMasResDto.setMessage(InspectionReportMasterConstants.INSPECTION_REPORT_SAVE);

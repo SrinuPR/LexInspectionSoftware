@@ -19,6 +19,5 @@ public interface InspectionStageMasterDAO {
 	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO) throws InspectionStageMasterException;
 	
 	public List<LISInspectionStageMaster> getAllInspStageMasterData() throws InspectionStageMasterException;
-	
 
 }

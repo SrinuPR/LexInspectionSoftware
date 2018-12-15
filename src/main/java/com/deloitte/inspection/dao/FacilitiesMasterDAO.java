@@ -20,4 +20,6 @@ public interface FacilitiesMasterDAO {
 	public FacilityMasterDTO createFacility(FacilityMasterDTO inspTypeMasterDTO, String userName) throws FacilityMasterException;
 	
 	public List<LISFacilityMaster> getFacilitiesMasterData() throws FacilityMasterException;
+
+	public List<LISFacilityMaster> getFacilityDetailsBySubscriberID(Integer subscriberId) throws FacilityMasterException;
 }
