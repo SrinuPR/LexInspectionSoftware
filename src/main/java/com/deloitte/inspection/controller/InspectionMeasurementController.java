@@ -1,6 +1,5 @@
 package com.deloitte.inspection.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deloitte.inspection.constant.InspectionMeasurementConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.InspectionTypeMasterDTO;
+import com.deloitte.inspection.response.dto.InspectionMeasurementResponseDTO;
 import com.deloitte.inspection.response.dto.WorkJobOrderResponseDTO;
 import com.deloitte.inspection.service.InspectionMeasurementService;
 
@@ -33,42 +34,47 @@ public class InspectionMeasurementController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/componentDrawNum/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<String>> getCompDrawNumList(@PathVariable Integer subscriberId){
+	public @ResponseBody ResponseEntity<InspectionMeasurementResponseDTO> getCompDrawNumList(@PathVariable Integer subscriberId){
 		logger.info("Entered into getCompDrawNumList");
-		List<String> componentDrawNumbers = new ArrayList<String>();
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
 		try{
 			if(null != subscriberId){
-				componentDrawNumbers = inspectionMeasurementService.getCompDrawNumList(subscriberId);
-				return new ResponseEntity(componentDrawNumbers,HttpStatus.OK);
-			}else{
-				return new ResponseEntity(null,HttpStatus.EXPECTATION_FAILED);
+				inspectionMeasurementResponseDTO = inspectionMeasurementService.getCompDrawNumList(subscriberId);
+				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
+				}
 			}
 		}catch(Exception exception){
 			logger.info("Exception At  getCompDrawNumList "+exception.getMessage());
-			return new ResponseEntity(null,HttpStatus.INTERNAL_SERVER_ERROR);
+			inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.UN_EXPECTED_EXCEPTION);
+			inspectionMeasurementResponseDTO.setStatus(StatusConstants.FAILURE);
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.EXPECTATION_FAILED);
 	}
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/worJobkOrder/{compDrawNum}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<WorkJobOrderResponseDTO> getWorkJobOrderList(@PathVariable String compDrawNum){
+	public @ResponseBody ResponseEntity<InspectionMeasurementResponseDTO> getWorkJobOrderList(@PathVariable String compDrawNum){
 		logger.info("Entered into getCompDrawNumList");
-		WorkJobOrderResponseDTO workOrderJobList = new WorkJobOrderResponseDTO();
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
 		try{
 			if(null != compDrawNum){
-				workOrderJobList = inspectionMeasurementService.getWorkJobOrderList(compDrawNum);
-				if(null != workOrderJobList && StatusConstants.SUCCESS.equalsIgnoreCase(workOrderJobList.getStatus())){
-					return new ResponseEntity(workOrderJobList,HttpStatus.OK);
+				inspectionMeasurementResponseDTO = inspectionMeasurementService.getWorkJobOrderList(compDrawNum);
+				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
 				}else{
-					return new ResponseEntity(workOrderJobList,HttpStatus.EXPECTATION_FAILED);
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.EXPECTATION_FAILED);
 				}
 			}
 		}catch(Exception exception){
 			logger.info("Exception At  getCompDrawNumList "+exception.getMessage());
-			return new ResponseEntity(null,HttpStatus.INTERNAL_SERVER_ERROR);
+			inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.UN_EXPECTED_EXCEPTION);
+			inspectionMeasurementResponseDTO.setStatus(StatusConstants.FAILURE);
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity(null,HttpStatus.PRECONDITION_FAILED);
+		return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.PRECONDITION_FAILED);
 	}
 	
 	@CrossOrigin

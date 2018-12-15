@@ -76,7 +76,7 @@ public class LISInspectionMeasurements implements Serializable{
 	private String shiftID;
 	
 	@Column(name = "SHIFT_NAME", length = 10)
-	private Date shiftName;
+	private String shiftName;
 	
 	@Column(name = "CUSTOMER_PO_NUMBER", length = 30)
 	private String customerPONumber;
@@ -282,11 +282,11 @@ public class LISInspectionMeasurements implements Serializable{
 		this.inspectionDate = inspectionDate;
 	}
 
-	public Date getShiftName() {
+	public String getShiftName() {
 		return shiftName;
 	}
 
-	public void setShiftName(Date shiftName) {
+	public void setShiftName(String shiftName) {
 		this.shiftName = shiftName;
 	}
 

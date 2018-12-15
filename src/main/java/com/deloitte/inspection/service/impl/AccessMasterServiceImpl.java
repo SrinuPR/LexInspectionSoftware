@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +99,7 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 	}
 
 	@Override
+	@Transactional
 	public AccessMasterResponseDTO getUserTypeListforSubscriber(Integer subscriberId) throws Exception {
 		logger.info("Inside getUserTypeListforSubscriber service");
 		AccessMasterResponseDTO accessMasterResponseDTO = new AccessMasterResponseDTO();
@@ -106,6 +109,7 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				List<AccessMasterDTO> accessMasterDTOs = new ArrayList<AccessMasterDTO>();
 				for(LISUserTypeMaster usertype : userTypeMasters){
 					AccessMasterDTO accessMasterDTO = new AccessMasterDTO();
+					accessMasterDTO.setAccessMasterId(usertype.getLisAccessMaster().getAccessMasterId());
 					accessMasterDTO.setSubscriberId(usertype.getSubscriberMaster().getSubscriberId());
 					accessMasterDTO.setUserTypeId(usertype.getUserTypeId());
 					accessMasterDTO.setUserTypeName(usertype.getUserTypeName());
@@ -121,9 +125,10 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 			for(LISMasterListOfScreensForSubscriber list:masterListOfScreensForSubscribers){
 					screens = screens+list.getScreenNumber() +",";
 			}
-			if(null != screens && !"".equalsIgnoreCase(screens))
+			if(null != screens && !"".equalsIgnoreCase(screens)){
 				screens = screens.replaceAll(",$", "");
-			accessMasterResponseDTO.setSubscriberScreens(screens);
+				accessMasterResponseDTO.setSubscriberScreens(screens);
+			}
 			accessMasterResponseDTO.setStatus(StatusConstants.SUCCESS);
 			accessMasterResponseDTO.setMessage(StatusConstants.ACCESS_MASTER_DATA_AVAILABLE);
 		}catch(Exception exception){

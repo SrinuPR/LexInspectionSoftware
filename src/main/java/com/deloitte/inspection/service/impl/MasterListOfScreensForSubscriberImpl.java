@@ -36,7 +36,7 @@ public class MasterListOfScreensForSubscriberImpl implements MasterListOfScreens
 			for(MasterListOfScreensForSubscriberDTO masterDTO : masterListOfScreensForSubscriberDTO){
 				if(null != masterDTO.getMasterListId() && !masterDTO.isSelected()){
 					deleteRow(masterDTO);
-				}else if(masterDTO.isSelected()){
+				}else if(null == masterDTO.getMasterListId() && masterDTO.isSelected()){
 					LISMasterListOfScreensForSubscriber insertRow = new LISMasterListOfScreensForSubscriber();
 					insertRow = updateDetailsToModel(insertRow,masterDTO);
 					insertList.add(insertRow);
