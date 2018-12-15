@@ -36,7 +36,7 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 		Query query = getSession().createSQLQuery("DELETE FROM LIS_MLOSS WHERE IS_ACTIVE = :isActive AND SUBSCRIBER_ID = :subscriberId AND lower(SCREEN_NUMBER) = :screenNumber");
 		query.setParameter("screenNumber", screenId.toLowerCase());
 		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IN_ACTIVE);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		query.executeUpdate();
 	}
 
@@ -54,10 +54,10 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 	@Override
 	public List<LISMasterListOfScreensForSubscriber> getScreensforSubscriber(Integer subscriberId)
 			throws MasterListOfScreensForSubscriberException {
-		logger.info("Inside deleteScreenForSubscriber DAO");
+		logger.info("Inside getScreensforSubscriber DAO");
 		Query query = getSession().createQuery("FROM LISMasterListOfScreensForSubscriber l where l.isActive = :isActive and l.subscriberId = :subscriberId ");
 		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IN_ACTIVE);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();
 	}
 }

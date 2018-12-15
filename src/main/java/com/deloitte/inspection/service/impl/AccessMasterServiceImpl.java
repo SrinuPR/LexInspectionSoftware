@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.AccessMasterDAO;
+import com.deloitte.inspection.dao.MasterListOfScreensForSubscriberDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dao.UserTypeMasterDAO;
 import com.deloitte.inspection.dao.impl.LoginDAOImpl;
 import com.deloitte.inspection.dto.AccessMasterDTO;
 import com.deloitte.inspection.model.LISAccessMaster;
+import com.deloitte.inspection.model.LISMasterListOfScreensForSubscriber;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserTypeMaster;
 import com.deloitte.inspection.response.dto.AccessMasterResponseDTO;
@@ -34,6 +36,9 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 	
 	@Autowired
 	private UserTypeMasterDAO userTypeMasterDAO;
+	
+	@Autowired
+	private MasterListOfScreensForSubscriberDAO masterListOfScreensForSubscriberDAO;
 	
 	@Override
 	public AccessMasterResponseDTO saveAccess(AccessMasterDTO accessMasterDTO) throws Exception {
@@ -111,6 +116,14 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				}
 				accessMasterResponseDTO.setResult(accessMasterDTOs);
 			}
+			List<LISMasterListOfScreensForSubscriber> masterListOfScreensForSubscribers = masterListOfScreensForSubscriberDAO.getScreensforSubscriber(subscriberId);
+			String screens = "";
+			for(LISMasterListOfScreensForSubscriber list:masterListOfScreensForSubscribers){
+					screens = screens+list.getScreenNumber() +",";
+			}
+			if(null != screens && !"".equalsIgnoreCase(screens))
+				screens = screens.replaceAll(",$", "");
+			accessMasterResponseDTO.setSubscriberScreens(screens);
 			accessMasterResponseDTO.setStatus(StatusConstants.SUCCESS);
 			accessMasterResponseDTO.setMessage(StatusConstants.ACCESS_MASTER_DATA_AVAILABLE);
 		}catch(Exception exception){

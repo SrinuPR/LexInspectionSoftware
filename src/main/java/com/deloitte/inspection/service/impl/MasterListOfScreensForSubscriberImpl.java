@@ -34,18 +34,15 @@ public class MasterListOfScreensForSubscriberImpl implements MasterListOfScreens
 		try{
 			List<LISMasterListOfScreensForSubscriber> insertList = new ArrayList<LISMasterListOfScreensForSubscriber>();
 			for(MasterListOfScreensForSubscriberDTO masterDTO : masterListOfScreensForSubscriberDTO){
-				if(StatusConstants.IS_ACTIVE == masterDTO.getIsDeleted()){
+				if(null != masterDTO.getMasterListId() && !masterDTO.isSelected()){
 					deleteRow(masterDTO);
-					
-				}else{
+				}else if(masterDTO.isSelected()){
 					LISMasterListOfScreensForSubscriber insertRow = new LISMasterListOfScreensForSubscriber();
-					if(StatusConstants.IS_ACTIVE != masterDTO.getNoChage()){
-						insertRow = updateDetailsToModel(insertRow,masterDTO);
-						insertList.add(insertRow);
-					}
-					masterListOfScreensForSubscriberDAO.insertScreensForSubscribers(insertList);
+					insertRow = updateDetailsToModel(insertRow,masterDTO);
+					insertList.add(insertRow);
 				}
 			}
+			masterListOfScreensForSubscriberDAO.insertScreensForSubscribers(insertList);
 			masterListOfScreensForSubscriberResponseDTO.setStatus(StatusConstants.SUCCESS);
 			masterListOfScreensForSubscriberResponseDTO.setMessage(MasterListOfScreensForSubscriberConstants.SCREEN_LIST_SAVE_SUCCESS);
 		}catch(Exception exception){
@@ -89,7 +86,7 @@ public class MasterListOfScreensForSubscriberImpl implements MasterListOfScreens
 					MasterListOfScreensForSubscriberDTO screenData = new MasterListOfScreensForSubscriberDTO();
 					screenData.setMasterListId(screenRow.getMasterListId());
 					screenData.setScreenName(screenRow.getScreenName());
-					screenData.setScreenNumber(screenData.getScreenNumber());
+					screenData.setScreenNumber(screenRow.getScreenNumber());
 					screenData.setSubscriberId(screenRow.getSubscriberId());
 					results.add(screenData);
 				}

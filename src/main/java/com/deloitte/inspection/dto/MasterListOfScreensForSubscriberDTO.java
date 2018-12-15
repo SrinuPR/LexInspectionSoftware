@@ -7,15 +7,8 @@ public class MasterListOfScreensForSubscriberDTO {
 	private String userId;
 	private String screenName;
 	private String screenNumber;
-	private char isDeleted;
-	private char noChage;
+	private boolean selected;
 	
-	public char getNoChage() {
-		return noChage;
-	}
-	public void setNoChage(char noChage) {
-		this.noChage = noChage;
-	}
 	public Integer getMasterListId() {
 		return masterListId;
 	}
@@ -46,10 +39,11 @@ public class MasterListOfScreensForSubscriberDTO {
 	public void setScreenNumber(String screenNumber) {
 		this.screenNumber = screenNumber;
 	}
-	public char getIsDeleted() {
-		return isDeleted;
+	public boolean isSelected() {
+		return selected;
 	}
-	public void setIsDeleted(char isDeleted) {
-		this.isDeleted = isDeleted;
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
+		
 }

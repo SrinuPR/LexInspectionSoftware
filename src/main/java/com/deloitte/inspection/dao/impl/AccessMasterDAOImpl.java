@@ -80,9 +80,9 @@ public class AccessMasterDAOImpl implements AccessMasterDAO{
 	@SuppressWarnings("rawtypes")
 	@Override
 	public LISAccessMaster getAccessMasterByUserTypeId(Integer userTypeId) throws Exception {
-		logger.info("inside getUserTypeListforSubscriber DAO");
+		logger.info("inside getAccessMasterByUserTypeId DAO");
 		Query query = getSession().createQuery(" From LISAccessMaster l where l.userTypeMaster.userTypeId = :userTypeId and l.isActive = :isActive");
-		query.setParameter("subscriberId", userTypeId);
+		query.setParameter("userTypeId", userTypeId);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		@SuppressWarnings("unchecked")
 		List<LISAccessMaster> master = query.list();
