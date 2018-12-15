@@ -109,7 +109,9 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				List<AccessMasterDTO> accessMasterDTOs = new ArrayList<AccessMasterDTO>();
 				for(LISUserTypeMaster usertype : userTypeMasters){
 					AccessMasterDTO accessMasterDTO = new AccessMasterDTO();
-					accessMasterDTO.setAccessMasterId(usertype.getLisAccessMaster().getAccessMasterId());
+					if(null != usertype.getLisAccessMaster()){
+						accessMasterDTO.setAccessMasterId(usertype.getLisAccessMaster().getAccessMasterId());
+					}
 					accessMasterDTO.setSubscriberId(usertype.getSubscriberMaster().getSubscriberId());
 					accessMasterDTO.setUserTypeId(usertype.getUserTypeId());
 					accessMasterDTO.setUserTypeName(usertype.getUserTypeName());
