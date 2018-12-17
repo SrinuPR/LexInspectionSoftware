@@ -87,6 +87,9 @@ public class LISInspectionReportMaster implements Serializable{
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
+	@Column(name = "REPORT_STATUS")
+	private String reportStatus;
+	
 	/**
 	 * @return the workJobOrderNumber
 	 */
@@ -401,6 +404,14 @@ public class LISInspectionReportMaster implements Serializable{
 
 	public void setWorkJobOrderId(Integer workJobOrderId) {
 		this.workJobOrderId = workJobOrderId;
+	}
+
+	public String getReportStatus() {
+		return reportStatus;
+	}
+
+	public void setReportStatus(String reportStatus) {
+		this.reportStatus = reportStatus;
 	}
 	
 }

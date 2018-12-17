@@ -73,13 +73,13 @@ public class FacilitiesMasterController {
 		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
-			String userName = null;
+			String userId = null;
 			if(null != userDto){
-				userName = userDto.getUserName();
+				userId = userDto.getUserName();
 			}else{
-				userName = StatusConstants.DEFAULT_USER_NAME;
+				userId = StatusConstants.DEFAULT_USER_NAME;
 			}
-			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO,userName);
+			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO,userId);
 			if(null != responseDTO)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
@@ -98,12 +98,20 @@ public class FacilitiesMasterController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<FacilityMasterResponseDataDTO> facilitiesMasterList(){
+	public @ResponseBody ResponseEntity<FacilityMasterResponseDataDTO> facilitiesMasterList(HttpSession httpSession){
 		logger.info("Entered into facilitiesMasterList");
 		FacilityMasterResponseDataDTO repsonseDto = new FacilityMasterResponseDataDTO();
 		List<FacilityMasterDTO> facilityMasDTOList = null;
 		try{
-			facilityMasDTOList = facilitiesMasterService.getFacilitiesMasterData();
+			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
+			String userId = null;
+			if(null != userDto){
+				userId = userDto.getUserId();
+			}else{
+				userId = StatusConstants.DEFAULT_USER_ID;
+			}
+			
+			facilityMasDTOList = facilitiesMasterService.getFacilitiesMasterData(userId.toLowerCase());
 			repsonseDto.setResult(facilityMasDTOList);
 			repsonseDto.setStatus(StatusConstants.SUCCESS);
 			repsonseDto.setMessage(StatusConstants.SUCCESS);

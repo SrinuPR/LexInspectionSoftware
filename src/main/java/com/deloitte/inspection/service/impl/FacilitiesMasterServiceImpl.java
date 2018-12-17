@@ -64,8 +64,7 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_FAILED);
 			} else {
-				List<FacilityMasterDTO> resultList = new ArrayList<FacilityMasterDTO>();
-				resultList.add(facilityMasterDTO);
+				List<FacilityMasterDTO> resultList = getFacilitiesMasterData(userName);
 				responseDTO.setResult(resultList);
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_SUCCESS);
@@ -81,10 +80,10 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	}
 	
 	@Override
-	public List<FacilityMasterDTO> getFacilitiesMasterData() throws FacilityMasterException {
+	public List<FacilityMasterDTO> getFacilitiesMasterData(String userId) throws FacilityMasterException {
 		try{
 			List<FacilityMasterDTO> facilityMasterList = new ArrayList<FacilityMasterDTO>();
-			List<LISFacilityMaster> facilityMasterModelList = facilityMasterDAO.getFacilitiesMasterData();
+			List<LISFacilityMaster> facilityMasterModelList = facilityMasterDAO.getFacilitiesMasterData(userId);
 			if(null != facilityMasterModelList && facilityMasterModelList.size() > 0){
 				for(LISFacilityMaster facilityMaster : facilityMasterModelList){
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();

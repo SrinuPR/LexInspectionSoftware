@@ -94,4 +94,15 @@ public class LoginController {
 		}
 		return new ResponseEntity(status, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/validate/session", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<LoginDTO> validate(HttpSession httpSession) {
+		try {
+			LoginDTO ut = (LoginDTO)httpSession.getAttribute("user");
+			return new ResponseEntity(ut, ut==null?HttpStatus.UNAUTHORIZED:HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

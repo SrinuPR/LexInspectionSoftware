@@ -16,5 +16,5 @@ import com.deloitte.inspection.response.dto.FacilityMasterResponseDataDTO;
 public interface FacilitiesMasterService {
 	public FacilityMasterResponseDataDTO getFacilityNumber(String facilityNum) throws FacilityMasterException;
 	public FacilityMasterResponseDataDTO createFacilities(FacilityMasterDTO inspTypeMasterDTO, String userName) throws FacilityMasterException;
-	public List<FacilityMasterDTO> getFacilitiesMasterData() throws FacilityMasterException;
+	public List<FacilityMasterDTO> getFacilitiesMasterData(String userId) throws FacilityMasterException;
 }
