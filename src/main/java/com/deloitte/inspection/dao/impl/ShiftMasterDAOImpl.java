@@ -1,6 +1,5 @@
 package com.deloitte.inspection.dao.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -94,11 +93,8 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 		logger.info("Entered into deleteByShiftId");
 		String status = StatusConstants.FAILURE;
 		//Query query = getSession().createSQLQuery("UPDATE LISShiftMaster SET isActive = :inactive,UPDATED_BY=:userId  WHERE shiftId = :shiftId ");
-		Query query = getSession().createSQLQuery("UPDATE LIS_SHMCS SET IS_ACTIVE = :inactive , UPDATED_BY=:userId , UPDATED_TIMESTAMP=:updatedDate WHERE SHIFT_ID = :shiftId ");
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_SHMCS WHERE SHIFT_ID = :shiftId ");
 		query.setParameter("shiftId", shiftId);
-		query.setParameter("inactive", StatusConstants.IN_ACTIVE);
-		query.setParameter("updatedDate", new Date());
-		query.setParameter("userId", userId);
 		int result = query.executeUpdate();
 		if(result > 0){
 			status = StatusConstants.SUCCESS;

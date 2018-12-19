@@ -35,9 +35,8 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	public String deleteWorkJobOrder(Integer workJobOrderId) throws WorkJobOrderException {
 		logger.info("inside deleteWorkJobOrder DAO method");
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("UPDATE LIS_WOMCS SET IS_ACTIVE = :inactive WHERE WOMCS_ID = :workJobOrderId ");
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_WOMCS WHERE WOMCS_ID = :workJobOrderId ");
 		query.setParameter("workJobOrderId", workJobOrderId);
-		query.setParameter("inactive", StatusConstants.IN_ACTIVE);
 		int result = query.executeUpdate();
 		if(result > 0){
 			status = StatusConstants.SUCCESS;

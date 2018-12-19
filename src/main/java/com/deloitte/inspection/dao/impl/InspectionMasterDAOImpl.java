@@ -100,15 +100,13 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	public String deleteInspectionMaster(Integer inspectionMasterId) {
 		logger.info("inside deleteInspectionMaster DAO method");
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createQuery(
-				"UPDATE LISInspectionMaster master set master.isActive = :isActive WHERE master.inspId = :inspId");
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_INMDC master WHERE master.INSPECTION_ID = :inspId");
 		query.setParameter("inspId", inspectionMasterId);
-		query.setParameter("isActive", StatusConstants.IN_ACTIVE);
 		int result = query.executeUpdate();
 		if (result > 0) {
 			status = StatusConstants.SUCCESS;

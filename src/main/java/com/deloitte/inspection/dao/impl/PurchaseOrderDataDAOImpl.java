@@ -70,9 +70,8 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	@Override
 	public String deletePurchaseOrder(Integer customerPoId) throws PurchaseOrderMasterException {
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("UPDATE LIS_CPMCS SET IS_ACTIVE = :isActive WHERE CUSTOMER_PO_ID = :customerPoId");
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_CPMCS WHERE CUSTOMER_PO_ID = :customerPoId");
 		query.setParameter("customerPoId", customerPoId);
-		query.setParameter("isActive", StatusConstants.IN_ACTIVE);
 		int result = query.executeUpdate();
 		if(result > 0){
 			status = StatusConstants.SUCCESS;

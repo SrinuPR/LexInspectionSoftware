@@ -134,9 +134,8 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	public boolean deleteAdmin(String adminId) throws CreateUserException {
-		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET IS_ACTIVE = :inactive WHERE lower(ADMIN_ID) = :adminId ");
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_LOGIN WHERE lower(ADMIN_ID) = :adminId ");
 		query.setParameter("adminId", adminId);
-		query.setParameter("inactive", StatusConstants.IN_ACTIVE);
 		int result = query.executeUpdate();
 		if(result > 0)
 			return true;
