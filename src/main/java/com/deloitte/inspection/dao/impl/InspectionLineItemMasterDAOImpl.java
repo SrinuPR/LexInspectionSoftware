@@ -57,7 +57,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 	public List<LISInspectionLineItemMaster> getAllInspectionLineItems(String userId)
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into getAllInspectionLineItems DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where lower(l.userID) = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.userID = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		query.setParameter("userId", userId);
 		List<LISInspectionLineItemMaster> list = query.list();

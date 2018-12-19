@@ -71,6 +71,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 			facilityMaster.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
 			facilityMaster.setFacilityNumber(facilityMasterDTO.getFacilityNumber());
 			facilityMaster.setFacilityName(facilityMasterDTO.getFacilityName());
+			facilityMaster.setUserId(userName);
 			LISSubscriberMaster subMaster = new LISSubscriberMaster();
 			subMaster.setSubscriberId(facilityMasterDTO.getSubscriberId());
 			facilityMaster.setSubscriberMaster(subMaster);
@@ -93,7 +94,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 	@Override
 	public List<LISFacilityMaster> getFacilitiesMasterData(String userId) throws FacilityMasterException {
 		logger.info("Entered into getFacilitiesMasterData");	
-		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE lower(FMACS.createdBy) = :userId ORDER BY FMACS.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE lower(FMACS.userId) = :userId ORDER BY FMACS.createdTimestamp DESC");
 		query.setParameter("userId", userId);
 		List<LISFacilityMaster> list = query.list();
 		return list;

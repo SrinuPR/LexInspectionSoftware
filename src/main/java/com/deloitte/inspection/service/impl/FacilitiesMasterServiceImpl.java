@@ -53,18 +53,18 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	}
 	
 	@Override
-	public FacilityMasterResponseDataDTO createFacilities(FacilityMasterDTO facilityMasterDTO,String userName)
+	public FacilityMasterResponseDataDTO createFacilities(FacilityMasterDTO facilityMasterDTO,String userId)
 			throws FacilityMasterException {
 
 		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
 		logger.info("Facility Number, name :"+facilityMasterDTO.getFacilityNumber() + " , " + facilityMasterDTO.getFacilityName());
 		if(null != facilityMasterDTO && null != facilityMasterDTO.getFacilityNumber() && null != facilityMasterDTO.getFacilityName()) {
-			FacilityMasterDTO login = facilityMasterDAO.createFacility(facilityMasterDTO,userName);
+			FacilityMasterDTO login = facilityMasterDAO.createFacility(facilityMasterDTO,userId);
 			if (null == login) {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_FAILED);
 			} else {
-				List<FacilityMasterDTO> resultList = getFacilitiesMasterData(userName);
+				List<FacilityMasterDTO> resultList = getFacilitiesMasterData(userId);
 				responseDTO.setResult(resultList);
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_SUCCESS);

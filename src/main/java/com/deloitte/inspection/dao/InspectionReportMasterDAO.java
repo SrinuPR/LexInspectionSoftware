@@ -11,4 +11,6 @@ public interface InspectionReportMasterDAO {
 	public LISInspectionReportMaster validateInspReportNumber(Integer inspReportNum) throws InspectionReportMasterException;
 
 	public List<LISInspectionReportMaster> getInspectionReportList(String compDrawNum) throws InspectionReportMasterException;
+
+	public List<LISInspectionReportMaster> getAllInspectionReportList(String userId) throws InspectionReportMasterException;
 }

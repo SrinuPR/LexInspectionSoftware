@@ -58,4 +58,15 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISInspectionReportMaster> getAllInspectionReportList(String userId)
+			throws InspectionReportMasterException {
+		logger.info("Entered into getAllInspectionReportList DAO");	
+		Query query = getSession().createQuery(" From LISInspectionReportMaster l where l.userID = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("userId", userId);
+		return query.list();
+	}
 }

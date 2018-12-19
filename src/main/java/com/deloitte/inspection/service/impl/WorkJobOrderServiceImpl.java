@@ -421,8 +421,10 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 						lotSize = workJobOrderMaster.getLotSize() != null?workJobOrderMaster.getLotSize():0;
 					}
 					int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber().toLowerCase());
-					
-					int finalResult = (lotSize - manufacturingBatchSize) - (workJobOrderDTO.getManufacturingBatchSize()!=null?workJobOrderDTO.getManufacturingBatchSize():0);
+					int dbSizes = (lotSize - manufacturingBatchSize);
+					int newFreeSpace = workJobOrderDTO.getLotSize() - lotSize;
+					newFreeSpace = newFreeSpace+dbSizes;
+					int finalResult = newFreeSpace - (workJobOrderDTO.getManufacturingBatchSize()!=null?workJobOrderDTO.getManufacturingBatchSize():0);
 					if(finalResult >= 0){
 						workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 						workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_SIZE_VALIDATION_SUCCESS);

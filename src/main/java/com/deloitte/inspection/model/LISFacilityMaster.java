@@ -49,6 +49,9 @@ import javax.persistence.Table;
  	@Column(name = "IS_ACTIVE")
  	private char isActive;
  	
+ 	@Column(name = "USER_ID")
+ 	private String userId;
+ 	
  	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
  	@JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
@@ -171,6 +174,14 @@ import javax.persistence.Table;
 
 	public void setFacilityId(Integer facilityId) {
 		this.facilityId = facilityId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 }

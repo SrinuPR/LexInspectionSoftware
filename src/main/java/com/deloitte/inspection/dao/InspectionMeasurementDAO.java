@@ -19,4 +19,6 @@ public interface InspectionMeasurementDAO {
 
 	public LISInspectionReportMaster getWorkJobOrderByReportNum(Integer reportNumber)  throws InspectionMeasurementException;
 
+	public List<LISInspectionMeasurements> getAllMeasurementList(String userId) throws InspectionMeasurementException;
+
 }
