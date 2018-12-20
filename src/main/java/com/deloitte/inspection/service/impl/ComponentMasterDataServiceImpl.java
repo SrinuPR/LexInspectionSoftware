@@ -20,6 +20,7 @@ import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
+import com.deloitte.inspection.response.dto.ComponentMasterResponseDataDTO;
 import com.deloitte.inspection.service.ComponentMasterDataService;
 
 @Service
@@ -60,6 +61,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 				masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits().trim());
 				masterDataComponent.setIsActive(StatusConstants.IS_ACTIVE);
 				masterDataComponent.setCreatedBy(userName);
+				masterDataComponent.setRecordInProcess(StatusConstants.RECORD_IN_PROCESS_COMPLETED);
 				masterDataComponent.setCreatedTimestamp(new Date());
 				componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
 				status = StatusConstants.SUCCESS;
@@ -73,32 +75,36 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 	}
 
 	@Override
-	public ComponentMasterDataDTO getComponentDataById(Integer componentId)	throws ComponentMasterDataException {
-		
+	public ComponentMasterResponseDataDTO getComponentDataById(Integer componentId)	throws ComponentMasterDataException {
+		ComponentMasterResponseDataDTO  componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 		logger.info("component Id "+componentId);
 		try{
-			ComponentMasterDataDTO  componentMasterDataDTO = new ComponentMasterDataDTO();
 			if(null != componentId){
 				LISMaintainMasterDataComponent masterDataComponent  = componentMasterDataDAO.getComponentDataById(componentId);
 				if(null != masterDataComponent){
-					componentMasterDataDTO.setComponentId(masterDataComponent.getCmdcsId());
-					componentMasterDataDTO.setComponentProductDrawNumber(masterDataComponent.getComponentProductDrawNumber());
-					componentMasterDataDTO.setComponentProductManufacturerUnits(masterDataComponent.getComponentProductManufacturerUnits());
-					componentMasterDataDTO.setComponentProductMeterial(masterDataComponent.getComponentProductMeterial());
-					componentMasterDataDTO.setComponentProductName(masterDataComponent.getComponentProductName());
-					componentMasterDataDTO.setComponentProductNotes(masterDataComponent.getComponentProductNotes());
-					componentMasterDataDTO.setComponentProductNumber(masterDataComponent.getComponentProductNumber());
-					componentMasterDataDTO.setCustomerNameAddress(masterDataComponent.getCustomerNameAddress());
-					if(null != masterDataComponent.getSubscriberMaster()){
-						componentMasterDataDTO.setSubscriberId(masterDataComponent.getSubscriberMaster().getSubscriberId());
-						componentMasterDataDTO.setSubscriberName(masterDataComponent.getSubscriberMaster().getSubscriberName());
+					if(StatusConstants.RECORD_IN_PROCESS == masterDataComponent.getRecordInProcess()){
+						componentMasterResponseDataDTO.setStatus(StatusConstants.FAILURE);
+						componentMasterResponseDataDTO.setMessage(StatusConstants.RECORD_IN_PROCESS_MESSAGE);
+					}else{
+						masterDataComponent.setRecordInProcess(StatusConstants.RECORD_IN_PROCESS);
+						componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
+						componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
+						componentMasterResponseDataDTO.setMessage(StatusConstants.RECORD_NOT_IN_PROCESS);
 					}
+				}else{
+					componentMasterResponseDataDTO.setStatus(StatusConstants.FAILURE);
+					componentMasterResponseDataDTO.setMessage(StatusConstants.RECORD_NOT_EXIST);
 				}
+			}else{
+				componentMasterResponseDataDTO.setStatus(StatusConstants.FAILURE);
+				componentMasterResponseDataDTO.setMessage(StatusConstants.INPUT_MISS);
 			}
-			return componentMasterDataDTO;
+			return componentMasterResponseDataDTO;
 		}catch(ComponentMasterDataException componentMasterDataException){
+			componentMasterResponseDataDTO.setStatus(StatusConstants.FAILURE);
 			logger.error("Exception While retriving the Component master data "+componentMasterDataException.getMessage());
 		}catch(Exception exception){
+			componentMasterResponseDataDTO.setStatus(StatusConstants.FAILURE);
 			logger.error("Exception While retriving the Component master data "+exception.getMessage());
 		}
 		return null;
@@ -122,6 +128,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 					masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits().trim());
 					masterDataComponent.setUpdatedBy(userName);
 					masterDataComponent.setUpdatedTimestamp(new Date());
+					masterDataComponent.setRecordInProcess(StatusConstants.RECORD_IN_PROCESS_COMPLETED);
 					componentMasterDataDAO.saveComponentMasterData(masterDataComponent);
 					status = StatusConstants.SUCCESS;
 					return status;
@@ -136,10 +143,10 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 	}
 
 	@Override
-	public List<ComponentMasterDataDTO> getAllComponentMasterData(String userId) throws ComponentMasterDataException {
+	public List<ComponentMasterDataDTO> getAllComponentMasterData(Integer SubscriberId) throws ComponentMasterDataException {
 		try{
 			List<ComponentMasterDataDTO> componentMasterDataDTOs = new ArrayList<ComponentMasterDataDTO>();
-			List<LISMaintainMasterDataComponent> maintainMasterDataComponents = componentMasterDataDAO.getAllComponentMasterData(userId);
+			List<LISMaintainMasterDataComponent> maintainMasterDataComponents = componentMasterDataDAO.getAllComponentMasterData(SubscriberId);
 			if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
 				for(LISMaintainMasterDataComponent masterDataComponent : maintainMasterDataComponents){
 					ComponentMasterDataDTO componentMasterDataDTO = new ComponentMasterDataDTO();

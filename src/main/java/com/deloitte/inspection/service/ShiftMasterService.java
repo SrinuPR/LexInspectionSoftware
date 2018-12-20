@@ -10,9 +10,9 @@ public interface ShiftMasterService {
 
 	public CommonDTO validateShiftId (String shiftId) throws ShiftMasterException;
 
-	public ShiftMasterResponseDTO createShiftMaster (ShiftMasterDTO shiftMasterDTO) throws ShiftMasterException ;
+	public ShiftMasterResponseDTO createShiftMaster (ShiftMasterDTO shiftMasterDTO, String userId) throws ShiftMasterException ;
 
-	public ShiftMasterResponseDTO getAllShifts (int subscriberId) throws ShiftMasterException ;
+	public ShiftMasterResponseDTO getAllShifts (Integer subscriberId) throws ShiftMasterException ;
 	
 	public ShiftMasterResponseDTO deleteShift (String shiftId,String userId) throws ShiftMasterException ;
 	

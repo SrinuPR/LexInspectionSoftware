@@ -2,9 +2,9 @@ package com.deloitte.inspection.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -137,9 +137,9 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 	}
 
 	@Override
-	public InspectionMasterResponseDataDTO getInspectionMasterData(String userId) {
+	public InspectionMasterResponseDataDTO getInspectionMasterData(Integer subscriberId) {
 		InspectionMasterResponseDataDTO response = new InspectionMasterResponseDataDTO();
-		List<LISInspectionMaster> masterList = inspectionDAO.getInspectionMasterList(userId);
+		List<LISInspectionMaster> masterList = inspectionDAO.getInspectionMasterList(subscriberId);
 		if (masterList != null && masterList.size() > 0) {
 			List<InspectionMasterDTO> results = new ArrayList<InspectionMasterDTO>();
 			for (LISInspectionMaster master : masterList) {
@@ -185,8 +185,8 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		try{
 			List<LISInspectionMaster> list = inspectionDAO.getInspectionTypesByCompProdDrawNum(compProdDrawNum.toLowerCase());
 			if(null != list && list.size() > 0){
-				Set<Integer> inspTypeIds = new HashSet<Integer>();
-				Set<Integer> inspStageIds = new HashSet<Integer>();
+				Set<Integer> inspTypeIds = new TreeSet<Integer>();
+				Set<Integer> inspStageIds = new TreeSet<Integer>();
 				for(LISInspectionMaster lisInspectionReportMaster : list){
 					inspStageIds.add(lisInspectionReportMaster.getInspStageId());
 					inspTypeIds.add(lisInspectionReportMaster.getInspTypeId());

@@ -53,7 +53,7 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	}
 	
 	@Override
-	public FacilityMasterResponseDataDTO createFacilities(FacilityMasterDTO facilityMasterDTO,String userId)
+	public FacilityMasterResponseDataDTO createFacilities(FacilityMasterDTO facilityMasterDTO,String userId, Integer subscriberId)
 			throws FacilityMasterException {
 
 		FacilityMasterResponseDataDTO responseDTO = new FacilityMasterResponseDataDTO();
@@ -64,7 +64,7 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_FAILED);
 			} else {
-				List<FacilityMasterDTO> resultList = getFacilitiesMasterData(userId);
+				List<FacilityMasterDTO> resultList = getFacilitiesMasterData(subscriberId);
 				responseDTO.setResult(resultList);
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(FacilityMasterConstants.CREATE_FACILITY_SUCCESS);
@@ -80,10 +80,10 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	}
 	
 	@Override
-	public List<FacilityMasterDTO> getFacilitiesMasterData(String userId) throws FacilityMasterException {
+	public List<FacilityMasterDTO> getFacilitiesMasterData(Integer subscriberId) throws FacilityMasterException {
 		try{
 			List<FacilityMasterDTO> facilityMasterList = new ArrayList<FacilityMasterDTO>();
-			List<LISFacilityMaster> facilityMasterModelList = facilityMasterDAO.getFacilitiesMasterData(userId);
+			List<LISFacilityMaster> facilityMasterModelList = facilityMasterDAO.getFacilitiesMasterData(subscriberId);
 			if(null != facilityMasterModelList && facilityMasterModelList.size() > 0){
 				for(LISFacilityMaster facilityMaster : facilityMasterModelList){
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();

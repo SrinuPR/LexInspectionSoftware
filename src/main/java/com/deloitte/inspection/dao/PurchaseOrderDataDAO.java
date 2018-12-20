@@ -20,4 +20,6 @@ public interface PurchaseOrderDataDAO {
 
 	public List<LISPurchaseOrderMaster> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException;
 
+	public List<LISPurchaseOrderMaster> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException;
+
 }

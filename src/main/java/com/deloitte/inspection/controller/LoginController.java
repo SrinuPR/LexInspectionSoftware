@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deloitte.inspection.config.LogInMap;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.dto.PasswordMaintenanceDTO;
@@ -35,6 +37,7 @@ public class LoginController {
 	public @ResponseBody ResponseEntity<LoginDTO> validateLoginCredentials(@RequestBody LoginDTO loginDTO, HttpSession httpSession){
 		LoginDTO responseDTO = new LoginDTO();
 		try{
+			httpSession.setMaxInactiveInterval(StatusConstants.MAX_INACTIVE_INTERVAL);
 			responseDTO = loginService.validateLoginCredentials(loginDTO,httpSession);
 			if(null != responseDTO && responseDTO.getErrorMessage() == null)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
@@ -49,9 +52,12 @@ public class LoginController {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@CrossOrigin
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<String> logout(HttpSession httpSession) {
+	@RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<String> logout(HttpSession httpSession,@PathVariable("userId") String userId) {
 		try {
+			if(!(StatusConstants.MAX_INACTIVE_INTERVAL >= httpSession.getMaxInactiveInterval())){
+				LogInMap.getInstance().logins.remove(userId);
+			}
 			httpSession.invalidate();
 			return new ResponseEntity(StatusConstants.SUCCESS, HttpStatus.OK);
 		}catch (Exception exception) {

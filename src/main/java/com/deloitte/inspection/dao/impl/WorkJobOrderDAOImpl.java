@@ -71,11 +71,11 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISWorkJobOrderMaster> WorkJobOrderList(String userId) throws WorkJobOrderException {
+	public List<LISWorkJobOrderMaster> WorkJobOrderList(Integer subscriberId) throws WorkJobOrderException {
 		logger.info("Entered into WorkJobOrderList DAO");	
-		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where l.userMasterCreate.userId = :userId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("userId", userId);
+		query.setParameter("subscriberId", subscriberId);
 		List<LISWorkJobOrderMaster> list = query.list();
 		return list;
 	}
@@ -239,9 +239,19 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	@Override
 	public List<LISWorkJobOrderMaster> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException {
 		logger.info("Retrieving getWorkJobOrderByCompDrawNum ");
-		Query query = getSession().createQuery("From LISWorkJobOrderMaster wjo where lower(wjo.componentMasterData.componentProductDrawNumber) = :compProdDrawNum and wjo.isActive = :isActive ORDER BY wjo.createdTimestamp DESC");
+		Query query = getSession().createQuery("From LISWorkJobOrderMaster wjo where lower(wjo.componentMasterData.componentProductDrawNumber) = :compProdDrawNum and wjo.isActive = :isActive ORDER BY wjo.workJobOrderNumber ASC");
 		query.setParameter("compProdDrawNum", compProdDrawNum);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISWorkJobOrderMaster> WorkJobOrderListByUserId(String userId) throws WorkJobOrderException {
+		logger.info("Entered into WorkJobOrderList DAO");	
+		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where l.userMasterCreate.userId = :userId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("userId", userId);
 		return query.list();
 	}
 	

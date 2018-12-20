@@ -48,16 +48,18 @@ public class PurchaseOrderDataController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
 			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
 				userId = StatusConstants.DEFAULT_USER_ID;
 			}
 			status = purchaseOrderDataService.savePurchaseOrderData(purchaseOrderDataDTO,userName, userId);
 			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
-				List<PurchaseOrderDataDTO> purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
+				List<PurchaseOrderDataDTO> purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(subscriberId);
 				purchaseOrderResponseDataDTO.setResult(purchaseOrderList);
 				purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
 				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CREATE_PURCHASE_ORDER_SUCCESS);
@@ -84,13 +86,11 @@ public class PurchaseOrderDataController {
 		LoginDTO userDto=new LoginDTO();
 		try{
 			userDto = (LoginDTO)httpSession.getAttribute("user");
-			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
-				userId = userDto.getUserId();
-			}else{
-				userId = StatusConstants.DEFAULT_USER_ID;
+				subscriberId = userDto.getSubscriberId();
 			}
-			purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
+			purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(subscriberId);
 			purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
 			purchaseOrderResponseDataDTO.setResult(purchaseOrderList);
 			purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.CUSTOMER_PO_EXIST);
@@ -154,16 +154,18 @@ public class PurchaseOrderDataController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
 			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
 				userId = StatusConstants.DEFAULT_USER_ID;
 			}
 			status = purchaseOrderDataService.updatePurchaseOrderData(purchaseOrderDataDTO, userName, userId);
 			if(null!=status && StatusConstants.SUCCESS.equalsIgnoreCase(status)) {
-				List<PurchaseOrderDataDTO> purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(userId);
+				List<PurchaseOrderDataDTO> purchaseOrderList = purchaseOrderDataService.getAllPurchaseOrders(subscriberId);
 				purchaseOrderResponseDataDTO.setResult(purchaseOrderList);
 				purchaseOrderResponseDataDTO.setStatus(StatusConstants.SUCCESS);
 				purchaseOrderResponseDataDTO.setMessage(PurchaseOrderConstants.UPDATE_PURCHASE_ORDER_SUCCESS);

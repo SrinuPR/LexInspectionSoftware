@@ -12,7 +12,7 @@ public interface InspectionMasterService {
 	
 	public InspectionMasterResponseDataDTO updateInspectionMaster(InspectionMasterDTO masterDTO);
 	
-	public InspectionMasterResponseDataDTO getInspectionMasterData(String userId);
+	public InspectionMasterResponseDataDTO getInspectionMasterData(Integer subscriberId);
 	
 	public String deleteInspectionMaster(Integer inspectionMasterId);
 

@@ -13,11 +13,13 @@ public interface InspectionLineItemMasterDAO {
 
 	public List<LISInspectionMaster> getComponentProductDrawNumbers(Integer subscriberId) throws InspectionLineItemMasterException;
 
-	public List<LISInspectionLineItemMaster> getAllInspectionLineItems(String userId) throws InspectionLineItemMasterException;
+	public List<LISInspectionLineItemMaster> getAllInspectionLineItems(Integer subscriberId) throws InspectionLineItemMasterException;
 
 	public LISInspectionLineItemMaster validateMeasurementName(InspectionLineItemDTO inspectionLineItem) throws InspectionLineItemMasterException;
 
 	public LISInspectionLineItemMaster getInspectionItem(Integer inspectionLineItemId) throws InspectionLineItemMasterException;
 
 	public List<LISInspectionLineItemMaster>  getComponentProductDrawNumbers(String compDraNum) throws InspectionLineItemMasterException;
+
+	public List<LISInspectionLineItemMaster> getAllInspectionLineItemByUserID(String userId) throws InspectionLineItemMasterException;
 }

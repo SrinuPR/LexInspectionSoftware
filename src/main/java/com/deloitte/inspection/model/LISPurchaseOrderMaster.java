@@ -69,6 +69,9 @@ public class LISPurchaseOrderMaster implements Serializable{
     
     @Column(name = "IS_ACTIVE")
     private char isActive;
+    
+    @Column(name = "RECORD_IN_PROCESS")
+	private char recordInProcess;
 
 	public String getCustomerPONumber() {
 		return customerPONumber;
@@ -182,5 +185,12 @@ public class LISPurchaseOrderMaster implements Serializable{
 	public void setWorkJobOrderMasters(List<LISWorkJobOrderMaster> workJobOrderMasters) {
 		this.workJobOrderMasters = workJobOrderMasters;
 	}
-	
+
+	public char getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(char recordInProcess) {
+		this.recordInProcess = recordInProcess;
+	}
 }

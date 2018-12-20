@@ -92,10 +92,11 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISFacilityMaster> getFacilitiesMasterData(String userId) throws FacilityMasterException {
+	public List<LISFacilityMaster> getFacilitiesMasterData(Integer subscriberId) throws FacilityMasterException {
 		logger.info("Entered into getFacilitiesMasterData");	
-		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE lower(FMACS.userId) = :userId ORDER BY FMACS.createdTimestamp DESC");
-		query.setParameter("userId", userId);
+		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE lower(FMACS.subscriberMaster.subscriberId) = :subscriberId and FMACS.isActive = :isActive ORDER BY FMACS.createdTimestamp DESC");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISFacilityMaster> list = query.list();
 		return list;
 	}

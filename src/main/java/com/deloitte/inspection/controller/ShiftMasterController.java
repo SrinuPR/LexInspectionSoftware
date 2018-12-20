@@ -74,7 +74,7 @@ public class ShiftMasterController {
 				userId = StatusConstants.DEFAULT_USER_ID;
 			}
 			createShiftMasterDTO.setCreatedBy(userId);
-			ShiftMasterResponseDTO response = shiftMasterService.createShiftMaster(createShiftMasterDTO);
+			ShiftMasterResponseDTO response = shiftMasterService.createShiftMaster(createShiftMasterDTO,userId);
 			if(null != response && response.getMessage().equals(ShiftMasterConstants.SHIFT_SAVE_SUCCESS)) {
 				response.setStatus(StatusConstants.SUCCESS);
 				return new ResponseEntity(response, HttpStatus.OK);
@@ -96,7 +96,6 @@ public @ResponseBody ResponseEntity<ShiftMasterResponseDTO> getShiftMasterData(@
 	logger.info("Entered into getShiftMasterData");
 	ShiftMasterResponseDTO ShiftMasterResponseDTO = new ShiftMasterResponseDTO();
 	try{
-		
 		ShiftMasterResponseDTO = shiftMasterService.getAllShifts(subscriberId);
 		if(null!=ShiftMasterResponseDTO.getResult() && ShiftMasterConstants.FETCH_SHIFT_LIST_SUCCESS.equals(ShiftMasterResponseDTO.getMessage())){
 			ShiftMasterResponseDTO.setStatus(StatusConstants.SUCCESS);

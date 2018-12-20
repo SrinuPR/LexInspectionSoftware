@@ -102,5 +102,15 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();
 	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<LISPurchaseOrderMaster> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException {
+		logger.info("Entered into getAllBySubscriberId");	
+		Query query = getSession().createQuery("FROM LISPurchaseOrderMaster i where i.subscriberMaster.subscriberId = :subscriberId and i.isActive = :isActive ORDER BY i.customerPONumber ASC ");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		return query.list();
+	}
 	
 }

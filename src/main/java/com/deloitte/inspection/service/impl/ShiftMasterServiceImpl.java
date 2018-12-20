@@ -55,12 +55,13 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 
 	}
 	@Override
-	public ShiftMasterResponseDTO createShiftMaster(ShiftMasterDTO shiftMasterDTO) throws ShiftMasterException {
+	public ShiftMasterResponseDTO createShiftMaster(ShiftMasterDTO shiftMasterDTO, String userId) throws ShiftMasterException {
 		
 		ShiftMasterResponseDTO resShiftMasterDTO = new ShiftMasterResponseDTO();
-		
+		Integer subscriberId = null;
 			try {
 			if(null!=shiftMasterDTO && null!=shiftMasterDTO.getSubscriberId()) {
+				subscriberId = shiftMasterDTO.getSubscriberId();
 				if( null!=shiftMasterDTO.getShiftId()) {
 					shiftMasterDTO.setCreatedTimestamp(new Date());
 					shiftMasterDTO= ShiftMasterDAO.createShiftMaster(shiftMasterDTO);
@@ -73,7 +74,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 					resShiftMasterDTO.setMessage(ShiftMasterConstants.SHIFT_ID_REQUIRED);
 				}	
 				List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
-				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(shiftMasterDTO.getSubscriberId());
+				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
 				for(LISShiftMaster tempMaster:shiftMasterList) {
 					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 					masterDTO.setShiftId(tempMaster.getShiftId());
@@ -93,7 +94,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 		
 	 }
 	@Override
-	public ShiftMasterResponseDTO getAllShifts(int subscriberId) throws ShiftMasterException {
+	public ShiftMasterResponseDTO getAllShifts(Integer subscriberId) throws ShiftMasterException {
 		ShiftMasterResponseDTO shiftMasterResponseDTO=new ShiftMasterResponseDTO();
 		List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
 		List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
@@ -133,9 +134,9 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 	public ShiftMasterResponseDTO updateShiftMaster(ShiftMasterDTO shiftMasterDTO) throws ShiftMasterException {
 		
 		ShiftMasterResponseDTO resShiftMasterDTO = new ShiftMasterResponseDTO();
-		
-			try {
+		try {
 			if(null!=shiftMasterDTO && null!=shiftMasterDTO.getSubscriberId()) {
+				Integer subscriberId = shiftMasterDTO.getSubscriberId();
 				if(null!=shiftMasterDTO.getShiftId()) {
 					shiftMasterDTO.setUpdatedTimestamp(new Date());
 					shiftMasterDTO= ShiftMasterDAO.updateShiftMaster(shiftMasterDTO);
@@ -148,7 +149,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 					resShiftMasterDTO.setMessage(ShiftMasterConstants.SHIFT_ID_REQUIRED);
 				}
 				List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
-				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(shiftMasterDTO.getSubscriberId());
+				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
 				for(LISShiftMaster tempMaster:shiftMasterList) {
 					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 					masterDTO.setShiftId(tempMaster.getShiftId());

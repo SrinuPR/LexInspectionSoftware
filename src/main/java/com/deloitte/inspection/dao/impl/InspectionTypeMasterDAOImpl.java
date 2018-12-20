@@ -58,11 +58,12 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 	 * @see com.deloitte.inspection.dao.InspectionTypeMasterDAO#createInspectionType(com.deloitte.inspection.dto.InspectionTypeMasterDTO)
 	 */
 	@Override
-	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO) throws InspectionTypeMasterException {
+	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO, String userId) throws InspectionTypeMasterException {
 		logger.info("Entered into createInspectionType");	
 		try {
 			LISInspectionTypeMaster inspTypeMaster = new LISInspectionTypeMaster();
 			inspTypeMaster.setCreatedBy(inspTypeMasterDTO.getCreatedBy());
+			inspTypeMaster.setUserId(userId);
 			inspTypeMaster.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
 			inspTypeMaster.setInspTypeId(inspTypeMasterDTO.getInspTypeId());
 			inspTypeMaster.setInspTypeName(inspTypeMasterDTO.getInspTypeName());
@@ -85,9 +86,11 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISInspectionTypeMaster> getAllInspTypeMasterData() throws InspectionTypeMasterException {
+	public List<LISInspectionTypeMaster> getAllInspTypeMasterData(Integer subscriberId) throws InspectionTypeMasterException {
 		logger.info("Entered into getAllInspTypeMasterData");	
-		Query query = getSession().createQuery(" From LISInspectionTypeMaster ITMCS ORDER BY ITMCS.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISInspectionTypeMaster ITMCS WHERE ITMCS.subscriberMaster.subscriberId = :subscriberId  and ITMCS.isActive = :isActive ORDER BY ITMCS.createdTimestamp DESC");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		List<LISInspectionTypeMaster> list = query.list();
 		return list;
 	}

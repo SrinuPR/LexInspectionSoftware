@@ -50,8 +50,19 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISMaintainMasterDataComponent> getAllComponentMasterData(String userId) throws ComponentMasterDataException {
+	public List<LISMaintainMasterDataComponent> getAllComponentMasterData(Integer subscriberId) throws ComponentMasterDataException {
 		logger.info("Entered into validateLoginCredentials");	
+		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.subscriberMaster.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.componentProductDrawNumber ASC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("subscriberId", subscriberId);
+		List<LISMaintainMasterDataComponent> list = query.list();
+		return list;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISMaintainMasterDataComponent> getAllComponentMasterDataByUserID(String userId) throws ComponentMasterDataException {
+		logger.info("Entered into getAllComponentMasterDataByUserID");	
 		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		query.setParameter("userId", userId);

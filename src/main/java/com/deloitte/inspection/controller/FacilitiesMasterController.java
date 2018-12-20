@@ -75,11 +75,11 @@ public class FacilitiesMasterController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userId = null;
 			if(null != userDto){
-				userId = userDto.getUserName();
+				userId = userDto.getUserId();
 			}else{
 				userId = StatusConstants.DEFAULT_USER_NAME;
 			}
-			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO,userId);
+			responseDTO = facilitiesMasterService.createFacilities(facilityMasDTO,userId,facilityMasDTO.getSubscriberId());
 			if(null != responseDTO)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
@@ -104,14 +104,11 @@ public class FacilitiesMasterController {
 		List<FacilityMasterDTO> facilityMasDTOList = null;
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
-			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
-				userId = userDto.getUserId();
-			}else{
-				userId = StatusConstants.DEFAULT_USER_ID;
+				subscriberId = userDto.getSubscriberId();
 			}
-			
-			facilityMasDTOList = facilitiesMasterService.getFacilitiesMasterData(userId.toLowerCase());
+			facilityMasDTOList = facilitiesMasterService.getFacilitiesMasterData(subscriberId);
 			repsonseDto.setResult(facilityMasDTOList);
 			repsonseDto.setStatus(StatusConstants.SUCCESS);
 			repsonseDto.setMessage(StatusConstants.SUCCESS);

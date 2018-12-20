@@ -72,6 +72,9 @@ public class LISInspectionMaster implements Serializable{
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name="COMP_PROD_DRAW_NUM")
     private LISMaintainMasterDataComponent componentMasterData;
+	
+	@Column(name = "RECORD_IN_PROCESS")
+	private char recordInProcess;
 
 	/**
 	 * @return the inspId
@@ -267,5 +270,13 @@ public class LISInspectionMaster implements Serializable{
 	 */
 	public void setComponentMasterData(LISMaintainMasterDataComponent componentMasterData) {
 		this.componentMasterData = componentMasterData;
+	}
+
+	public char getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(char recordInProcess) {
+		this.recordInProcess = recordInProcess;
 	}
 }

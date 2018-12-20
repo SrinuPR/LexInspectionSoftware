@@ -54,13 +54,13 @@ public class InspectionTypeMasterServiceImpl implements InspectionTypeMasterServ
 	}
 	
 	@Override
-	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO)
+	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO,String userId)
 			throws InspectionTypeMasterException{
 
 		InspectionTypeMasterDTO responseDTO = new InspectionTypeMasterDTO();
 		logger.info("Inspection ID, name "+inspTypeMasterDTO.getInspTypeId()+" , "+inspTypeMasterDTO.getInspTypeName());
 		if(null != inspTypeMasterDTO && null != inspTypeMasterDTO.getInspTypeId() && null != inspTypeMasterDTO.getInspTypeName()) {
-			InspectionTypeMasterDTO login = inspTypeMasterDAO.createInspectionType(inspTypeMasterDTO);
+			InspectionTypeMasterDTO login = inspTypeMasterDAO.createInspectionType(inspTypeMasterDTO,userId);
 			if (null == login) {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(InspectionTypeMasterConstants.CREATE_INSPECTION_TYPE_FAILED);
@@ -81,10 +81,10 @@ public class InspectionTypeMasterServiceImpl implements InspectionTypeMasterServ
 	}
 	
 	@Override
-	public List<InspectionTypeMasterDTO> getAllInspTypeMasterData() throws InspectionTypeMasterException{
+	public List<InspectionTypeMasterDTO> getAllInspTypeMasterData(Integer subscriberId) throws InspectionTypeMasterException{
 		try{
 			List<InspectionTypeMasterDTO> inspTypeMasterList = new ArrayList<InspectionTypeMasterDTO>();
-			List<LISInspectionTypeMaster> lisInspTypeMasterList = inspTypeMasterDAO.getAllInspTypeMasterData();
+			List<LISInspectionTypeMaster> lisInspTypeMasterList = inspTypeMasterDAO.getAllInspTypeMasterData(subscriberId);
 			if(null != lisInspTypeMasterList && lisInspTypeMasterList.size() > 0){
 				for(LISInspectionTypeMaster lisInspTypeMaster : lisInspTypeMasterList){
 					InspectionTypeMasterDTO inspTypeMasterDTO = new InspectionTypeMasterDTO();

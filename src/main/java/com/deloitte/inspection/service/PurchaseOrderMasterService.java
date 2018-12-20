@@ -12,7 +12,7 @@ public interface PurchaseOrderMasterService {
 
 	public String savePurchaseOrderData(PurchaseOrderDataDTO PurchaseOrderDataDTO, String userName, String userId) throws PurchaseOrderMasterException, CreateUserException, SubscriberMasterException ;
 
-	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(String userName) throws PurchaseOrderMasterException,CreateUserException;
+	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(Integer subscriberId) throws PurchaseOrderMasterException,CreateUserException;
 
 	public String validatePODate(PurchaseOrderDataDTO PurchaseOrderDataDTO) throws PurchaseOrderMasterException;
 	

@@ -45,9 +45,11 @@ public class ComponentMasterDataController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
 			String userId = null;
+			Integer SubscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+				SubscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
 				userId = StatusConstants.DEFAULT_USER_ID;
@@ -56,7 +58,7 @@ public class ComponentMasterDataController {
 			status = componentMasterDataService.saveComponentMasterData(componentMasterDataDTO,userName,userId);
 			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
-				componentMasterData  = componentMasterDataService.getAllComponentMasterData(userId);
+				componentMasterData  = componentMasterDataService.getAllComponentMasterData(SubscriberId);
 				componentMasterResponseDataDTO.setResult(componentMasterData);
 				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_UPDATE_SUCCESS);
 				componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
@@ -75,18 +77,18 @@ public class ComponentMasterDataController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@RequestMapping(value = "/edit/{componentId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<ComponentMasterDataDTO> editComponentMasterData(@PathVariable("componentId") Integer componentId){
+	public @ResponseBody ResponseEntity<ComponentMasterResponseDataDTO> editComponentMasterData(@PathVariable("componentId") Integer componentId){
 		logger.info("Entered into saveComponentMasterData");
-		ComponentMasterDataDTO componentMasterDataDTO = null;
+		ComponentMasterResponseDataDTO componentMasterResponseDataDTO = null;
 		try{
-			componentMasterDataDTO = componentMasterDataService.getComponentDataById(componentId);
-			if(null != componentMasterDataDTO)
-				return new ResponseEntity(componentMasterDataDTO,HttpStatus.OK);
+			componentMasterResponseDataDTO = componentMasterDataService.getComponentDataById(componentId);
+			if(null != componentMasterResponseDataDTO && StatusConstants.SUCCESS.equalsIgnoreCase(componentMasterResponseDataDTO.getStatus()))
+				return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.OK);
 		}catch(Exception exception){
 			logger.error("Error while saving the data : "+exception.getMessage());
-			return new ResponseEntity(componentMasterDataDTO,HttpStatus.METHOD_FAILURE);
+			return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.METHOD_FAILURE);
 		}
-		return new ResponseEntity(componentMasterDataDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(componentMasterResponseDataDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@CrossOrigin
@@ -98,19 +100,18 @@ public class ComponentMasterDataController {
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
-			String userId = null;
+			Integer SubscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
-				userId = userDto.getUserId();
+				SubscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
-				userId = StatusConstants.DEFAULT_USER_ID;
 			}
 			ComponentMasterResponseDataDTO componentMasterResponseDataDTO = new ComponentMasterResponseDataDTO();
 			status = componentMasterDataService.updateComponentMasterData(componentMasterDataDTO, userName);		
 			List<ComponentMasterDataDTO> componentMasterData = null;
 			if(StatusConstants.SUCCESS.equalsIgnoreCase(status)){
-				componentMasterData  = componentMasterDataService.getAllComponentMasterData(userId);
+				componentMasterData  = componentMasterDataService.getAllComponentMasterData(SubscriberId);
 				componentMasterResponseDataDTO.setResult(componentMasterData);
 				componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_UPDATE_SUCCESS);
 				componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);
@@ -135,13 +136,11 @@ public class ComponentMasterDataController {
 		List<ComponentMasterDataDTO> componentMasterDataDTOs = null;
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
-			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
-				userId = userDto.getUserId();
-			}else{
-				userId = StatusConstants.DEFAULT_USER_ID;
+				subscriberId = userDto.getSubscriberId();
 			}
-			componentMasterDataDTOs = componentMasterDataService.getAllComponentMasterData(userId);
+			componentMasterDataDTOs = componentMasterDataService.getAllComponentMasterData(subscriberId);
 			componentMasterResponseDataDTO.setResult(componentMasterDataDTOs);
 			componentMasterResponseDataDTO.setMessage(ComponentConstants.COMPONENT_LIST_SUCCESS);
 			componentMasterResponseDataDTO.setStatus(StatusConstants.SUCCESS);

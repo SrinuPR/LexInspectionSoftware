@@ -63,7 +63,7 @@ public class AccessMasterDAOImpl implements AccessMasterDAO{
 	@Override
 	public List<LISUserTypeMaster> getUserTypeListforSubscriber(Integer subscriberId) throws Exception {
 		logger.info("inside getUserTypeListforSubscriber DAO");
-		Query query = getSession().createQuery(" From LISUserTypeMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive");
+		Query query = getSession().createQuery(" From LISUserTypeMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive order by l.userTypeName ASC");
 		query.setParameter("subscriberId", subscriberId);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return query.list();

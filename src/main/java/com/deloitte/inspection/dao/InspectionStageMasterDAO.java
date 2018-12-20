@@ -16,8 +16,8 @@ public interface InspectionStageMasterDAO {
 
 	public LISInspectionStageMaster getInspSatgeId(Integer inspStageId) throws InspectionStageMasterException;
 	
-	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO) throws InspectionStageMasterException;
+	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO, String userId) throws InspectionStageMasterException;
 	
-	public List<LISInspectionStageMaster> getAllInspStageMasterData() throws InspectionStageMasterException;
+	public List<LISInspectionStageMaster> getAllInspStageMasterData(Integer subscriberId) throws InspectionStageMasterException;
 
 }

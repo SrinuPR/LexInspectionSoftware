@@ -14,7 +14,7 @@ import com.deloitte.inspection.exception.InspectionTypeMasterException;
  */
 public interface InspectionTypeMasterService {
 	public InspectionTypeMasterDTO getInspTypeId(Integer inspTypeId) throws InspectionTypeMasterException;
-	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO) throws InspectionTypeMasterException;
-	public List<InspectionTypeMasterDTO> getAllInspTypeMasterData() throws InspectionTypeMasterException;
+	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO, String userId) throws InspectionTypeMasterException;
+	public List<InspectionTypeMasterDTO> getAllInspTypeMasterData(Integer subscriberId) throws InspectionTypeMasterException;
 	
 }

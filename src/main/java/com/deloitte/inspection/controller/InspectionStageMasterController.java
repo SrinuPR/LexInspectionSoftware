@@ -4,6 +4,9 @@
 package com.deloitte.inspection.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.InspectionStageMasterDTO;
+import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.service.InspectionStageMasterService;
 
 /**
@@ -63,10 +67,17 @@ public class InspectionStageMasterController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<InspectionStageMasterDTO> createInspectionStage(@RequestBody InspectionStageMasterDTO inspStageMasDTO){
+	public @ResponseBody ResponseEntity<InspectionStageMasterDTO> createInspectionStage(@RequestBody InspectionStageMasterDTO inspStageMasDTO, HttpSession httpSession){
 		InspectionStageMasterDTO responseDTO = new InspectionStageMasterDTO();
 		try{
-			responseDTO = inspStageMasterService.createInspectionStage(inspStageMasDTO);
+			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
+			String userId = null;
+			if(null != userDto){
+				userId = userDto.getUserId();
+			}else{
+				userId = StatusConstants.DEFAULT_USER_NAME;
+			}
+			responseDTO = inspStageMasterService.createInspectionStage(inspStageMasDTO,userId);
 			if(null != responseDTO)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
 			else
@@ -84,12 +95,17 @@ public class InspectionStageMasterController {
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<List<InspectionStageMasterDTO>> inspStageMasterList(){
+	public @ResponseBody ResponseEntity<List<InspectionStageMasterDTO>> inspStageMasterList(HttpSession httpSession){
 		logger.info("Entered into inspStageMasterList");
 		InspectionStageMasterDTO responseDTO = new InspectionStageMasterDTO();
 		List<InspectionStageMasterDTO> inspStageMasDTOList = null;
 		try{
-			inspStageMasDTOList = inspStageMasterService.getAllInspStageMasterData();
+			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
+			Integer subscriberId = null;
+			if(null != userDto){
+				subscriberId = userDto.getSubscriberId();
+			}
+			inspStageMasDTOList = inspStageMasterService.getAllInspStageMasterData(subscriberId);
 			if(null != inspStageMasDTOList && inspStageMasDTOList.size() > 0) {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setInspStageMasterList(inspStageMasDTOList);

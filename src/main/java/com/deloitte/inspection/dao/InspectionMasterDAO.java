@@ -10,7 +10,7 @@ public interface InspectionMasterDAO {
 	
 	public LISInspectionMaster getInspectionStage(InspectionMasterDTO inspectionDTO);
 	public void saveInspectionMaster(LISInspectionMaster inspectionMaster);
-	public List<LISInspectionMaster> getInspectionMasterList(String userId);
+	public List<LISInspectionMaster> getInspectionMasterList(Integer subscriberId);
 	public LISInspectionMaster getInspectionMasterById(Integer inspectionMasterId);
 	public LISInspectionMaster getInspectionStageOtherThanCurrent(InspectionMasterDTO inspectionDTO);
 	public String deleteInspectionMaster(Integer inspectionMasterId);

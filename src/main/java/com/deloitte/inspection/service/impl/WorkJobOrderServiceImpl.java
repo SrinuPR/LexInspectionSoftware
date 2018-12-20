@@ -194,10 +194,10 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	}
 
 	@Override
-	public WorkJobOrderResponseDTO getAllWorkJobOrderData(String userId) throws WorkJobOrderException {
+	public WorkJobOrderResponseDTO getAllWorkJobOrderData(Integer subscriberId) throws WorkJobOrderException {
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
-			List<WorkJobOrderDTO> workJobOrderDTOs = WorkJobOrderList(userId);
+			List<WorkJobOrderDTO> workJobOrderDTOs = WorkJobOrderList(subscriberId);
 			workJobOrderResponseDTO.setResults(workJobOrderDTOs);
 			workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 			workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_LIST_SUCCESS);
@@ -210,11 +210,11 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	}
 	
 	@Override
-	public List<WorkJobOrderDTO> WorkJobOrderList(String userId) throws WorkJobOrderException{
+	public List<WorkJobOrderDTO> WorkJobOrderList(Integer subscriberId) throws WorkJobOrderException{
 		logger.info("Entered into WorkJobOrderList");
 		List<WorkJobOrderDTO> workJobOrderDTOs = new ArrayList<WorkJobOrderDTO>();
 		try{
-			List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.WorkJobOrderList(userId);
+			List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.WorkJobOrderList(subscriberId);
 			workJobOrderDTOs =  transferModelToDTO(workJobOrderMasters);
 		}catch(Exception exception){
 			logger.error("Error while fetching the data "+exception.getMessage());

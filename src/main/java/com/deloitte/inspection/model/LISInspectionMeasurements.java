@@ -24,6 +24,9 @@ public class LISInspectionMeasurements implements Serializable{
 	@Column(name = "SUBSCRIBER_ID", length = 5, nullable = false)
 	private Integer subscriberId;
 	
+	@Column(name = "RECORD_IN_PROCESS")
+	private char recordInProcess;
+	
 	@Column(name = "SUBSCRIBER_NAME", length = 50, nullable = false)
 	private String subscriberName;
 	
@@ -456,6 +459,14 @@ public class LISInspectionMeasurements implements Serializable{
 
 	public void setActualBaseMeasure(String actualBaseMeasure) {
 		this.actualBaseMeasure = actualBaseMeasure;
+	}
+
+	public char getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(char recordInProcess) {
+		this.recordInProcess = recordInProcess;
 	}
 	
 }

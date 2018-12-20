@@ -73,12 +73,12 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 	
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@SuppressWarnings({ "unchecked", "rawtypes"})
 	@Override
-	public List<LISShiftMaster> findBySubscriberId(int subscriberId) throws ShiftMasterException {
+	public List<LISShiftMaster> findBySubscriberId(Integer subscriberId) throws ShiftMasterException {
 		logger.info("Entered into getAllShifts");	
 		Query query = getSession().createQuery(" From LISShiftMaster SHMCS where SHMCS.subscriberMaster.subscriberId = :subscriberId AND SHMCS.isActive = :isactive");
-		query.setInteger("subscriberId", subscriberId);
+		query.setParameter("subscriberId", subscriberId);
 		query.setParameter("isactive", StatusConstants.IS_ACTIVE);
 		List<LISShiftMaster> shiftMasterList = query.list();
 		if(null != shiftMasterList && shiftMasterList.size() > 0) {
@@ -130,6 +130,17 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 			ex.printStackTrace();
 		} 
 		return null;
+	}
+
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISShiftMaster> getAllShiftsBySubscriberId(Integer subscriberId) throws ShiftMasterException {
+		logger.info("Entered into getAllShifts");	
+		Query query = getSession().createQuery(" From LISShiftMaster SHMCS where SHMCS.subscriberMaster.subscriberId = :subscriberId AND SHMCS.isActive = :isactive");
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("isactive", StatusConstants.IS_ACTIVE);
+		return query.list();
 	}
 	
 }

@@ -54,6 +54,9 @@ public class LISInspectionStageMaster implements Serializable{
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
+	
+	@Column(name = "USER_ID")
+	private String userId;
 
 	/**
 	 * @return the inspStageId
@@ -174,5 +177,12 @@ public class LISInspectionStageMaster implements Serializable{
 	public void setInspStageUniqueId(Integer inspStageUniqueId) {
 		this.inspStageUniqueId = inspStageUniqueId;
 	}
-	
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }

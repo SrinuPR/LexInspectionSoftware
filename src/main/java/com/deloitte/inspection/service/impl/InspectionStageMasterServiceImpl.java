@@ -54,13 +54,13 @@ public class InspectionStageMasterServiceImpl implements InspectionStageMasterSe
 	}
 	
 	@Override
-	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO)
+	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO, String userId)
 			throws InspectionStageMasterException {
 
 		InspectionStageMasterDTO responseDTO = new InspectionStageMasterDTO();
 		logger.info("Inspection stage ID, name "+inspTypeMasterDTO.getInspStageId() + " , " + inspTypeMasterDTO.getInspStageName());
 		if(null != inspTypeMasterDTO && null != inspTypeMasterDTO.getInspStageId() && null != inspTypeMasterDTO.getInspStageName()) {
-			InspectionStageMasterDTO login = inspStageMasterDAO.createInspectionStage(inspTypeMasterDTO);
+			InspectionStageMasterDTO login = inspStageMasterDAO.createInspectionStage(inspTypeMasterDTO,userId);
 			if (null == login) {
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(InspectionTypeMasterConstants.CREATE_INSPECTION_STAGE_FAILED);
@@ -80,10 +80,10 @@ public class InspectionStageMasterServiceImpl implements InspectionStageMasterSe
 	}
 	
 	@Override
-	public List<InspectionStageMasterDTO> getAllInspStageMasterData() throws InspectionStageMasterException {
+	public List<InspectionStageMasterDTO> getAllInspStageMasterData(Integer subscriberId) throws InspectionStageMasterException {
 		try{
 			List<InspectionStageMasterDTO> inspTypeMasterList = new ArrayList<InspectionStageMasterDTO>();
-			List<LISInspectionStageMaster> lisInspTypeMasterList = inspStageMasterDAO.getAllInspStageMasterData();
+			List<LISInspectionStageMaster> lisInspTypeMasterList = inspStageMasterDAO.getAllInspStageMasterData(subscriberId);
 			if(null != lisInspTypeMasterList && lisInspTypeMasterList.size() > 0){
 				for(LISInspectionStageMaster lisInspTypeMaster : lisInspTypeMasterList){
 					InspectionStageMasterDTO inspTypeMasterDTO = new InspectionStageMasterDTO();

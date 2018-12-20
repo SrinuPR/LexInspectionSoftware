@@ -40,11 +40,15 @@ public class LISShiftMaster implements Serializable{
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
+	@Column(name = "RECORD_IN_PROCESS")
+	private char recordInProcess;
+	
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
-
 	
+	@Column(name = "USER_ID")
+	private String userId;	
 
 	public String getShiftId() {
 		return shiftId;
@@ -110,5 +114,20 @@ public class LISShiftMaster implements Serializable{
 		this.subscriberMaster = subscriberMaster;
 	}
 
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public char getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(char recordInProcess) {
+		this.recordInProcess = recordInProcess;
+	}
 	
 }

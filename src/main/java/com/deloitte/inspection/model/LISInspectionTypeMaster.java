@@ -50,6 +50,9 @@ public class LISInspectionTypeMaster implements Serializable{
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
+	@Column(name = "USER_ID")
+	private String userId;
+	
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name="SUBSCRIBER_ID")
     private LISSubscriberMaster subscriberMaster;
@@ -173,5 +176,12 @@ public class LISInspectionTypeMaster implements Serializable{
 	public void setInspTypeUniqueId(Integer inspTypeUniqueId) {
 		this.inspTypeUniqueId = inspTypeUniqueId;
 	}
-	
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }

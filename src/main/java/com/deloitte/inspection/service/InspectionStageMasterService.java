@@ -15,8 +15,8 @@ import com.deloitte.inspection.exception.InspectionStageMasterException;
 public interface InspectionStageMasterService {
 
 	public InspectionStageMasterDTO getInspStageId(Integer inspStageId) throws InspectionStageMasterException;
-	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO) throws InspectionStageMasterException;
-	public List<InspectionStageMasterDTO> getAllInspStageMasterData() throws InspectionStageMasterException;
+	public InspectionStageMasterDTO createInspectionStage(InspectionStageMasterDTO inspTypeMasterDTO, String userId) throws InspectionStageMasterException;
+	public List<InspectionStageMasterDTO> getAllInspStageMasterData(Integer subscriberId) throws InspectionStageMasterException;
 	
 
 }

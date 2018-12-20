@@ -112,7 +112,7 @@ private static final Logger logger = LogManager.getLogger(CreateUserDAOImpl.clas
 	@Override
 	public List<LISUserTypeMaster> getUserTypeBySubscriberId(Integer subscriberId) throws CreateUserException {
 		logger.info("Entered into getUserTypeBySubscriberId ");	
-		Query query = getSession().createQuery(" From LISUserTypeMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISUserTypeMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive ORDER BY l.userTypeName ASC");
 		query.setParameter("subscriberId", subscriberId);
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		return  query.list();

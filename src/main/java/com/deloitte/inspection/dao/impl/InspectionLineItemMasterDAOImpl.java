@@ -45,7 +45,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 	public List<LISInspectionMaster> getComponentProductDrawNumbers(Integer subscriberId)
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into getComponentProductDrawNumbers DAO");	
-		Query query = getSession().createQuery(" From LISInspectionMaster l where l.subscriberMaster.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISInspectionMaster l where l.subscriberMaster.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.componentMasterData.componentProductDrawNumber ASC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		query.setParameter("subscriberId", subscriberId);
 		List<LISInspectionMaster> list = query.list();
@@ -54,12 +54,12 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISInspectionLineItemMaster> getAllInspectionLineItems(String userId)
+	public List<LISInspectionLineItemMaster> getAllInspectionLineItems(Integer subscriberId)
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into getAllInspectionLineItems DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.userID = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("userId", userId);
+		query.setParameter("subscriberId", subscriberId);
 		List<LISInspectionLineItemMaster> list = query.list();
 		return list;
 	}
@@ -101,5 +101,16 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		query.setParameter("compDraNum", compDraNum);
 		List<LISInspectionLineItemMaster> list = query.list();
 		return list;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<LISInspectionLineItemMaster> getAllInspectionLineItemByUserID(String userId)
+			throws InspectionLineItemMasterException {
+		logger.info("Entered into getAllInspectionLineItems DAO");	
+		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.userID = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("userId", userId);
+		return query.list();
 	}
 }

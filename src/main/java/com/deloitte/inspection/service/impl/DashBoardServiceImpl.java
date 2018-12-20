@@ -55,7 +55,7 @@ public class DashBoardServiceImpl implements DashBoardService{
 		logger.info("Inside getDashboardData Service");
 		try{
 			DashBoardDTO dashBoardDTO = new DashBoardDTO();
-			List<LISMaintainMasterDataComponent> componentList = componentMasterDataDAO.getAllComponentMasterData(userId);
+			List<LISMaintainMasterDataComponent> componentList = componentMasterDataDAO.getAllComponentMasterDataByUserID(userId);
 			if(null != componentList && componentList.size() > 0)
 				dashBoardDTO.setComponentCount(componentList.size());
 			else
@@ -67,7 +67,7 @@ public class DashBoardServiceImpl implements DashBoardService{
 			else
 				dashBoardDTO.setCustomerPOCount(0);
 			
-			List<LISWorkJobOrderMaster> workJobOrderList = workJobOrderDAO.WorkJobOrderList(userId);
+			List<LISWorkJobOrderMaster> workJobOrderList = workJobOrderDAO.WorkJobOrderListByUserId(userId);
 			if(null != workJobOrderList && workJobOrderList.size() > 0)
 				dashBoardDTO.setWorkJobOrderCount(workJobOrderList.size());
 			else
@@ -79,7 +79,7 @@ public class DashBoardServiceImpl implements DashBoardService{
 			else
 				dashBoardDTO.setInspectionReportCount(0);
 			
-			List<LISInspectionLineItemMaster> inspectionLineItemMastersList = inspectionLineItemMasterDAO.getAllInspectionLineItems(userId); 
+			List<LISInspectionLineItemMaster> inspectionLineItemMastersList = inspectionLineItemMasterDAO.getAllInspectionLineItemByUserID(userId); 
 			if(null != inspectionLineItemMastersList && inspectionLineItemMastersList.size() > 0){
 				Set<String> componentDrawNum = new HashSet<String>();
 				for(LISInspectionLineItemMaster item : inspectionLineItemMastersList){

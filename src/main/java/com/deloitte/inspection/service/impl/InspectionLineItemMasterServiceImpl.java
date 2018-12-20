@@ -29,7 +29,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 	@Autowired
 	private InspectionLineItemMasterDAO inspectionLineMasterDAO;
 	
-	private InspectionLineItemResponseDTO saveInspectionLineItem(List<InspectionLineItemDTO> inspectionLineItemDTOs, String userId, String userName)
+	private InspectionLineItemResponseDTO saveInspectionLineItem(List<InspectionLineItemDTO> inspectionLineItemDTOs, String userId, String userName,Integer subscriberId)
 			throws InspectionLineItemMasterException {
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		logger.info("Inside saveInspectionLineItem Service");
@@ -51,7 +51,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 				}
 				inspectionLineMasterDAO.saveInspectionLineItem(lineMasterList);
 				inspectionLineItemResponseDTO.setStatus(StatusConstants.SUCCESS);
-				inspectionLineItemResponseDTO.setResults(getAllInspectionLineItemDTOs(userId));
+				inspectionLineItemResponseDTO.setResults(getAllInspectionLineItemDTOs(subscriberId));
 			}else{
 				inspectionLineItemResponseDTO.setStatus(StatusConstants.ERROR);
 				inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.INPUT_MISS);
@@ -115,12 +115,12 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 	}
 
 	@Override
-	public InspectionLineItemResponseDTO getAllInspectionLineItems(String userId)
+	public InspectionLineItemResponseDTO getAllInspectionLineItems(Integer subscriberId)
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into getAllInspectionLineItems service");
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		try{
-			List<InspectionLineItemDTO> inspectionLineItemDTOs =getAllInspectionLineItemDTOs(userId);
+			List<InspectionLineItemDTO> inspectionLineItemDTOs =getAllInspectionLineItemDTOs(subscriberId);
 			inspectionLineItemResponseDTO.setResults(inspectionLineItemDTOs);
 			inspectionLineItemResponseDTO.setStatus(StatusConstants.SUCCESS);
 			inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.FETCH_INSPECTION_LINE_ITEM_SUCCESS);
@@ -149,9 +149,9 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 		return inspectionLineItemDTO;
 	}	
 
-	public List<InspectionLineItemDTO> getAllInspectionLineItemDTOs(String userId) throws InspectionLineItemMasterException{
+	public List<InspectionLineItemDTO> getAllInspectionLineItemDTOs(Integer subscriberId) throws InspectionLineItemMasterException{
 		List<InspectionLineItemDTO> inspectionLineItemDTOs = new ArrayList<InspectionLineItemDTO>();
-		List<LISInspectionLineItemMaster> inspectionLineItemMasters = inspectionLineMasterDAO.getAllInspectionLineItems(userId.toLowerCase());
+		List<LISInspectionLineItemMaster> inspectionLineItemMasters = inspectionLineMasterDAO.getAllInspectionLineItems(subscriberId);
 		if(null != inspectionLineItemMasters && inspectionLineItemMasters.size()>0){
 			for(LISInspectionLineItemMaster lineItemMaster : inspectionLineItemMasters){
 				InspectionLineItemDTO inspectionLineItemDTO = new InspectionLineItemDTO();
@@ -164,11 +164,11 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 
 	@Override
 	public InspectionLineItemResponseDTO reportSave(List<InspectionLineItemDTO> inspectionLineItems, String userId,
-			String userName) throws InspectionLineItemMasterException {
+			String userName, Integer subscriberId) throws InspectionLineItemMasterException {
 		logger.info("Inside reportSave Service");
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		try{
-			inspectionLineItemResponseDTO = saveInspectionLineItem(inspectionLineItems,userId,userName);
+			inspectionLineItemResponseDTO = saveInspectionLineItem(inspectionLineItems,userId,userName,subscriberId);
 			if(null != inspectionLineItemResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionLineItemResponseDTO.getStatus())){
 				inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.REPORT_MEASURE_ITEM_SAVE_SUCCESS);
 			}else{
@@ -184,11 +184,11 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 
 	@Override
 	public InspectionLineItemResponseDTO measureItemSave(List<InspectionLineItemDTO> inspectionLineItems, String userId,
-			String userName) throws InspectionLineItemMasterException {
+			String userName, Integer subscriberId) throws InspectionLineItemMasterException {
 		logger.info("Inside measureItemSave Service");
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		try{
-			inspectionLineItemResponseDTO = saveInspectionLineItem(inspectionLineItems,userId,userName);
+			inspectionLineItemResponseDTO = saveInspectionLineItem(inspectionLineItems,userId,userName,subscriberId);
 			if(null != inspectionLineItemResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionLineItemResponseDTO.getStatus())){
 				inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.MEASURE_ITEM_SAVE_SUCCESS);
 			}else{
@@ -230,7 +230,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 	}
 
 	@Override
-	public InspectionLineItemResponseDTO updateInspectionData(List<InspectionLineItemDTO> inspectionLineItem, String userName, String userId)
+	public InspectionLineItemResponseDTO updateInspectionData(List<InspectionLineItemDTO> inspectionLineItem, String userName, String userId, Integer subscriberId)
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into validateMeasurementName service");
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
@@ -246,7 +246,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 				}
 				if(updateList.size() > 0){
 					inspectionLineMasterDAO.saveInspectionLineItem(updateList);
-					inspectionLineItemResponseDTO.setResults(getAllInspectionLineItemDTOs(userId));
+					inspectionLineItemResponseDTO.setResults(getAllInspectionLineItemDTOs(subscriberId));
 					inspectionLineItemResponseDTO.setStatus(StatusConstants.SUCCESS);
 					inspectionLineItemResponseDTO.setMessage(InspectionLineItemConstants.UPDATE_SUCCESS);
 				}else{

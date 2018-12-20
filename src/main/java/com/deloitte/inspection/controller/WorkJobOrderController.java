@@ -43,16 +43,18 @@ public class WorkJobOrderController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
 			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
 				userId = StatusConstants.DEFAULT_USER_ID;
 			}
 			workJobOrderResponseDTO = workJobOrderService.saveWorkJobOrderData(workJobOrderDTO,userName,userId,StatusConstants.INSERT);
 			if(null != workJobOrderResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(workJobOrderResponseDTO.getStatus())){
-				workJobOrderResponseDTO.setResults(workJobOrderService.WorkJobOrderList(userId));
+				workJobOrderResponseDTO.setResults(workJobOrderService.WorkJobOrderList(subscriberId));
 				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.OK);
 			}else{
 				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.EXPECTATION_FAILED);
@@ -75,16 +77,18 @@ public class WorkJobOrderController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
 			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
 				userId = StatusConstants.DEFAULT_USER_ID;
 			}
 			workJobOrderResponseDTO = workJobOrderService.saveWorkJobOrderData(workJobOrderDTO,userName,userId, StatusConstants.UPDATE);
 			if(null != workJobOrderResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(workJobOrderResponseDTO.getStatus())){
-				workJobOrderResponseDTO.setResults(workJobOrderService.WorkJobOrderList(userId));
+				workJobOrderResponseDTO.setResults(workJobOrderService.WorkJobOrderList(subscriberId));
 				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.OK);
 			}else{
 				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.EXPECTATION_FAILED);
@@ -105,13 +109,11 @@ public class WorkJobOrderController {
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
-			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
-				userId = userDto.getUserId();
-			}else{
-				userId = StatusConstants.DEFAULT_USER_ID;
+				subscriberId = userDto.getSubscriberId();
 			}
-			workJobOrderResponseDTO = workJobOrderService.getAllWorkJobOrderData(userId);
+			workJobOrderResponseDTO = workJobOrderService.getAllWorkJobOrderData(subscriberId);
 			if(null != workJobOrderResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(workJobOrderResponseDTO.getStatus())){
 				return new ResponseEntity(workJobOrderResponseDTO,HttpStatus.OK);
 			}else{

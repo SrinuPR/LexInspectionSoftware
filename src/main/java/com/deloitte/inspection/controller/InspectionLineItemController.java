@@ -58,19 +58,12 @@ public class InspectionLineItemController {
 	
 	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes"})
-	@RequestMapping(value = "/all", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<InspectionLineItemResponseDTO> getAllInspectionLineItems(HttpSession httpSession){
+	@RequestMapping(value = "/all/{subscriberId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<InspectionLineItemResponseDTO> getAllInspectionLineItems(@PathVariable("subscriberId") Integer subscriberId){
 		logger.info("Inside getAllInspectionLineItems");
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		try{
-			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
-			String userId = null;
-			if(null != userDto){
-				userId = userDto.getUserId();
-			}else{
-				userId = StatusConstants.DEFAULT_USER_ID;
-			}
-			inspectionLineItemResponseDTO = inspectionLineItemMasterService.getAllInspectionLineItems(userId);
+			inspectionLineItemResponseDTO = inspectionLineItemMasterService.getAllInspectionLineItems(subscriberId);
 			if(null != inspectionLineItemResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionLineItemResponseDTO.getStatus())){
 				return new ResponseEntity(inspectionLineItemResponseDTO, HttpStatus.OK);
 			}else{
@@ -94,6 +87,7 @@ public class InspectionLineItemController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userId = null;
 			String userName = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userId = userDto.getUserId();
 				userName = userDto.getUserName();
@@ -101,7 +95,7 @@ public class InspectionLineItemController {
 				userId = StatusConstants.DEFAULT_USER_ID;
 				userName = StatusConstants.DEFAULT_USER_NAME;
 			}
-			inspectionLineItemResponseDTO = inspectionLineItemMasterService.measureItemSave(inspectionLineItems,userId, userName);
+			inspectionLineItemResponseDTO = inspectionLineItemMasterService.measureItemSave(inspectionLineItems,userId, userName,subscriberId);
 			if(null != inspectionLineItemResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionLineItemResponseDTO.getStatus())){
 				return new ResponseEntity(inspectionLineItemResponseDTO, HttpStatus.OK);
 			}else{
@@ -125,14 +119,16 @@ public class InspectionLineItemController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userId = null;
 			String userName = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userId = userDto.getUserId();
 				userName = userDto.getUserName();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userId = StatusConstants.DEFAULT_USER_ID;
 				userName = StatusConstants.DEFAULT_USER_NAME;
 			}
-			inspectionLineItemResponseDTO = inspectionLineItemMasterService.reportSave(inspectionLineItems,userId,userName);
+			inspectionLineItemResponseDTO = inspectionLineItemMasterService.reportSave(inspectionLineItems,userId,userName,subscriberId);
 			if(null != inspectionLineItemResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionLineItemResponseDTO.getStatus())){
 				return new ResponseEntity(inspectionLineItemResponseDTO, HttpStatus.OK);
 			}else{
@@ -177,14 +173,16 @@ public class InspectionLineItemController {
 			LoginDTO userDto = (LoginDTO)httpSession.getAttribute("user");
 			String userName = null;
 			String userId = null;
+			Integer subscriberId = null;
 			if(null != userDto){
 				userName = userDto.getUserName();
 				userId = userDto.getUserId();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userName = StatusConstants.DEFAULT_USER_NAME;
 				userId = StatusConstants.DEFAULT_USER_ID;
 			}
-			inspectionLineItemResponseDTO = inspectionLineItemMasterService.updateInspectionData(inspectionLineItem,userName,userId);
+			inspectionLineItemResponseDTO = inspectionLineItemMasterService.updateInspectionData(inspectionLineItem,userName,userId,subscriberId);
 			if(null != inspectionLineItemResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionLineItemResponseDTO.getStatus())){
 				return new ResponseEntity(inspectionLineItemResponseDTO, HttpStatus.OK);
 			}else{

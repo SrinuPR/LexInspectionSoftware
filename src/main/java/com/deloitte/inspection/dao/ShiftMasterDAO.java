@@ -12,9 +12,11 @@ public interface ShiftMasterDAO {
 	
 	public LISShiftMaster getShiftId (String shiftId) throws ShiftMasterException;
 	
-	public List<LISShiftMaster> findBySubscriberId (int subscriberId) throws ShiftMasterException;
+	public List<LISShiftMaster> findBySubscriberId (Integer subscriberId) throws ShiftMasterException;
 	
 	public String deleteByShiftId (String shiftId,String userId) throws ShiftMasterException;
 	
 	public ShiftMasterDTO updateShiftMaster (ShiftMasterDTO createShiftMasterDTO) throws ShiftMasterException;
+
+	public List<LISShiftMaster> getAllShiftsBySubscriberId(Integer subscriberId) throws ShiftMasterException;
 }

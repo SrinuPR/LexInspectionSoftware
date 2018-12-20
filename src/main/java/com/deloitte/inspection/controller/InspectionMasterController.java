@@ -105,7 +105,7 @@ public class InspectionMasterController {
 		InspectionMasterResponseDataDTO inspectionResponseDTO = new InspectionMasterResponseDataDTO();
 		try {
 			inspectionResponseDTO = inspectionMasterService
-					.getInspectionMasterData(this.getUserDetails(httpSession).getUserId());
+					.getInspectionMasterData(this.getUserDetails(httpSession).getSubscriberId());
 			if (inspectionResponseDTO != null
 					&& StatusConstants.SUCCESS.equalsIgnoreCase(inspectionResponseDTO.getStatus())) {
 				return new ResponseEntity(inspectionResponseDTO, HttpStatus.OK);

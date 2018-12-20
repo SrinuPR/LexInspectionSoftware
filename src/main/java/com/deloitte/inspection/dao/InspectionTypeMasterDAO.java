@@ -16,7 +16,7 @@ public interface InspectionTypeMasterDAO {
 	
 	public LISInspectionTypeMaster getInspTypeId(Integer inspTypeId) throws InspectionTypeMasterException;
 	
-	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO) throws InspectionTypeMasterException;
+	public InspectionTypeMasterDTO createInspectionType(InspectionTypeMasterDTO inspTypeMasterDTO, String userId) throws InspectionTypeMasterException;
 	
-	public List<LISInspectionTypeMaster> getAllInspTypeMasterData() throws InspectionTypeMasterException;
+	public List<LISInspectionTypeMaster> getAllInspTypeMasterData(Integer subscriberId) throws InspectionTypeMasterException;
 }

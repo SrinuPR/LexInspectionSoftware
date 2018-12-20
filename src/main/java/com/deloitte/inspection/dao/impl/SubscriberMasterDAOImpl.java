@@ -101,7 +101,7 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 	@Override
 	public List<LISSubscriberMaster> getAllSubscriberMasterData() throws SubscriberMasterException {
 		logger.info("Entered into getAllSubscriberMasterData");	
-		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS ORDER BY SUMAS.createdTimestamp DESC");
+		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS ORDER BY SUMAS.subscriberId ASC");
 		List<LISSubscriberMaster> list = query.list();
 		return list;
 	}

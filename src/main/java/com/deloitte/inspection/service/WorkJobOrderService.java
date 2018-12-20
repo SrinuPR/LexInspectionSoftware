@@ -12,9 +12,9 @@ public interface WorkJobOrderService {
 
 	public WorkJobOrderResponseDTO saveWorkJobOrderData(WorkJobOrderDTO workJobOrderDTO, String userName, String userId, String action) throws WorkJobOrderException;
 
-	public WorkJobOrderResponseDTO getAllWorkJobOrderData(String userId) throws WorkJobOrderException;
+	public WorkJobOrderResponseDTO getAllWorkJobOrderData(Integer subscriberId) throws WorkJobOrderException;
 
-	public List<WorkJobOrderDTO> WorkJobOrderList(String userId) throws WorkJobOrderException;
+	public List<WorkJobOrderDTO> WorkJobOrderList(Integer WorkJobOrderList) throws WorkJobOrderException;
 
 	public WorkJobOrderResponseDTO validateWorkJobOrderNumber(WorkJobOrderDTO workJobOrderDTO) throws WorkJobOrderException;
 

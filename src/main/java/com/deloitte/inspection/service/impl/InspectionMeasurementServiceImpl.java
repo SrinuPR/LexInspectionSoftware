@@ -91,7 +91,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				}
 				inspectionMeasurementResponseDTO.setFacilityData(facilityMasterDTOs);
 			}
-			List<LISShiftMaster> shiftMasters = shiftMasterDAO.findBySubscriberId(subscriberId);
+			List<LISShiftMaster> shiftMasters = shiftMasterDAO.getAllShiftsBySubscriberId(subscriberId);
 			if(null != shiftMasters && shiftMasters.size() > 0){
 				logger.info("Entered into Shift Data");
 				List<ShiftMasterDTO> shiftMasterDTOs = new ArrayList<ShiftMasterDTO>();

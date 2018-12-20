@@ -54,5 +54,14 @@ public class StatusConstants {
 	
 	public static final String ACCESS_RECORD_SAVED ="Access Record saved";
 	public static final String ACCESS_RECORD_NOT_SAVED= "Access Record NOT saved, please try again";
+	
+	public static final char RECORD_IN_PROCESS ='Y';
+	public static final char RECORD_IN_PROCESS_COMPLETED = 'N';
+	public static final String RECORD_IN_PROCESS_MESSAGE ="This record is in use by another user";
+	public static final String RECORD_NOT_IN_PROCESS ="This record not in use";
+	public static final String RECORD_NOT_EXIST ="Record Not Exist";
+	public static final String INPUT_MISS ="Input Missed";
+	
+	public static final int MAX_INACTIVE_INTERVAL = 180;
 
 }

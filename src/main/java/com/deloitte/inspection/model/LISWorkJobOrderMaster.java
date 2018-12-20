@@ -67,6 +67,9 @@ public class LISWorkJobOrderMaster implements Serializable{
 	@Column(name = "IS_ACTIVE" , length = 1)
 	private char isActive;
 	
+	@Column(name = "RECORD_IN_PROCESS")
+	private char recordInProcess;
+	
 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name="SUBSCRIBER_ID")
 	private LISSubscriberMaster subscriberMaster;
@@ -234,5 +237,13 @@ public class LISWorkJobOrderMaster implements Serializable{
 	public void setPurchaseOrderMaster(LISPurchaseOrderMaster purchaseOrderMaster) {
 		this.purchaseOrderMaster = purchaseOrderMaster;
 	}
-	
+
+	public char getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(char recordInProcess) {
+		this.recordInProcess = recordInProcess;
+	}
+		
 }

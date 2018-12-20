@@ -11,19 +11,19 @@ public interface InspectionLineItemMasterService {
 	public InspectionLineItemResponseDTO getComponentProductDrawNumbers(Integer subscriberId) 
 			throws InspectionLineItemMasterException;
 
-	public InspectionLineItemResponseDTO getAllInspectionLineItems(String userId)
+	public InspectionLineItemResponseDTO getAllInspectionLineItems(Integer subscriberId)
 			throws InspectionLineItemMasterException;
 
 	public InspectionLineItemResponseDTO reportSave(List<InspectionLineItemDTO> inspectionLineItems, String userId,
-			String userName) throws InspectionLineItemMasterException;
+			String userName, Integer subscriberId) throws InspectionLineItemMasterException;
 
 	public InspectionLineItemResponseDTO measureItemSave(List<InspectionLineItemDTO> inspectionLineItems, String userId,
-			String userName) throws InspectionLineItemMasterException;
+			String userName, Integer subscriberId) throws InspectionLineItemMasterException;
 
 	public InspectionLineItemResponseDTO validateMeasurementName(InspectionLineItemDTO inspectionLineItem)
 			throws InspectionLineItemMasterException;
 
-	public InspectionLineItemResponseDTO updateInspectionData(List<InspectionLineItemDTO> inspectionLineItem, String userName, String userId) throws InspectionLineItemMasterException;
+	public InspectionLineItemResponseDTO updateInspectionData(List<InspectionLineItemDTO> inspectionLineItem, String userName, String userId, Integer subscriberId) throws InspectionLineItemMasterException;
 
 	public InspectionLineItemResponseDTO getLineItemByCompDraNum(String compDraNum) 
 			throws InspectionLineItemMasterException;
