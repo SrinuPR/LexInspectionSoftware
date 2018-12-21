@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 import com.deloitte.inspection.config.LogInMap;
 import com.deloitte.inspection.constant.StatusConstants;
 
-public class LoginDTO implements HttpSessionBindingListener {
+public class LoginDTO /*implements HttpSessionBindingListener*/ {
 	
 	private String userId;
 	private String password;
@@ -83,7 +83,7 @@ public class LoginDTO implements HttpSessionBindingListener {
 	}
 	
 
-	@Override
+	/*@Override
 	public void valueBound(HttpSessionBindingEvent event) {
 		HttpSession oldSession = (LogInMap.getInstance().logins).get(this.getUserId());
 		if(oldSession != null){
@@ -105,7 +105,7 @@ public class LoginDTO implements HttpSessionBindingListener {
 		if(!"user".equalsIgnoreCase(event.getName())){
 			(LogInMap.getInstance().logins).remove(this.getUserId());	
 		}
-	}
+	}*/
 	
 	@Override
 	public boolean equals(Object other) {

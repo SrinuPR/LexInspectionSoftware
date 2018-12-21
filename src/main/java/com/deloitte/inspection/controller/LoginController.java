@@ -53,16 +53,25 @@ public class LoginController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@CrossOrigin
 	@RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<String> logout(HttpSession httpSession,@PathVariable("userId") String userId) {
+	public @ResponseBody ResponseEntity<LoginDTO> logout(HttpSession httpSession,@PathVariable("userId") String userId) {
+		LoginDTO loginDto = (LoginDTO)httpSession.getAttribute("user");
 		try {
+			if(null == loginDto){
+				loginDto = new LoginDTO();
+				loginDto.setStatus(StatusConstants.SUCCESS);
+			}else{
+				loginDto.setStatus(StatusConstants.SUCCESS);
+			}
 			if(!(StatusConstants.MAX_INACTIVE_INTERVAL >= httpSession.getMaxInactiveInterval())){
+				if(null != LogInMap.getInstance().logins){
 				LogInMap.getInstance().logins.remove(userId);
+				}
 			}
 			httpSession.invalidate();
-			return new ResponseEntity(StatusConstants.SUCCESS, HttpStatus.OK);
+			return new ResponseEntity(loginDto, HttpStatus.OK);
 		}catch (Exception exception) {
 			logger.error("Exception While logout the user "+exception.getMessage());
-			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity(loginDto, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

@@ -57,11 +57,11 @@ public class LoginServiceImpl implements LoginService{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
 				httpSession.setAttribute("user", responseDTO);
-				if(responseDTO.isAlreadyLoggedIn()){
-					/*httpSession.removeAttribute("user");*/
+				/*if(responseDTO.isAlreadyLoggedIn()){
+					httpSession.removeAttribute("user");
 					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first.");
-					/*throw new LoginException("You are already logged in from a different session. Please logout first.");*/
-				}
+					throw new LoginException("You are already logged in from a different session. Please logout first.");
+				}*/
 			}catch(Exception exception){
 				logger.error("Error while validating credentails "+exception.getMessage());
 			}
