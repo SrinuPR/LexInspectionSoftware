@@ -37,7 +37,7 @@ public class LoginController {
 	public @ResponseBody ResponseEntity<LoginDTO> validateLoginCredentials(@RequestBody LoginDTO loginDTO, HttpSession httpSession){
 		LoginDTO responseDTO = new LoginDTO();
 		try{
-			httpSession.setMaxInactiveInterval(StatusConstants.MAX_INACTIVE_INTERVAL);
+			/*httpSession.setMaxInactiveInterval(StatusConstants.MAX_INACTIVE_INTERVAL);*/
 			responseDTO = loginService.validateLoginCredentials(loginDTO,httpSession);
 			if(null != responseDTO && responseDTO.getErrorMessage() == null)
 				return new ResponseEntity(responseDTO, HttpStatus.OK);

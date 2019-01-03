@@ -2,12 +2,15 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,7 +22,7 @@ public class LISInspectionMeasurements implements Serializable{
 	@Id
 	@Column(name = "IMDES_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String inspectionMeasurementId;
+	private Integer inspectionMeasurementId;
 	
 	@Column(name = "SUBSCRIBER_ID", length = 5, nullable = false)
 	private Integer subscriberId;
@@ -96,35 +99,8 @@ public class LISInspectionMeasurements implements Serializable{
 	@Column(name = "PART_IDENTIFICATION_NUMBER", length = 30, nullable = false)
 	private String partIdentificationNumber;
 	
-	@Column(name = "MEASUREMENT_NAME", length = 50)
-	private String measurementName;
-	
-	@Column(name = "MEASURED_VALUE", nullable = false)
-	private Float measuredValue;
-	
-	@Column(name = "ACTUAL_BASE_MEASURE", length = 5, nullable = false)
-	private String actualBaseMeasure;
-	
-	@Column(name = "ACTUAL_UPPER_LIMIT")
-	private Float actualUpperLimit;
-	
-	@Column(name = "ACTUAL_LOWER_LIMIT")
-	private Float actualLowerLimit;
-	
-	@Column(name = "DEVIATION")
-	private Float deviation;
-	
-	@Column(name = "STATUS", length = 8)
-	private String status;
-	
-	@Column(name = "PART_STATUS", length = 10, nullable = false)
-	private String partStatus;
-	
-	@Column(name = "INSPECTED_QUANTITY", length = 3, nullable = false)
-	private Integer inspectedQuantity;
-	
-	@Column(name = "PRODUCED_QUANTITY", length = 3, nullable = false)
-	private Integer producedQuantity;
+	@Column(name = "MEASUREMENT_RECORD_STATUS", length = 20)
+	private String measurementRecordstatus;
 	
 	@Column(name = "CREATED_BY")
 	private String createdBy;
@@ -140,12 +116,24 @@ public class LISInspectionMeasurements implements Serializable{
 	
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
+	
+	@Column(name = "PART_STATUS", length = 10, nullable = false)
+	private String partStatus;
+	
+	@OneToMany(mappedBy="inspectionMeasurements", cascade = CascadeType.ALL)
+	private List<LISPartIdentification> partIdentifications;
 
-	public String getInspectionMeasurementId() {
+	@Column(name = "INSPECTED_QUANTITY", length = 3, nullable = false)
+	private Integer inspectedQuantity;
+	
+	@Column(name = "PRODUCED_QUANTITY", length = 3, nullable = false)
+	private Integer producedQuantity;
+	
+	public Integer getInspectionMeasurementId() {
 		return inspectionMeasurementId;
 	}
 
-	public void setInspectionMeasurementId(String inspectionMeasurementId) {
+	public void setInspectionMeasurementId(Integer inspectionMeasurementId) {
 		this.inspectionMeasurementId = inspectionMeasurementId;
 	}
 
@@ -333,78 +321,6 @@ public class LISInspectionMeasurements implements Serializable{
 		this.partIdentificationNumber = partIdentificationNumber;
 	}
 
-	public String getMeasurementName() {
-		return measurementName;
-	}
-
-	public void setMeasurementName(String measurementName) {
-		this.measurementName = measurementName;
-	}
-
-	public Float getMeasuredValue() {
-		return measuredValue;
-	}
-
-	public void setMeasuredValue(Float measuredValue) {
-		this.measuredValue = measuredValue;
-	}
-
-	public Float getActualUpperLimit() {
-		return actualUpperLimit;
-	}
-
-	public void setActualUpperLimit(Float actualUpperLimit) {
-		this.actualUpperLimit = actualUpperLimit;
-	}
-
-	public Float getActualLowerLimit() {
-		return actualLowerLimit;
-	}
-
-	public void setActualLowerLimit(Float actualLowerLimit) {
-		this.actualLowerLimit = actualLowerLimit;
-	}
-
-	public Float getDeviation() {
-		return deviation;
-	}
-
-	public void setDeviation(Float deviation) {
-		this.deviation = deviation;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getPartStatus() {
-		return partStatus;
-	}
-
-	public void setPartStatus(String partStatus) {
-		this.partStatus = partStatus;
-	}
-
-	public Integer getInspectedQuantity() {
-		return inspectedQuantity;
-	}
-
-	public void setInspectedQuantity(Integer inspectedQuantity) {
-		this.inspectedQuantity = inspectedQuantity;
-	}
-
-	public Integer getProducedQuantity() {
-		return producedQuantity;
-	}
-
-	public void setProducedQuantity(Integer producedQuantity) {
-		this.producedQuantity = producedQuantity;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -453,20 +369,52 @@ public class LISInspectionMeasurements implements Serializable{
 		this.shiftID = shiftID;
 	}
 
-	public String getActualBaseMeasure() {
-		return actualBaseMeasure;
-	}
-
-	public void setActualBaseMeasure(String actualBaseMeasure) {
-		this.actualBaseMeasure = actualBaseMeasure;
-	}
-
 	public char getRecordInProcess() {
 		return recordInProcess;
 	}
 
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
+	}
+
+	public String getMeasurementRecordstatus() {
+		return measurementRecordstatus;
+	}
+
+	public void setMeasurementRecordstatus(String measurementRecordstatus) {
+		this.measurementRecordstatus = measurementRecordstatus;
+	}
+
+	public String getPartStatus() {
+		return partStatus;
+	}
+
+	public void setPartStatus(String partStatus) {
+		this.partStatus = partStatus;
+	}
+
+	public List<LISPartIdentification> getPartIdentifications() {
+		return partIdentifications;
+	}
+
+	public void setPartIdentifications(List<LISPartIdentification> partIdentifications) {
+		this.partIdentifications = partIdentifications;
+	}
+
+	public Integer getInspectedQuantity() {
+		return inspectedQuantity;
+	}
+
+	public void setInspectedQuantity(Integer inspectedQuantity) {
+		this.inspectedQuantity = inspectedQuantity;
+	}
+
+	public Integer getProducedQuantity() {
+		return producedQuantity;
+	}
+
+	public void setProducedQuantity(Integer producedQuantity) {
+		this.producedQuantity = producedQuantity;
 	}
 	
 }

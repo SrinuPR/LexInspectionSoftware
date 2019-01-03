@@ -3,6 +3,7 @@
  */
 package com.deloitte.inspection.dto;
 
+import java.util.List;
 
 /**
  * @author rnarne
@@ -34,6 +35,7 @@ public class InspectionReportMasterDTO {
 	private String inspectionStageName;
 	private String inspectiontypeName;
 	private String inspectionDate;
+	private List<InspectionLineItemDTO> lineItemData;
 	
 	/**
 	 * @return the inspReportNumber
@@ -261,5 +263,10 @@ public class InspectionReportMasterDTO {
 	public void setInspectionDate(String inspectionDate) {
 		this.inspectionDate = inspectionDate;
 	}
-	
+	public List<InspectionLineItemDTO> getLineItemData() {
+		return lineItemData;
+	}
+	public void setLineItemData(List<InspectionLineItemDTO> lineItemData) {
+		this.lineItemData = lineItemData;
+	}
 }

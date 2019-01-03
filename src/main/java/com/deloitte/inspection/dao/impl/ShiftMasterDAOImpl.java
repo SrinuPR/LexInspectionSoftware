@@ -34,12 +34,13 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 
 	
 	@Override
-	public ShiftMasterDTO createShiftMaster(ShiftMasterDTO createShiftMasterDTO) throws ShiftMasterException {
+	public ShiftMasterDTO createShiftMaster(ShiftMasterDTO createShiftMasterDTO,String userId) throws ShiftMasterException {
 		logger.info("Entered into createShiftMaster");	
 		try {
 			LISShiftMaster shiftMaster =new LISShiftMaster();
 			shiftMaster.setIsActive(StatusConstants.IS_ACTIVE);
 			shiftMaster.setShiftId(createShiftMasterDTO.getShiftId());
+			shiftMaster.setUserId(userId);
 			shiftMaster.setShiftName(createShiftMasterDTO.getShiftName());
 			LISSubscriberMaster subMaster = new LISSubscriberMaster();
 			subMaster.setSubscriberId(createShiftMasterDTO.getSubscriberId());

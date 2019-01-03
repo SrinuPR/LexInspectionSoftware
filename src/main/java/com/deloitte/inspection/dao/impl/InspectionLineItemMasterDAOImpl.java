@@ -113,4 +113,15 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		query.setParameter("userId", userId);
 		return query.list();
 	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<LISInspectionLineItemMaster> getAllInspectionLineItemsByDrawNum(String compDrawNum)
+			throws InspectionLineItemMasterException {
+		logger.info("Entered into getAllInspectionLineItems DAO");	
+		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where lower(l.componentProductDrawNumber) = :compDrawNum and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("compDrawNum", compDrawNum);
+		return query.list();
+	}
 }

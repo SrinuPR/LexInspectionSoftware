@@ -3,7 +3,9 @@ package com.deloitte.inspection.service.impl;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,18 +16,22 @@ import com.deloitte.inspection.constant.PurchaseOrderConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.dao.CreateUserDAO;
+import com.deloitte.inspection.dao.InspectionMeasurementDAO;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
+import com.deloitte.inspection.dao.WorkJobOrderDAO;
 import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
+import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
+import com.deloitte.inspection.model.LISWorkJobOrderMaster;
 import com.deloitte.inspection.service.PurchaseOrderMasterService;
 import com.deloitte.inspection.util.InspectionUtils;
 
@@ -45,6 +51,12 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	
 	@Autowired
 	private ComponentMasterDataDAO componentMasterDataDAO;
+	
+	@Autowired
+	private WorkJobOrderDAO workJobOrderDAO;
+	
+	@Autowired
+	private InspectionMeasurementDAO inspectionMeasurementDAO;
 
 	@Override
 	public String savePurchaseOrderData(PurchaseOrderDataDTO purchaseOrderDataDTO, String userName, String userId)
@@ -192,17 +204,48 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				purchaseMaster.setCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber().trim());
-				purchaseMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
-				purchaseMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
-				purchaseMaster.setUpdatedBy(userName);
-				purchaseMaster.setUpdatedTimestamp(new Date());
-				purchaseOrderDataDAO.savePurchaseOrderData(purchaseMaster);
-				status = StatusConstants.SUCCESS;
+				boolean valid = quantityChangeValidation(purchaseOrderDataDTO.getCustomerPONumber(),purchaseOrderDataDTO.getSubscriberId(),purchaseOrderDataDTO.getCustomerPOQuantity());
+				if(valid){
+					purchaseMaster.setCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber().trim());
+					purchaseMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
+					purchaseMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
+					purchaseMaster.setUpdatedBy(userName);
+					purchaseMaster.setUpdatedTimestamp(new Date());
+					purchaseOrderDataDAO.savePurchaseOrderData(purchaseMaster);
+					status = StatusConstants.SUCCESS;
+				}
 				return status;
 			}
 		}
 		return null;
+	}
+
+	private boolean quantityChangeValidation(String customerPONumber, Integer subscriberId, Integer customerPOQuantity) {
+		boolean valid = false;
+		try{
+			List<LISWorkJobOrderMaster> wjList = workJobOrderDAO.getWJOListByPONumAndSubId(customerPONumber.toLowerCase(),subscriberId);
+			if(null != wjList && wjList.size() > 0){
+				Set<String> wjoNum = new HashSet<String>();
+				for(LISWorkJobOrderMaster wjMaster : wjList){
+					wjoNum.add(wjMaster.getWorkJobOrderNumber());
+				}
+				if(null != wjoNum && wjoNum.size() > 0){
+					List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByWJandSubId(wjoNum, subscriberId);
+					if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
+						int producedQuantity = 0;
+						for(LISInspectionMeasurements row:inspectionMeasurements){
+							producedQuantity = producedQuantity + row.getProducedQuantity();
+						}
+						if((customerPOQuantity - producedQuantity) >= 0)
+							valid = true;
+					}
+				}
+			}
+		}catch(Exception exception){
+			logger.error("Error in change validation logic "+exception.getMessage());
+			exception.printStackTrace();
+		}
+		return valid;
 	}
 
 	@Override

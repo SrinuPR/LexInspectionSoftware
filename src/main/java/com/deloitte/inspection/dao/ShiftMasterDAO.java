@@ -8,7 +8,7 @@ import com.deloitte.inspection.model.LISShiftMaster;
 
 public interface ShiftMasterDAO {
 
-	public ShiftMasterDTO createShiftMaster (ShiftMasterDTO createShiftMasterDTO) throws ShiftMasterException;
+	public ShiftMasterDTO createShiftMaster (ShiftMasterDTO createShiftMasterDTO, String userId) throws ShiftMasterException;
 	
 	public LISShiftMaster getShiftId (String shiftId) throws ShiftMasterException;
 	

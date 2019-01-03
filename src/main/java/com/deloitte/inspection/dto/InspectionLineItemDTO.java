@@ -13,6 +13,8 @@ public class InspectionLineItemDTO {
 	private Float lowerLimit;
 	private String userId;
 	private String userName;
+	private String status;
+	
 	public Integer getSubscriberId() {
 		return subscriberId;
 	}
@@ -79,4 +81,11 @@ public class InspectionLineItemDTO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }

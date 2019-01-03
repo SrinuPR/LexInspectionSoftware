@@ -22,4 +22,6 @@ public interface InspectionLineItemMasterDAO {
 	public List<LISInspectionLineItemMaster>  getComponentProductDrawNumbers(String compDraNum) throws InspectionLineItemMasterException;
 
 	public List<LISInspectionLineItemMaster> getAllInspectionLineItemByUserID(String userId) throws InspectionLineItemMasterException;
+
+	public List<LISInspectionLineItemMaster> getAllInspectionLineItemsByDrawNum(String compDrawNum) throws InspectionLineItemMasterException;
 }

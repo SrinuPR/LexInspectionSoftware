@@ -1,8 +1,10 @@
 package com.deloitte.inspection.dto;
 
+import java.util.List;
+
 public class InspectionMeasurementDTO {
 	
-	private String inspectionMeasurementId;
+	private Integer inspectionMeasurementId;
 	private Integer reportNumber;
 	private Integer subscriberId;
 	private String subscriberName;
@@ -16,10 +18,8 @@ public class InspectionMeasurementDTO {
 	private String manufacturingBatchNumber;
 	private Integer manufacturingBatchSize;
 	private String componentProductName;
-	
 	private String inspectionType;
 	private Integer InspectionStage;
-	
 	private Integer facilityMachineNumber;
 	private Integer facilityMachineName;
 	private Integer userName;
@@ -30,14 +30,19 @@ public class InspectionMeasurementDTO {
 	private String customerPODate;
 	private String customerNameAddress;
 	private String partIdentificationNumber;
-	private String measurementName;
-	private Float measuredValue;
-	private String actualBaseMeasure;
-	private Float actualUpperLimit;
-	public String getInspectionMeasurementId() {
+	private List<PartIdentificationDTO> partIdentifications;
+	private Integer customerPOQuantity;
+	
+	public Integer getCustomerPOQuantity() {
+		return customerPOQuantity;
+	}
+	public void setCustomerPOQuantity(Integer customerPOQuantity) {
+		this.customerPOQuantity = customerPOQuantity;
+	}
+	public Integer getInspectionMeasurementId() {
 		return inspectionMeasurementId;
 	}
-	public void setInspectionMeasurementId(String inspectionMeasurementId) {
+	public void setInspectionMeasurementId(Integer inspectionMeasurementId) {
 		this.inspectionMeasurementId = inspectionMeasurementId;
 	}
 	public Integer getSubscriberId() {
@@ -184,34 +189,16 @@ public class InspectionMeasurementDTO {
 	public void setPartIdentificationNumber(String partIdentificationNumber) {
 		this.partIdentificationNumber = partIdentificationNumber;
 	}
-	public String getMeasurementName() {
-		return measurementName;
-	}
-	public void setMeasurementName(String measurementName) {
-		this.measurementName = measurementName;
-	}
-	public Float getMeasuredValue() {
-		return measuredValue;
-	}
-	public void setMeasuredValue(Float measuredValue) {
-		this.measuredValue = measuredValue;
-	}
-	public String getActualBaseMeasure() {
-		return actualBaseMeasure;
-	}
-	public void setActualBaseMeasure(String actualBaseMeasure) {
-		this.actualBaseMeasure = actualBaseMeasure;
-	}
-	public Float getActualUpperLimit() {
-		return actualUpperLimit;
-	}
-	public void setActualUpperLimit(Float actualUpperLimit) {
-		this.actualUpperLimit = actualUpperLimit;
-	}
 	public Integer getReportNumber() {
 		return reportNumber;
 	}
 	public void setReportNumber(Integer reportNumber) {
 		this.reportNumber = reportNumber;
+	}
+	public List<PartIdentificationDTO> getPartIdentifications() {
+		return partIdentifications;
+	}
+	public void setPartIdentifications(List<PartIdentificationDTO> partIdentifications) {
+		this.partIdentifications = partIdentifications;
 	}
 }

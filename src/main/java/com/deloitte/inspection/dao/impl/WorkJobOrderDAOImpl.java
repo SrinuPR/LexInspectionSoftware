@@ -254,5 +254,17 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 		query.setParameter("userId", userId);
 		return query.list();
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISWorkJobOrderMaster> getWJOListByPONumAndSubId(String customerPONumber, Integer subscriberId)
+			throws WorkJobOrderException {
+		logger.info("Entered into getWJOListByPONumAndSubId DAO");	
+		Query query = getSession().createQuery(" From LISWorkJobOrderMaster l where lower(l.purchaseOrderMaster.customerPONumber) = :customerPONumber and l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("customerPONumber", customerPONumber);
+		return query.list();
+	}
 	
 }

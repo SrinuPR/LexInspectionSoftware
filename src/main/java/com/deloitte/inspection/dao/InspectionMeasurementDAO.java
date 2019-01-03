@@ -1,6 +1,7 @@
 package com.deloitte.inspection.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.model.LISInspectionMeasurements;
@@ -20,5 +21,12 @@ public interface InspectionMeasurementDAO {
 	public LISInspectionReportMaster getWorkJobOrderByReportNum(Integer reportNumber)  throws InspectionMeasurementException;
 
 	public List<LISInspectionMeasurements> getAllMeasurementList(String userId) throws InspectionMeasurementException;
+
+	public List<LISInspectionMeasurements> validatePartIdentification(String partIdententificationId,Integer subscriberId) throws InspectionMeasurementException;
+
+	public void saveMeasurementsToDataBase(LISInspectionMeasurements inspectionMeasurements) throws InspectionMeasurementException;
+
+	public List<LISInspectionMeasurements> getProducedQuantityListByWJandSubId(Set<String> wjoNum,
+			Integer subscriberId) throws InspectionMeasurementException;
 
 }

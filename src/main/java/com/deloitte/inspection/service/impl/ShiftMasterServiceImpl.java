@@ -64,7 +64,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 				subscriberId = shiftMasterDTO.getSubscriberId();
 				if( null!=shiftMasterDTO.getShiftId()) {
 					shiftMasterDTO.setCreatedTimestamp(new Date());
-					shiftMasterDTO= ShiftMasterDAO.createShiftMaster(shiftMasterDTO);
+					shiftMasterDTO= ShiftMasterDAO.createShiftMaster(shiftMasterDTO,userId);
 					if(null!=shiftMasterDTO) {
 						resShiftMasterDTO.setMessage(ShiftMasterConstants.SHIFT_SAVE_SUCCESS);
 					}else {

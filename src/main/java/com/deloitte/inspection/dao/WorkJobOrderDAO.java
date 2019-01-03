@@ -40,5 +40,7 @@ public interface WorkJobOrderDAO {
 	public List<LISWorkJobOrderMaster> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException;
 
 	public List<LISWorkJobOrderMaster> WorkJobOrderListByUserId(String userId) throws WorkJobOrderException;
+	
+	public List<LISWorkJobOrderMaster> getWJOListByPONumAndSubId(String customerPONumber, Integer subscriberId) throws WorkJobOrderException;
 
 }

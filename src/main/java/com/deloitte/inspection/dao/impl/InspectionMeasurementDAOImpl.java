@@ -1,6 +1,7 @@
 package com.deloitte.inspection.dao.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -97,6 +98,37 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		Query query = getSession().createQuery(" From LISInspectionMeasurements l where l.userId = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
 		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
 		query.setParameter("userId", userId);
+		return query.list();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISInspectionMeasurements> validatePartIdentification(String partIdententificationId,Integer subscriberId)
+			throws InspectionMeasurementException {
+		logger.info("Entered into validatePartIdentification");	
+		Query query = getSession().createQuery(" From LISInspectionMeasurements l where l.subscriberId = :subscriberId and lower(l.partIdentificationNumber) = :partIdententificationId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameter("partIdententificationId", partIdententificationId);
+		return query.list();
+	}
+
+	@Override
+	public void saveMeasurementsToDataBase(LISInspectionMeasurements inspectionMeasurements)
+			throws InspectionMeasurementException {
+		logger.info("Entered into saveMeasurementsToDataBase ");
+		 getSession().saveOrUpdate(inspectionMeasurements);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LISInspectionMeasurements> getProducedQuantityListByWJandSubId(Set<String> wjoNum, Integer subscriberId)
+			throws InspectionMeasurementException {
+		logger.info("Entered into getProducedQuantityListByWJandSubId");	
+		Query query = getSession().createQuery(" From LISInspectionMeasurements l where l.subscriberId = :subscriberId and lower(l.workJobOrderNumber) in (:wjoNum) and isActive = :isActive ORDER BY l.createdTimestamp DESC");
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.setParameter("subscriberId", subscriberId);
+		query.setParameterList("wjoNum", wjoNum);
 		return query.list();
 	}
 

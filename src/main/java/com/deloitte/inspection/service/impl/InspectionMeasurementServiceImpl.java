@@ -1,5 +1,6 @@
 package com.deloitte.inspection.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.deloitte.inspection.constant.InspectionMeasurementConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.dao.FacilitiesMasterDAO;
+import com.deloitte.inspection.dao.InspectionLineItemMasterDAO;
 import com.deloitte.inspection.dao.InspectionMeasurementDAO;
 import com.deloitte.inspection.dao.InspectionReportMasterDAO;
 import com.deloitte.inspection.dao.InspectionStageMasterDAO;
@@ -20,14 +22,20 @@ import com.deloitte.inspection.dao.InspectionTypeMasterDAO;
 import com.deloitte.inspection.dao.ShiftMasterDAO;
 import com.deloitte.inspection.dto.ComponentMasterDataDTO;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
+import com.deloitte.inspection.dto.InspectionLineItemDTO;
+import com.deloitte.inspection.dto.InspectionMeasurementDTO;
 import com.deloitte.inspection.dto.InspectionReportMasterDTO;
+import com.deloitte.inspection.dto.PartIdentificationDTO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
 import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.model.LISFacilityMaster;
+import com.deloitte.inspection.model.LISInspectionLineItemMaster;
+import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISInspectionReportMaster;
 import com.deloitte.inspection.model.LISInspectionStageMaster;
 import com.deloitte.inspection.model.LISInspectionTypeMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
+import com.deloitte.inspection.model.LISPartIdentification;
 import com.deloitte.inspection.model.LISShiftMaster;
 import com.deloitte.inspection.response.dto.InspectionMeasurementResponseDTO;
 import com.deloitte.inspection.service.InspectionMeasurementService;
@@ -58,6 +66,9 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 	
 	@Autowired
 	private InspectionTypeMasterDAO inspectionTypeMasterDAO;
+	
+	@Autowired
+	private InspectionLineItemMasterDAO inspectionLineItemMasterDAO;
 		
 	@Override
 	public InspectionMeasurementResponseDTO getCompDrawNumList(Integer subscriberId) throws InspectionMeasurementException {
@@ -149,6 +160,20 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 						inspectionReportMasterDTO.setInspectionTypeId(inspectionTypeMaster.getInspTypeId());
 						inspectionReportMasterDTO.setInspectiontypeName(inspectionTypeMaster.getInspTypeName());
 					}
+					List<LISInspectionLineItemMaster> inspectionLineItemMasters = inspectionLineItemMasterDAO.getAllInspectionLineItemsByDrawNum(compDrawNum.toLowerCase());
+					List<InspectionLineItemDTO> inspectionLineItemDTOs = new ArrayList<InspectionLineItemDTO>();
+					if(null != inspectionLineItemMasters && inspectionLineItemMasters.size() > 0){
+						for(LISInspectionLineItemMaster inspectionLineItemMaster :inspectionLineItemMasters){
+							InspectionLineItemDTO lineItemDTO = new InspectionLineItemDTO();
+							lineItemDTO.setBaseMeasure(inspectionLineItemMaster.getBaseMeasure());
+							lineItemDTO.setBaseMeasureUnits(inspectionLineItemMaster.getBaseMeasureUnits());
+							lineItemDTO.setMeasurementName(inspectionLineItemMaster.getMeasurmentName());
+							lineItemDTO.setLowerLimit(inspectionLineItemMaster.getLowerLimit());
+							lineItemDTO.setUpperLimit(inspectionLineItemMaster.getUpperLimit());
+							inspectionLineItemDTOs.add(lineItemDTO);
+						}
+					}
+					inspectionReportMasterDTO.setLineItemData(inspectionLineItemDTOs);
 					inspectionReportMasterDTOs.add(inspectionReportMasterDTO);
 				}
 				inspectionMeasurementResponseDTO.setReportData(inspectionReportMasterDTOs);
@@ -161,6 +186,155 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.INSPECTION_REPORT_LIST);
 		}
 		return inspectionMeasurementResponseDTO;
+	}
+
+	@Override
+	public InspectionMeasurementResponseDTO validatePartIdentification(String partIdententificationId, InspectionMeasurementDTO inspectionMeasurementDTO)
+			throws InspectionMeasurementException {
+		logger.info("Inside validatePartIdentification Service");
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		try{
+			List<LISInspectionMeasurements> lists = inspectionMeasurementDAO.validatePartIdentification(partIdententificationId.toLowerCase(),inspectionMeasurementDTO.getSubscriberId());
+			if(null != lists && lists.size() > 0){
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.WARNING);
+				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.PART_NUMBER_EXIST);
+				inspectionMeasurementDTO = prefillDataOnPartConfirmation(inspectionMeasurementDTO,lists);
+			}else{
+				inspectionMeasurementDTO = saveInspectionMeasurementData(inspectionMeasurementDTO);
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.SUCCESS);
+				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.PART_NUMBER_DOES_NOT_EXIST);
+			}
+			inspectionMeasurementResponseDTO.setResults(inspectionMeasurementDTO);
+		}catch(Exception exception){
+			logger.error("Exception Occured in validatePartIdentification service :"+exception.getMessage());
+			inspectionMeasurementResponseDTO.setStatus(StatusConstants.FAILURE);
+			inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.UN_EXPECTED_EXCEPTION);
+		}
+		return inspectionMeasurementResponseDTO;
+	}
+
+	private InspectionMeasurementDTO saveInspectionMeasurementData(InspectionMeasurementDTO inspectionMeasurementDTO) {
+		logger.info("Inside saveInspectionMeasurementData Service");
+		try{
+			LISInspectionMeasurements inspectionMeasurements = new LISInspectionMeasurements();
+			inspectionMeasurements = transformToModel(inspectionMeasurementDTO,inspectionMeasurements,InspectionMeasurementConstants.INSERT);
+			inspectionMeasurementDAO.saveMeasurementsToDataBase(inspectionMeasurements);
+		}catch(Exception exception){
+			logger.error("Exception Occured in saveInspectionMeasurementData service :"+exception.getMessage());
+		}
+		return inspectionMeasurementDTO;
+	}
+	
+	private InspectionMeasurementDTO prefillDataOnPartConfirmation(InspectionMeasurementDTO inspectionMeasurementDTO, List<LISInspectionMeasurements> inspectionMeasurements2)throws Exception{
+		if(null != inspectionMeasurements2 && inspectionMeasurements2.size() > 0){
+			for(LISInspectionMeasurements inspectionMeasurements3:inspectionMeasurements2){
+				if(null != inspectionMeasurements3.getPartIdentifications()){
+					List<PartIdentificationDTO> partList = new ArrayList<PartIdentificationDTO>();
+					partList = transformToDTO(partList, inspectionMeasurements3.getPartIdentifications());
+					inspectionMeasurementDTO.setPartIdentifications(partList);
+				}
+				inspectionMeasurementDTO = inspectionData(inspectionMeasurementDTO,inspectionMeasurements3);
+				break;
+			}
+		}
+		return inspectionMeasurementDTO;
+	}
+	
+	private InspectionMeasurementDTO inspectionData(InspectionMeasurementDTO inspectionMeasurementDTO, LISInspectionMeasurements inspectionMeasurements) throws ParseException{
+		inspectionMeasurementDTO.setInspectionMeasurementId(inspectionMeasurements.getInspectionMeasurementId());
+		inspectionMeasurementDTO.setComponentProductName(inspectionMeasurements.getComponentProductName());
+		inspectionMeasurementDTO.setCompProductDrawNum(inspectionMeasurements.getCompProductDrawNum());
+		inspectionMeasurementDTO.setCustomerNameAddress(inspectionMeasurements.getCustomerNameAddress());
+		inspectionMeasurementDTO.setCustomerPODate(InspectionUtils.convertDateToString(inspectionMeasurements.getCustomerPODate()));
+		inspectionMeasurementDTO.setCustomerPONumber(inspectionMeasurements.getCustomerPONumber());
+		inspectionMeasurementDTO.setCustomerPOQuantity(inspectionMeasurements.getCustomerPOQuantity());
+		inspectionMeasurementDTO.setFacilityMachineName(inspectionMeasurements.getFacilityMachineName());
+		inspectionMeasurementDTO.setFacilityMachineNumber(inspectionMeasurements.getFacilityMachineNumber());
+		inspectionMeasurementDTO.setInspectionDate(InspectionUtils.convertDateToString(inspectionMeasurements.getInspectionDate()));
+		inspectionMeasurementDTO.setInspectionReportNumber(inspectionMeasurements.getInspectionReportNumber());
+		inspectionMeasurementDTO.setInspectionStage(inspectionMeasurements.getInspectionStage());
+		inspectionMeasurementDTO.setInspectionType(inspectionMeasurements.getInspectionType());
+		inspectionMeasurementDTO.setLotNumber(inspectionMeasurements.getLotNumber());
+		inspectionMeasurementDTO.setLotSize(inspectionMeasurements.getLotSize());
+		inspectionMeasurementDTO.setManufacturingBatchNumber(inspectionMeasurements.getManufacturingBatchNumber());
+		inspectionMeasurementDTO.setManufacturingBatchSize(inspectionMeasurements.getManufacturingBatchSize());
+		inspectionMeasurementDTO.setPartIdentificationNumber(inspectionMeasurements.getPartIdentificationNumber());
+		inspectionMeasurementDTO.setShiftID(inspectionMeasurements.getShiftID());
+		inspectionMeasurementDTO.setShiftName(inspectionMeasurements.getShiftName());
+		inspectionMeasurementDTO.setSubscriberId(inspectionMeasurements.getSubscriberId());
+		inspectionMeasurementDTO.setUserId(inspectionMeasurements.getUserId());
+		inspectionMeasurementDTO.setSubscriberName(inspectionMeasurements.getSubscriberName());
+		inspectionMeasurementDTO.setUserName(inspectionMeasurements.getUserName());
+		return inspectionMeasurementDTO;
+	}
+
+	private List<LISPartIdentification> measurementData(List<LISPartIdentification> partIdentificationList,
+			List<PartIdentificationDTO> lineItemData, LISInspectionMeasurements inspectionMeasurements) {
+		if(null != lineItemData && lineItemData.size() > 0){
+			for(PartIdentificationDTO lineItemDTO : lineItemData){
+				LISPartIdentification partIdentification = new LISPartIdentification();
+				partIdentification.setStatus(lineItemDTO.getStatus());
+				partIdentification.setActualBaseMeasure(lineItemDTO.getActualBaseMeasure());
+				partIdentification.setActualLowerLimit(lineItemDTO.getActualLowerLimit());
+				partIdentification.setActualLowerLimit(lineItemDTO.getActualUpperLimit());
+				partIdentification.setStatus(InspectionMeasurementConstants.IN_ACTIVE);
+				partIdentification.setPartIdentificationNumber(inspectionMeasurements.getPartIdentificationNumber());
+				partIdentification.setInspectionMeasurements(inspectionMeasurements);
+				partIdentificationList.add(partIdentification);
+			}
+		}
+		return partIdentificationList;
 	}	
+	
+	private List<PartIdentificationDTO> transformToDTO(List<PartIdentificationDTO> partList,List<LISPartIdentification> partsFromDB) throws Exception{
+		for(LISPartIdentification partIdentification:partsFromDB){
+			PartIdentificationDTO partIdentificationDTO = new PartIdentificationDTO();
+			partIdentificationDTO.setPartVerifId(partIdentification.getPartVerifId());
+			partIdentificationDTO.setActualLowerLimit(partIdentification.getActualLowerLimit());
+			partIdentificationDTO.setActualUpperLimit(partIdentification.getActualUpperLimit());
+			partIdentificationDTO.setPartIdentificationNumber(partIdentification.getPartIdentificationNumber());
+			partIdentificationDTO.setMeasurementName(partIdentification.getMeasurementName());
+			partIdentificationDTO.setMeasuredValue(partIdentification.getMeasuredValue());
+			partIdentificationDTO.setActualBaseMeasure(partIdentification.getActualBaseMeasure());
+			partList.add(partIdentificationDTO);
+		}
+		return partList;
+	}
+	
+	private LISInspectionMeasurements transformToModel(InspectionMeasurementDTO inspectionMeasurementDTO, LISInspectionMeasurements inspectionMeasurements,String action) throws ParseException{
+		if(null != action && InspectionMeasurementConstants.INSERT.equalsIgnoreCase(action)){
+			inspectionMeasurements.setPartIdentificationNumber(inspectionMeasurementDTO.getPartIdentificationNumber());
+			inspectionMeasurements.setCreatedBy(inspectionMeasurementDTO.getUserId());
+			inspectionMeasurements.setSubscriberId(inspectionMeasurementDTO.getSubscriberId());
+			inspectionMeasurements.setSubscriberName(inspectionMeasurementDTO.getSubscriberName());
+			inspectionMeasurements.setCreatedTimestamp(new Date());
+			inspectionMeasurements.setCustomerNameAddress(inspectionMeasurementDTO.getCustomerNameAddress());
+			inspectionMeasurements.setComponentProductName(inspectionMeasurementDTO.getComponentProductName());
+			inspectionMeasurements.setCompProductDrawNum(inspectionMeasurementDTO.getCompProductDrawNum());
+			inspectionMeasurements.setCustomerPODate(InspectionUtils.convertStringToDate(inspectionMeasurementDTO.getCustomerPODate()));
+			inspectionMeasurements.setCustomerPONumber(inspectionMeasurementDTO.getCustomerPONumber());
+			inspectionMeasurements.setCustomerPOQuantity(inspectionMeasurementDTO.getCustomerPOQuantity());
+			inspectionMeasurements.setFacilityMachineName(inspectionMeasurementDTO.getFacilityMachineName());
+			inspectionMeasurements.setFacilityMachineNumber(inspectionMeasurementDTO.getFacilityMachineNumber());
+			inspectionMeasurements.setInspectionDate(InspectionUtils.convertStringToDate(inspectionMeasurementDTO.getInspectionDate()));
+			inspectionMeasurements.setInspectionReportNumber(inspectionMeasurementDTO.getInspectionReportNumber());
+			inspectionMeasurements.setInspectionStage(inspectionMeasurementDTO.getInspectionStage());
+			inspectionMeasurements.setInspectionType(inspectionMeasurementDTO.getInspectionType());
+			inspectionMeasurements.setIsActive(StatusConstants.IS_ACTIVE);
+			inspectionMeasurements.setLotNumber(inspectionMeasurementDTO.getLotNumber());
+			inspectionMeasurements.setLotSize(inspectionMeasurementDTO.getLotSize());
+			inspectionMeasurements.setManufacturingBatchNumber(inspectionMeasurementDTO.getManufacturingBatchNumber());
+			inspectionMeasurements.setManufacturingBatchSize(inspectionMeasurementDTO.getManufacturingBatchSize());
+			inspectionMeasurements.setMeasurementRecordstatus(InspectionMeasurementConstants.MEASUREMENT_INPROGRESS);
+			inspectionMeasurements.setShiftID(inspectionMeasurementDTO.getShiftID());
+			inspectionMeasurements.setShiftName(inspectionMeasurementDTO.getShiftName());
+			inspectionMeasurements.setWorkJobOrderNumber(inspectionMeasurementDTO.getWorkJobOrderNumber());
+			inspectionMeasurements.setUserName(inspectionMeasurementDTO.getUserName());
+			List<LISPartIdentification> partIdentificationList = new ArrayList<LISPartIdentification>();
+			partIdentificationList = measurementData(partIdentificationList,inspectionMeasurementDTO.getPartIdentifications(),inspectionMeasurements);
+			inspectionMeasurements.setPartIdentifications(partIdentificationList);
+		}
+		return inspectionMeasurements;
+	}
 
 }

@@ -57,7 +57,11 @@ public class LoginServiceImpl implements LoginService{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
 				httpSession.setAttribute("user", responseDTO);
-				/*if(responseDTO.isAlreadyLoggedIn()){
+				/*LoggedInUsers loggedInUsers = new LoggedInUsers();
+				loggedInUsers.setUserId(loginDTO.getUserId());
+				loggedInUsers.setPassword(loginDTO.getPassword());
+				httpSession.setAttribute(loginDTO.getUserId(), loggedInUsers);
+				if(loggedInUsers.isAlreadyLoggedIn()){
 					httpSession.removeAttribute("user");
 					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first.");
 					throw new LoginException("You are already logged in from a different session. Please logout first.");

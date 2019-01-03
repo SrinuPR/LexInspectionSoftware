@@ -1,13 +1,6 @@
 package com.deloitte.inspection.dto;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
-import com.deloitte.inspection.config.LogInMap;
-import com.deloitte.inspection.constant.StatusConstants;
-
-public class LoginDTO /*implements HttpSessionBindingListener*/ {
+public class LoginDTO {
 	
 	private String userId;
 	private String password;
@@ -19,7 +12,6 @@ public class LoginDTO /*implements HttpSessionBindingListener*/ {
 	private boolean firstTimeLogin;
 	private char isAdmin;
 	private String screenList;
-	private boolean alreadyLoggedIn = false;
 	
 	public String getUserId() {
 		return userId;
@@ -80,62 +72,6 @@ public class LoginDTO /*implements HttpSessionBindingListener*/ {
 	}
 	public void setScreenList(String screenList) {
 		this.screenList = screenList;
-	}
-	
-
-	/*@Override
-	public void valueBound(HttpSessionBindingEvent event) {
-		HttpSession oldSession = (LogInMap.getInstance().logins).get(this.getUserId());
-		if(oldSession != null){
-			int  val = oldSession.getMaxInactiveInterval();
-			if(val >= StatusConstants.MAX_INACTIVE_INTERVAL){
-				(LogInMap.getInstance().logins).remove(this.getUserId());
-				oldSession = null;
-			}
-		}
-		if (oldSession != null) {
-			alreadyLoggedIn = true;
-		}else{
-			(LogInMap.getInstance().logins).put(this.getUserId(), event.getSession());
-		}		
-	}
-
-	@Override
-	public void valueUnbound(HttpSessionBindingEvent event) {
-		if(!"user".equalsIgnoreCase(event.getName())){
-			(LogInMap.getInstance().logins).remove(this.getUserId());	
-		}
-	}*/
-	
-	@Override
-	public boolean equals(Object other) {
-		boolean isEqual = false;
-		if(other instanceof LoginDTO){
-			if(getUserId() != null){
-				isEqual = getUserId().equals(((LoginDTO) other).getUserId());
-			}else{
-				isEqual = (other == this);
-			}
-		}
-		return isEqual;
-	}
-	
-	@Override
-	public int hashCode() {
-		int hashValue;
-		if(getUserId() != null){
-			hashValue = (getUserId().hashCode());
-		}else{
-			hashValue = super.hashCode();
-		}
-		return hashValue; 
-	}
-	
-	public boolean isAlreadyLoggedIn() {
-		return alreadyLoggedIn;
-	}
-	public void setAlreadyLoggedIn(boolean alreadyLoggedIn) {
-		this.alreadyLoggedIn = alreadyLoggedIn;
 	}
 	
 }

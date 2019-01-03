@@ -11,18 +11,18 @@ import com.deloitte.inspection.dto.ShiftMasterDTO;
 
 public class InspectionMeasurementResponseDTO extends CommonDTO{
 
-	private List<InspectionMeasurementDTO> results;
+	private InspectionMeasurementDTO result;
 	private List<ComponentMasterDataDTO> componentData;
 	private List<FacilityMasterDTO> facilityData;
 	private List<InspectionReportMasterDTO> reportData;
 	private List<ShiftMasterDTO> shiftData;
 	
-	public List<InspectionMeasurementDTO> getResults() {
-		return results;
+	public InspectionMeasurementDTO getResults() {
+		return result;
 	}
 
-	public void setResults(List<InspectionMeasurementDTO> results) {
-		this.results = results;
+	public void setResults(InspectionMeasurementDTO result) {
+		this.result = result;
 	}
 
 	public List<ComponentMasterDataDTO> getComponentData() {
