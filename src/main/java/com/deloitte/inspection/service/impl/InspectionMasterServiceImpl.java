@@ -146,8 +146,8 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 				results.add(this.toInspectionMasterDTO(master));
 			}
 			response.setResults(results);
-			response.setStatus(StatusConstants.SUCCESS);
 		}
+		response.setStatus(StatusConstants.SUCCESS);
 		return response;
 	}
 	

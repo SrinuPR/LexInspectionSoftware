@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.deloitte.inspection.constant.InspectionMeasurementConstants;
 import com.deloitte.inspection.constant.InspectionReportMasterConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionReportMasterDAO;
@@ -54,6 +55,7 @@ public class InspectionReportMasterServiceImpl implements InspectionReportMaster
 					lisInspRptMaster.setCustomerPoDate(InspectionUtils.convertStringToDate(inspRptMasterDto.getCustomerPoDate()));
 					lisInspRptMaster.setUserID(userId);
 					lisInspRptMaster.setIsActive(StatusConstants.IS_ACTIVE);
+					lisInspRptMaster.setReportStatus(InspectionMeasurementConstants.ACTIVE);
 					lisInspRptMaster.setWorkJobOrderId(inspRptMasterDto.getWorkJobOrderId());
 					inspReportMasterDAO.saveReport(lisInspRptMaster);
 					inspRptMasResDto.setStatus(StatusConstants.SUCCESS);
