@@ -13,4 +13,8 @@ public interface LoginDAO {
 	public LISUserMasterCreate validateUser(String userId) throws LoginException;
 
 	public void updateLoginPassword(String userId, String password) throws LoginException;
+
+	public void logout(String userId) throws LoginException;
+
+	public void updateSessionActiveSwToN() throws LoginException;
 }

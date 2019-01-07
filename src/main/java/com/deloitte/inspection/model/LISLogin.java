@@ -54,6 +54,9 @@ public class LISLogin implements Serializable{
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
+	@Column(name = "IS_SESSION_ACTIVE")
+	private char isSessionActive;
+	
 	public Integer getLoginId() {
 		return loginId;
 	}
@@ -134,4 +137,11 @@ public class LISLogin implements Serializable{
 		this.adminId = adminId;
 	}
 
+	public char getIsSessionActive() {
+		return isSessionActive;
+	}
+
+	public void setIsSessionActive(char isSessionActive) {
+		this.isSessionActive = isSessionActive;
+	}
 }

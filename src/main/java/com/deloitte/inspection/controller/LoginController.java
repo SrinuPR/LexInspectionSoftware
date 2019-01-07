@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.deloitte.inspection.config.LogInMap;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.LoginDTO;
 import com.deloitte.inspection.dto.PasswordMaintenanceDTO;
@@ -62,11 +61,7 @@ public class LoginController {
 			}else{
 				loginDto.setStatus(StatusConstants.SUCCESS);
 			}
-			if(!(StatusConstants.MAX_INACTIVE_INTERVAL >= httpSession.getMaxInactiveInterval())){
-				if(null != LogInMap.getInstance().logins){
-				LogInMap.getInstance().logins.remove(userId);
-				}
-			}
+			loginService.logout(userId);
 			httpSession.invalidate();
 			return new ResponseEntity(loginDto, HttpStatus.OK);
 		}catch (Exception exception) {

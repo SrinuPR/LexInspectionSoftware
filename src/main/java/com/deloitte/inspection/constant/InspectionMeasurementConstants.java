@@ -17,5 +17,12 @@ public class InspectionMeasurementConstants {
 	public static final String PART_NUMBER_DOES_NOT_EXIST = "Part Identification Number Does not Exist";
 	public static final String INSERT = "INSERT";
 	public static final String UPDATE = "UPDATE";
+	
+	public static final String SAVE_MEASUREMENT_SUCCESS = "Measurement saved";
+	public static final String SAVE_MEASUREMENT_FAILED = "Measurement NOT saved, please try again";
+	public static final String NOT_SAVE = "Inspection Report Not Saved";
+	public static final String SAVE = "Inspection Report Saved";
+	public static final String PART_SAVE = "Part Saved";
+	public static final String PART_NOT_SAVE = "Part Not Saved";
 
 }

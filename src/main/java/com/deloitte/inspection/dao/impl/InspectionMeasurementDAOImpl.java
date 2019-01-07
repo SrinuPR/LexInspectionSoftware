@@ -17,6 +17,7 @@ import com.deloitte.inspection.dao.InspectionMeasurementDAO;
 import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISInspectionReportMaster;
+import com.deloitte.inspection.model.LISPartIdentification;
 
 @Repository
 @Transactional
@@ -130,6 +131,28 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		query.setParameter("subscriberId", subscriberId);
 		query.setParameterList("wjoNum", wjoNum);
 		return query.list();
+	}
+
+	@Override
+	public LISPartIdentification getMeasurementRecord(Integer partVerifId) throws InspectionMeasurementException {
+		logger.info("Entered into getMeasurementRecord DAO");
+		LISPartIdentification lisPartIdentification =  (LISPartIdentification) getSession().get(LISPartIdentification.class, partVerifId);
+		return lisPartIdentification;
+	}
+
+	@Override
+	public void saveMeasurementRecord(LISPartIdentification partIdentification) throws InspectionMeasurementException {
+		logger.info("Entered into saveMeasurementRecord DAO");
+		getSession().saveOrUpdate(partIdentification);
+		
+	}
+
+	@Override
+	public LISInspectionMeasurements getRecordById(Integer inspectionMeasurementId)
+			throws InspectionMeasurementException {
+		logger.info("Entered into getRecordById DAO");
+		LISInspectionMeasurements lisInspectionMeasurements =  (LISInspectionMeasurements) getSession().get(LISInspectionMeasurements.class, inspectionMeasurementId);
+		return lisInspectionMeasurements;
 	}
 
 }

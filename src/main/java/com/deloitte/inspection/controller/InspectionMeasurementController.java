@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.deloitte.inspection.constant.InspectionMeasurementConstants;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dto.InspectionMeasurementDTO;
+import com.deloitte.inspection.dto.PartIdentificationDTO;
 import com.deloitte.inspection.response.dto.InspectionMeasurementResponseDTO;
 import com.deloitte.inspection.service.InspectionMeasurementService;
 
@@ -85,6 +86,72 @@ public class InspectionMeasurementController {
 		try{
 			if(null != partIdententificationId){
 				inspectionMeasurementResponseDTO = inspectionMeasurementService.validatePartIdentification(partIdententificationId,inspectionMeasurementDTO);
+				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
+				}else{
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.EXPECTATION_FAILED);
+				}
+			}
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.PRECONDITION_FAILED);
+		}catch(Exception exception){
+			logger.info("Exception At  validatePartIdentification "+exception.getMessage());
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/saveMeasurement", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<InspectionMeasurementResponseDTO> saveMeasurement(@RequestBody PartIdentificationDTO partIdentificationDTO){
+		logger.info("Entered into validatePartIdentification ");
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		try{
+			if(null != partIdentificationDTO){
+				inspectionMeasurementResponseDTO = inspectionMeasurementService.saveMeasurement(partIdentificationDTO);
+				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
+				}else{
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.EXPECTATION_FAILED);
+				}
+			}
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.PRECONDITION_FAILED);
+		}catch(Exception exception){
+			logger.info("Exception At  validatePartIdentification "+exception.getMessage());
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/save", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<InspectionMeasurementResponseDTO> save(@RequestBody InspectionMeasurementDTO inspectionMeasurementDTO){
+		logger.info("Entered into validatePartIdentification ");
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		try{
+			if(null != inspectionMeasurementDTO){
+				inspectionMeasurementResponseDTO = inspectionMeasurementService.save(inspectionMeasurementDTO);
+				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
+				}else{
+					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.EXPECTATION_FAILED);
+				}
+			}
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.PRECONDITION_FAILED);
+		}catch(Exception exception){
+			logger.info("Exception At  validatePartIdentification "+exception.getMessage());
+			return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/savePart", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<InspectionMeasurementResponseDTO> savePart(@RequestBody InspectionMeasurementDTO inspectionMeasurementDTO){
+		logger.info("Entered into validatePartIdentification ");
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		try{
+			if(null != inspectionMeasurementDTO){
+				inspectionMeasurementResponseDTO = inspectionMeasurementService.savePart(inspectionMeasurementDTO);
 				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
 					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
 				}else{

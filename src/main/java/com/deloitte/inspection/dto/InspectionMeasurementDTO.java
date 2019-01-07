@@ -32,6 +32,8 @@ public class InspectionMeasurementDTO {
 	private String partIdentificationNumber;
 	private List<PartIdentificationDTO> partIdentifications;
 	private Integer customerPOQuantity;
+	private Integer inspectedQuantity;
+	private Integer producedQuantity;
 	
 	public Integer getCustomerPOQuantity() {
 		return customerPOQuantity;
@@ -201,4 +203,17 @@ public class InspectionMeasurementDTO {
 	public void setPartIdentifications(List<PartIdentificationDTO> partIdentifications) {
 		this.partIdentifications = partIdentifications;
 	}
+	public Integer getInspectedQuantity() {
+		return inspectedQuantity;
+	}
+	public void setInspectedQuantity(Integer inspectedQuantity) {
+		this.inspectedQuantity = inspectedQuantity;
+	}
+	public Integer getProducedQuantity() {
+		return producedQuantity;
+	}
+	public void setProducedQuantity(Integer producedQuantity) {
+		this.producedQuantity = producedQuantity;
+	}
+	
 }

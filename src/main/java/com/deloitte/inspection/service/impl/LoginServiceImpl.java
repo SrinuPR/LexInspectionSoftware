@@ -56,7 +56,11 @@ public class LoginServiceImpl implements LoginService{
 				}else{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
-				httpSession.setAttribute("user", responseDTO);
+				if(null != login && login.getIsSessionActive() == 'Y'){
+					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first.");
+				}else{
+					httpSession.setAttribute("user", responseDTO);
+				}
 				/*LoggedInUsers loggedInUsers = new LoggedInUsers();
 				loggedInUsers.setUserId(loginDTO.getUserId());
 				loggedInUsers.setPassword(loginDTO.getPassword());
@@ -264,6 +268,11 @@ public class LoginServiceImpl implements LoginService{
 			response = StatusConstants.PASSWORD_CHANGED_FAIL;
 		}
 		return response;
+	}
+
+	@Override
+	public void logout(String userId) throws LoginException {
+		loginDAO.logout(userId);
 	}
 
 }

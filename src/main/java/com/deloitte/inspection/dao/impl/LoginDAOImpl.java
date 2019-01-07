@@ -82,6 +82,24 @@ public class LoginDAOImpl implements LoginDAO{
 		query.setParameter("password", password);
 		query.setParameter("userId",userId);
 		query.executeUpdate();	
+	}
+
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
+	public void logout(String userId) throws LoginException {
+		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET IS_SESSION_ACTIVE = :inActive WHERE USER_ID = :userId or ADMIN_ID = :userId");
+		query.setParameter("userId",userId);
+		query.setParameter("inActive", StatusConstants.IN_ACTIVE);
+		query.executeUpdate();
+	}
+
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
+	public void updateSessionActiveSwToN() throws LoginException {
+		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET IS_SESSION_ACTIVE = :inActive WHERE IS_ACTIVE = :isActive");
+		query.setParameter("inActive", StatusConstants.IN_ACTIVE);
+		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
+		query.executeUpdate();
 	}		
 
 }

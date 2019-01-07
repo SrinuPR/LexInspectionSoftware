@@ -337,4 +337,74 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		return inspectionMeasurements;
 	}
 
+	@Override
+	public InspectionMeasurementResponseDTO saveMeasurement(PartIdentificationDTO partIdentificationDTO) {
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		try{
+			if(null != partIdentificationDTO.getPartVerifId()){
+				LISPartIdentification partIdentification = inspectionMeasurementDAO.getMeasurementRecord(partIdentificationDTO.getPartVerifId());
+				if(null != partIdentification){
+					partIdentification.setMeasuredValue(partIdentificationDTO.getMeasuredValue());
+					partIdentification.setStatus(partIdentificationDTO.getStatus());
+					partIdentification.setDeviation(partIdentificationDTO.getDeviation());
+					partIdentification.setActualLowerLimit(partIdentificationDTO.getActualLowerLimit());
+					partIdentification.setActualUpperLimit(partIdentificationDTO.getActualUpperLimit());
+					partIdentification.setActualBaseMeasure(partIdentificationDTO.getActualBaseMeasure());
+					inspectionMeasurementDAO.saveMeasurementRecord(partIdentification);
+					inspectionMeasurementResponseDTO.setStatus(StatusConstants.SUCCESS);
+					inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.SAVE_MEASUREMENT_SUCCESS);
+				}else{
+					inspectionMeasurementResponseDTO.setStatus(StatusConstants.FAILURE);
+					inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.SAVE_MEASUREMENT_FAILED);
+				}
+			}
+			
+		}catch(Exception exception){
+			inspectionMeasurementResponseDTO.setStatus(StatusConstants.ERROR);
+			inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.SAVE_MEASUREMENT_FAILED);
+		}
+		return inspectionMeasurementResponseDTO;
+	}
+
+	@Override
+	public InspectionMeasurementResponseDTO savePart(InspectionMeasurementDTO inspectionMeasurementDTO)
+			throws InspectionMeasurementException {
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		if(null != inspectionMeasurementDTO.getInspectionMeasurementId()){
+			LISInspectionMeasurements inspectionMeasurements = inspectionMeasurementDAO.getRecordById(inspectionMeasurementDTO.getInspectionMeasurementId());
+			if(null != inspectionMeasurements){
+				inspectionMeasurements.setPartStatus(InspectionMeasurementConstants.MEASUREMENT_COMPLETED);
+				inspectionMeasurementDAO.saveMeasurementsToDataBase(inspectionMeasurements);
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.SUCCESS);
+				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.PART_SAVE);
+			}else{
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.FAILURE);
+				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.PART_NOT_SAVE);
+			}
+		}
+		return inspectionMeasurementResponseDTO;
+	}
+
+	@Override
+	public InspectionMeasurementResponseDTO save(InspectionMeasurementDTO inspectionMeasurementDTO)
+			throws InspectionMeasurementException {
+		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
+		if(null != inspectionMeasurementDTO.getInspectionMeasurementId()){
+			LISInspectionMeasurements inspectionMeasurements = inspectionMeasurementDAO.getRecordById(inspectionMeasurementDTO.getInspectionMeasurementId());
+			if(null != inspectionMeasurements){
+				inspectionMeasurements.setPartStatus(InspectionMeasurementConstants.MEASUREMENT_COMPLETED);
+				inspectionMeasurements.setMeasurementRecordstatus(InspectionMeasurementConstants.MEASUREMENT_COMPLETED);
+				inspectionMeasurements.setProducedQuantity(inspectionMeasurementDTO.getProducedQuantity());
+				inspectionMeasurements.setInspectedQuantity(inspectionMeasurementDTO.getInspectedQuantity());
+				inspectionMeasurementDAO.saveMeasurementsToDataBase(inspectionMeasurements);
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.SUCCESS);
+				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.SAVE);
+			}else{
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.FAILURE);
+				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.NOT_SAVE);
+			}
+		}
+		return inspectionMeasurementResponseDTO;
+	}
+
 }
