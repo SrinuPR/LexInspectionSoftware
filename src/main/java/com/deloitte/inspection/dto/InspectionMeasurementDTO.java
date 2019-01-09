@@ -21,8 +21,8 @@ public class InspectionMeasurementDTO {
 	private String inspectionType;
 	private Integer InspectionStage;
 	private Integer facilityMachineNumber;
-	private Integer facilityMachineName;
-	private Integer userName;
+	private String facilityMachineName;
+	private String userName;
 	private String inspectionDate;
 	private String shiftID;
 	private String shiftName;
@@ -137,16 +137,16 @@ public class InspectionMeasurementDTO {
 	public void setFacilityMachineNumber(Integer facilityMachineNumber) {
 		this.facilityMachineNumber = facilityMachineNumber;
 	}
-	public Integer getFacilityMachineName() {
+	public String getFacilityMachineName() {
 		return facilityMachineName;
 	}
-	public void setFacilityMachineName(Integer facilityMachineName) {
+	public void setFacilityMachineName(String facilityMachineName) {
 		this.facilityMachineName = facilityMachineName;
 	}
-	public Integer getUserName() {
+	public String getUserName() {
 		return userName;
 	}
-	public void setUserName(Integer userName) {
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 	public String getInspectionDate() {

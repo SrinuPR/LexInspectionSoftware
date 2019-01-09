@@ -33,7 +33,7 @@ public class LISInspectionMeasurements implements Serializable{
 	@Column(name = "SUBSCRIBER_NAME", length = 50, nullable = false)
 	private String subscriberName;
 	
-	@Column(name = "USER_ID", length = 10, nullable = false)
+	@Column(name = "USER_ID", length = 10)
 	private String userId;
 	
 	@Column(name = "IRMCS_COMP_PRD_DRAW_NUM", length = 50, nullable = false)
@@ -70,10 +70,10 @@ public class LISInspectionMeasurements implements Serializable{
 	private Integer facilityMachineNumber;
 	
 	@Column(name = "FACILITY_MACHINE_NAME", length = 150)
-	private Integer facilityMachineName;
+	private String facilityMachineName;
 	
 	@Column(name = "USER_NAME", length = 150)
-	private Integer userName;
+	private String userName;
 	
 	@Column(name = "INSPECTION_DATE")
 	private Date inspectionDate;
@@ -117,16 +117,16 @@ public class LISInspectionMeasurements implements Serializable{
 	@Column(name = "IS_ACTIVE")
 	private char isActive;
 	
-	@Column(name = "PART_STATUS", length = 10, nullable = false)
+	@Column(name = "PART_STATUS", length = 10)
 	private String partStatus;
 	
 	@OneToMany(mappedBy="inspectionMeasurements", cascade = CascadeType.ALL)
 	private List<LISPartIdentification> partIdentifications;
 
-	@Column(name = "INSPECTED_QUANTITY", length = 3, nullable = false)
+	@Column(name = "INSPECTED_QUANTITY", length = 3)
 	private Integer inspectedQuantity;
 	
-	@Column(name = "PRODUCED_QUANTITY", length = 3, nullable = false)
+	@Column(name = "PRODUCED_QUANTITY", length = 3)
 	private Integer producedQuantity;
 	
 	public Integer getInspectionMeasurementId() {
@@ -249,19 +249,19 @@ public class LISInspectionMeasurements implements Serializable{
 		this.facilityMachineNumber = facilityMachineNumber;
 	}
 
-	public Integer getFacilityMachineName() {
+	public String getFacilityMachineName() {
 		return facilityMachineName;
 	}
 
-	public void setFacilityMachineName(Integer facilityMachineName) {
+	public void setFacilityMachineName(String facilityMachineName) {
 		this.facilityMachineName = facilityMachineName;
 	}
 
-	public Integer getUserName() {
+	public String getUserName() {
 		return userName;
 	}
 
-	public void setUserName(Integer userName) {
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 

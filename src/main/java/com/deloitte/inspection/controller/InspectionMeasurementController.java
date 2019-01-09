@@ -86,7 +86,8 @@ public class InspectionMeasurementController {
 		try{
 			if(null != partIdententificationId){
 				inspectionMeasurementResponseDTO = inspectionMeasurementService.validatePartIdentification(partIdententificationId,inspectionMeasurementDTO);
-				if(null != inspectionMeasurementResponseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus())){
+				if(null != inspectionMeasurementResponseDTO && (StatusConstants.SUCCESS.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus()) || 
+						StatusConstants.WARNING.equalsIgnoreCase(inspectionMeasurementResponseDTO.getStatus()))){
 					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.OK);
 				}else{
 					return new ResponseEntity(inspectionMeasurementResponseDTO,HttpStatus.EXPECTATION_FAILED);

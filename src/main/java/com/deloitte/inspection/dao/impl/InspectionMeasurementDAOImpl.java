@@ -144,7 +144,6 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	public void saveMeasurementRecord(LISPartIdentification partIdentification) throws InspectionMeasurementException {
 		logger.info("Entered into saveMeasurementRecord DAO");
 		getSession().saveOrUpdate(partIdentification);
-		
 	}
 
 	@Override

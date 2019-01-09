@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.deloitte.inspection.dto.InspectionMeasurementDTO;
 import com.deloitte.inspection.dto.InspectionReportMasterDTO;
 import com.deloitte.inspection.dto.PartIdentificationDTO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
+import com.deloitte.inspection.exception.InspectionLineItemMasterException;
 import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.model.LISFacilityMaster;
 import com.deloitte.inspection.model.LISInspectionLineItemMaster;
@@ -218,14 +221,19 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		try{
 			LISInspectionMeasurements inspectionMeasurements = new LISInspectionMeasurements();
 			inspectionMeasurements = transformToModel(inspectionMeasurementDTO,inspectionMeasurements,InspectionMeasurementConstants.INSERT);
+			logger.info("Before Inserting inspectionMeasurements "+inspectionMeasurements);
 			inspectionMeasurementDAO.saveMeasurementsToDataBase(inspectionMeasurements);
 		}catch(Exception exception){
 			logger.error("Exception Occured in saveInspectionMeasurementData service :"+exception.getMessage());
+			logger.error("StackTrace saveInspectionMeasurementData service :"+exception.getStackTrace());
+			exception.printStackTrace();
 		}
 		return inspectionMeasurementDTO;
 	}
 	
+	@Transactional
 	private InspectionMeasurementDTO prefillDataOnPartConfirmation(InspectionMeasurementDTO inspectionMeasurementDTO, List<LISInspectionMeasurements> inspectionMeasurements2)throws Exception{
+		logger.info("Entered into prefillDataOnPartConfirmation Service");
 		if(null != inspectionMeasurements2 && inspectionMeasurements2.size() > 0){
 			for(LISInspectionMeasurements inspectionMeasurements3:inspectionMeasurements2){
 				if(null != inspectionMeasurements3.getPartIdentifications()){
@@ -265,18 +273,21 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		inspectionMeasurementDTO.setUserId(inspectionMeasurements.getUserId());
 		inspectionMeasurementDTO.setSubscriberName(inspectionMeasurements.getSubscriberName());
 		inspectionMeasurementDTO.setUserName(inspectionMeasurements.getUserName());
+		inspectionMeasurementDTO.setInspectedQuantity(inspectionMeasurements.getInspectedQuantity());
+		inspectionMeasurementDTO.setProducedQuantity(inspectionMeasurements.getProducedQuantity());
 		return inspectionMeasurementDTO;
 	}
 
 	private List<LISPartIdentification> measurementData(List<LISPartIdentification> partIdentificationList,
-			List<PartIdentificationDTO> lineItemData, LISInspectionMeasurements inspectionMeasurements) {
-		if(null != lineItemData && lineItemData.size() > 0){
-			for(PartIdentificationDTO lineItemDTO : lineItemData){
+			LISInspectionMeasurements inspectionMeasurements, String compDrawNum) throws InspectionLineItemMasterException {		
+		List<LISInspectionLineItemMaster> inspectionLineItemMasters = inspectionLineItemMasterDAO.getAllInspectionLineItemsByDrawNum(compDrawNum.toLowerCase());
+		logger.info("Inside MeasurementData Service");
+		if(null != inspectionLineItemMasters && inspectionLineItemMasters.size() > 0){
+			for(LISInspectionLineItemMaster inspectionLineItemMaster :inspectionLineItemMasters){
 				LISPartIdentification partIdentification = new LISPartIdentification();
-				partIdentification.setStatus(lineItemDTO.getStatus());
-				partIdentification.setActualBaseMeasure(lineItemDTO.getActualBaseMeasure());
-				partIdentification.setActualLowerLimit(lineItemDTO.getActualLowerLimit());
-				partIdentification.setActualLowerLimit(lineItemDTO.getActualUpperLimit());
+				partIdentification.setActualBaseMeasure(inspectionLineItemMaster.getBaseMeasure());
+				partIdentification.setActualLowerLimit(inspectionLineItemMaster.getLowerLimit());
+				partIdentification.setActualLowerLimit(inspectionLineItemMaster.getUpperLimit());
 				partIdentification.setStatus(InspectionMeasurementConstants.IN_ACTIVE);
 				partIdentification.setPartIdentificationNumber(inspectionMeasurements.getPartIdentificationNumber());
 				partIdentification.setInspectionMeasurements(inspectionMeasurements);
@@ -287,6 +298,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 	}	
 	
 	private List<PartIdentificationDTO> transformToDTO(List<PartIdentificationDTO> partList,List<LISPartIdentification> partsFromDB) throws Exception{
+		logger.info("Inside transformToDTO Service");
 		for(LISPartIdentification partIdentification:partsFromDB){
 			PartIdentificationDTO partIdentificationDTO = new PartIdentificationDTO();
 			partIdentificationDTO.setPartVerifId(partIdentification.getPartVerifId());
@@ -301,10 +313,12 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		return partList;
 	}
 	
-	private LISInspectionMeasurements transformToModel(InspectionMeasurementDTO inspectionMeasurementDTO, LISInspectionMeasurements inspectionMeasurements,String action) throws ParseException{
+	private LISInspectionMeasurements transformToModel(InspectionMeasurementDTO inspectionMeasurementDTO, LISInspectionMeasurements inspectionMeasurements,String action) throws ParseException, InspectionLineItemMasterException{
+		logger.info("Inside transformToModel service");
 		if(null != action && InspectionMeasurementConstants.INSERT.equalsIgnoreCase(action)){
 			inspectionMeasurements.setPartIdentificationNumber(inspectionMeasurementDTO.getPartIdentificationNumber());
 			inspectionMeasurements.setCreatedBy(inspectionMeasurementDTO.getUserId());
+			inspectionMeasurements.setUserId(inspectionMeasurementDTO.getUserId());
 			inspectionMeasurements.setSubscriberId(inspectionMeasurementDTO.getSubscriberId());
 			inspectionMeasurements.setSubscriberName(inspectionMeasurementDTO.getSubscriberName());
 			inspectionMeasurements.setCreatedTimestamp(new Date());
@@ -331,7 +345,8 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			inspectionMeasurements.setWorkJobOrderNumber(inspectionMeasurementDTO.getWorkJobOrderNumber());
 			inspectionMeasurements.setUserName(inspectionMeasurementDTO.getUserName());
 			List<LISPartIdentification> partIdentificationList = new ArrayList<LISPartIdentification>();
-			partIdentificationList = measurementData(partIdentificationList,inspectionMeasurementDTO.getPartIdentifications(),inspectionMeasurements);
+			partIdentificationList = measurementData(partIdentificationList,inspectionMeasurements,inspectionMeasurementDTO.getCompProductDrawNum());
+			logger.info("partIdentificationList "+partIdentificationList);
 			inspectionMeasurements.setPartIdentifications(partIdentificationList);
 		}
 		return inspectionMeasurements;
