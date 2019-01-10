@@ -15,4 +15,6 @@ public interface LoginService {
 	public String changePassword(PasswordMaintenanceDTO passwordMaintenanceDTO) throws LoginException;
 
 	public void logout(String userId) throws LoginException;
+
+	public String resetLogin(String userId) throws LoginException;
 }

@@ -57,7 +57,7 @@ public class LoginServiceImpl implements LoginService{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
 				if(null != login && login.getIsSessionActive() == 'Y'){
-					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first.");
+					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first or wait for sometime.");
 				}else{
 					httpSession.setAttribute("user", responseDTO);
 				}
@@ -273,6 +273,15 @@ public class LoginServiceImpl implements LoginService{
 	@Override
 	public void logout(String userId) throws LoginException {
 		loginDAO.logout(userId);
+	}
+
+	@Override
+	public String resetLogin(String userId) throws LoginException {
+		if(null != loginDAO.validateUser(userId)){
+			loginDAO.logout(userId);
+			return StatusConstants.SUCCESS;
+		}
+		return StatusConstants.USER_NOT_EXISTS;
 	}
 
 }

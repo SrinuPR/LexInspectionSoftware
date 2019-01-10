@@ -115,4 +115,28 @@ public class LoginController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/active/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<LoginDTO> resetLogin(@PathVariable("userId") String userId) {
+		LoginDTO loginDTO = new LoginDTO();
+		try {
+			if(null != userId){
+				String status = loginService.resetLogin(userId);
+				if(null != status && StatusConstants.SUCCESS.equalsIgnoreCase(status)){
+					loginDTO.setStatus(StatusConstants.SUCCESS);
+					return new ResponseEntity(loginDTO,HttpStatus.OK);
+				}else{
+					loginDTO.setErrorMessage(status);
+					return new ResponseEntity(loginDTO,HttpStatus.EXPECTATION_FAILED);
+				}
+			}else{
+				loginDTO.setErrorMessage(StatusConstants.FAILURE);
+				return new ResponseEntity(loginDTO,HttpStatus.PRECONDITION_FAILED);
+			}
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }

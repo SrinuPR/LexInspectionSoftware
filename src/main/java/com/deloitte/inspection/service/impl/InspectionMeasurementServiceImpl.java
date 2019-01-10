@@ -192,6 +192,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 	}
 
 	@Override
+	@Transactional
 	public InspectionMeasurementResponseDTO validatePartIdentification(String partIdententificationId, InspectionMeasurementDTO inspectionMeasurementDTO)
 			throws InspectionMeasurementException {
 		logger.info("Inside validatePartIdentification Service");
@@ -199,9 +200,9 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		try{
 			List<LISInspectionMeasurements> lists = inspectionMeasurementDAO.validatePartIdentification(partIdententificationId.toLowerCase(),inspectionMeasurementDTO.getSubscriberId());
 			if(null != lists && lists.size() > 0){
-				inspectionMeasurementResponseDTO.setStatus(StatusConstants.WARNING);
+				inspectionMeasurementResponseDTO.setStatus(StatusConstants.SUCCESS);
 				inspectionMeasurementResponseDTO.setMessage(InspectionMeasurementConstants.PART_NUMBER_EXIST);
-				inspectionMeasurementDTO = prefillDataOnPartConfirmation(inspectionMeasurementDTO,lists);
+				inspectionMeasurementDTO = prefillDataOnPartConfirmation(inspectionMeasurementDTO,lists.get(0));
 			}else{
 				inspectionMeasurementDTO = saveInspectionMeasurementData(inspectionMeasurementDTO);
 				inspectionMeasurementResponseDTO.setStatus(StatusConstants.SUCCESS);
@@ -216,6 +217,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		return inspectionMeasurementResponseDTO;
 	}
 
+	@Transactional
 	private InspectionMeasurementDTO saveInspectionMeasurementData(InspectionMeasurementDTO inspectionMeasurementDTO) {
 		logger.info("Inside saveInspectionMeasurementData Service");
 		try{
@@ -223,6 +225,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			inspectionMeasurements = transformToModel(inspectionMeasurementDTO,inspectionMeasurements,InspectionMeasurementConstants.INSERT);
 			logger.info("Before Inserting inspectionMeasurements "+inspectionMeasurements);
 			inspectionMeasurementDAO.saveMeasurementsToDataBase(inspectionMeasurements);
+			inspectionMeasurementDTO = prefillDataOnPartConfirmation(inspectionMeasurementDTO,inspectionMeasurements);
 		}catch(Exception exception){
 			logger.error("Exception Occured in saveInspectionMeasurementData service :"+exception.getMessage());
 			logger.error("StackTrace saveInspectionMeasurementData service :"+exception.getStackTrace());
@@ -232,18 +235,13 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 	}
 	
 	@Transactional
-	private InspectionMeasurementDTO prefillDataOnPartConfirmation(InspectionMeasurementDTO inspectionMeasurementDTO, List<LISInspectionMeasurements> inspectionMeasurements2)throws Exception{
+	private InspectionMeasurementDTO prefillDataOnPartConfirmation(InspectionMeasurementDTO inspectionMeasurementDTO, LISInspectionMeasurements lisInspectionMeasurements)throws Exception{
 		logger.info("Entered into prefillDataOnPartConfirmation Service");
-		if(null != inspectionMeasurements2 && inspectionMeasurements2.size() > 0){
-			for(LISInspectionMeasurements inspectionMeasurements3:inspectionMeasurements2){
-				if(null != inspectionMeasurements3.getPartIdentifications()){
-					List<PartIdentificationDTO> partList = new ArrayList<PartIdentificationDTO>();
-					partList = transformToDTO(partList, inspectionMeasurements3.getPartIdentifications());
-					inspectionMeasurementDTO.setPartIdentifications(partList);
-				}
-				inspectionMeasurementDTO = inspectionData(inspectionMeasurementDTO,inspectionMeasurements3);
-				break;
-			}
+		if(null != lisInspectionMeasurements.getPartIdentifications()){
+			List<PartIdentificationDTO> partList = new ArrayList<PartIdentificationDTO>();
+			partList = transformToDTO(partList, lisInspectionMeasurements.getPartIdentifications());
+			inspectionMeasurementDTO.setPartIdentifications(partList);
+			inspectionMeasurementDTO = inspectionData(inspectionMeasurementDTO,lisInspectionMeasurements);
 		}
 		return inspectionMeasurementDTO;
 	}
@@ -286,9 +284,9 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			for(LISInspectionLineItemMaster inspectionLineItemMaster :inspectionLineItemMasters){
 				LISPartIdentification partIdentification = new LISPartIdentification();
 				partIdentification.setActualBaseMeasure(inspectionLineItemMaster.getBaseMeasure());
+				partIdentification.setMeasurementName(inspectionLineItemMaster.getMeasurmentName());
 				partIdentification.setActualLowerLimit(inspectionLineItemMaster.getLowerLimit());
 				partIdentification.setActualLowerLimit(inspectionLineItemMaster.getUpperLimit());
-				partIdentification.setStatus(InspectionMeasurementConstants.IN_ACTIVE);
 				partIdentification.setPartIdentificationNumber(inspectionMeasurements.getPartIdentificationNumber());
 				partIdentification.setInspectionMeasurements(inspectionMeasurements);
 				partIdentificationList.add(partIdentification);
@@ -308,6 +306,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			partIdentificationDTO.setMeasurementName(partIdentification.getMeasurementName());
 			partIdentificationDTO.setMeasuredValue(partIdentification.getMeasuredValue());
 			partIdentificationDTO.setActualBaseMeasure(partIdentification.getActualBaseMeasure());
+			partIdentificationDTO.setStatus(partIdentification.getStatus());
 			partList.add(partIdentificationDTO);
 		}
 		return partList;
@@ -360,6 +359,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				LISPartIdentification partIdentification = inspectionMeasurementDAO.getMeasurementRecord(partIdentificationDTO.getPartVerifId());
 				if(null != partIdentification){
 					partIdentification.setMeasuredValue(partIdentificationDTO.getMeasuredValue());
+					partIdentification.setMeasurementName(partIdentificationDTO.getMeasurementName());
 					partIdentification.setStatus(partIdentificationDTO.getStatus());
 					partIdentification.setDeviation(partIdentificationDTO.getDeviation());
 					partIdentification.setActualLowerLimit(partIdentificationDTO.getActualLowerLimit());
