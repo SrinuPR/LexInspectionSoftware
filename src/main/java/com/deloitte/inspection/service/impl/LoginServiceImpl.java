@@ -59,6 +59,8 @@ public class LoginServiceImpl implements LoginService{
 				if(null != login && login.getIsSessionActive() == 'Y' && null != responseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(responseDTO.getStatus())){
 					responseDTO.setStatus(StatusConstants.FAILURE);
 					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first or wait for sometime.");
+				}else if(null != responseDTO.getErrorMessage()){
+					responseDTO.setStatus(StatusConstants.FAILURE);
 				}else{
 					login.setIsSessionActive(StatusConstants.IS_ACTIVE);
 					loginDAO.updateLogin(login);
