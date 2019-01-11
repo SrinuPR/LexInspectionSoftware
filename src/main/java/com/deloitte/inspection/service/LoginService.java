@@ -17,4 +17,6 @@ public interface LoginService {
 	public void logout(String userId) throws LoginException;
 
 	public String resetLogin(String userId) throws LoginException;
+
+	public String validateUserId(String userId) throws LoginException;
 }

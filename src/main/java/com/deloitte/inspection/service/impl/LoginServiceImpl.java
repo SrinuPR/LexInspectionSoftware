@@ -56,9 +56,12 @@ public class LoginServiceImpl implements LoginService{
 				}else{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
-				if(null != login && login.getIsSessionActive() == 'Y'){
+				if(null != login && login.getIsSessionActive() == 'Y' && null != responseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(responseDTO.getStatus())){
+					responseDTO.setStatus(StatusConstants.FAILURE);
 					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first or wait for sometime.");
 				}else{
+					login.setIsSessionActive(StatusConstants.IS_ACTIVE);
+					loginDAO.updateLogin(login);
 					httpSession.setAttribute("user", responseDTO);
 				}
 				/*LoggedInUsers loggedInUsers = new LoggedInUsers();
@@ -277,8 +280,20 @@ public class LoginServiceImpl implements LoginService{
 
 	@Override
 	public String resetLogin(String userId) throws LoginException {
-		if(null != loginDAO.validateUser(userId)){
+		logger.info("Inside resetLogin");
+		LISUserMasterCreate user = loginDAO.validateUser(userId);
+		if(null != user){
 			loginDAO.logout(userId);
+			return StatusConstants.SUCCESS;
+		}
+		return StatusConstants.USER_NOT_EXISTS;
+	}
+
+	@Override
+	public String validateUserId(String userId) throws LoginException {
+		logger.info("Inside validateUserId");
+		LISUserMasterCreate user = loginDAO.validateUser(userId);
+		if(null != user){
 			return StatusConstants.SUCCESS;
 		}
 		return StatusConstants.USER_NOT_EXISTS;

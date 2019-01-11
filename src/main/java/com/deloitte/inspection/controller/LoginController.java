@@ -51,7 +51,7 @@ public class LoginController {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@CrossOrigin
-	@RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET,  produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<LoginDTO> logout(HttpSession httpSession,@PathVariable("userId") String userId) {
 		LoginDTO loginDto = (LoginDTO)httpSession.getAttribute("user");
 		try {
@@ -116,8 +116,9 @@ public class LoginController {
 		}
 	}
 	
+	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/active/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/unLock/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<LoginDTO> resetLogin(@PathVariable("userId") String userId) {
 		LoginDTO loginDTO = new LoginDTO();
 		try {
@@ -136,6 +137,31 @@ public class LoginController {
 			}
 		}catch (Exception e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/validateUser/{userId}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<LoginDTO> validateUserId(@PathVariable("userId") String userId) {
+		LoginDTO loginDTO = new LoginDTO();
+		try {
+			if(null != userId){
+				String status = loginService.validateUserId(userId);
+				if(null != status && StatusConstants.SUCCESS.equalsIgnoreCase(status)){
+					loginDTO.setStatus(StatusConstants.SUCCESS);
+					return new ResponseEntity(loginDTO,HttpStatus.OK);
+				}else{
+					loginDTO.setErrorMessage(status);
+					return new ResponseEntity(loginDTO,HttpStatus.EXPECTATION_FAILED);
+				}
+			}else{
+				loginDTO.setErrorMessage(StatusConstants.FAILURE);
+				return new ResponseEntity(loginDTO,HttpStatus.PRECONDITION_FAILED);
+			}
+		}catch (Exception exception) {
+			logger.error("Exception validateUserId "+exception.getMessage());
+			return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

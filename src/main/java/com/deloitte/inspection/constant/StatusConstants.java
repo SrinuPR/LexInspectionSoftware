@@ -29,7 +29,7 @@ public class StatusConstants {
 	public static final String USER_CREATE_FIALED="User NOT saved, Please try again";
 	public static final String USER_CREATE_SUCCESS="User saved";
 	public static final String USER_EXISTS="User ID Exists";
-	public static final String USER_NOT_EXISTS="User ID Exists";
+	public static final String USER_NOT_EXISTS="User Id Not Exists";
 	public static final String EMPTY="";
 
 	public static final String DEFAULT_USER_NAME = "Admin";

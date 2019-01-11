@@ -17,4 +17,6 @@ public interface LoginDAO {
 	public void logout(String userId) throws LoginException;
 
 	public void updateSessionActiveSwToN() throws LoginException;
+
+	public void updateLogin(LISLogin login) throws LoginException;
 }

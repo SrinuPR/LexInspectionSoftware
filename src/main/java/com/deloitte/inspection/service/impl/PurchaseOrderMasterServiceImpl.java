@@ -100,9 +100,9 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 
 	@Override
 	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(Integer subscriberId) throws PurchaseOrderMasterException, CreateUserException {
+		logger.info("getAllPurchaseOrders "+ subscriberId);
 		List<PurchaseOrderDataDTO> purchaseOrderDTOList =  new ArrayList<PurchaseOrderDataDTO>();
 		List<LISPurchaseOrderMaster> purchaseOrderList = null;
-		
 		if( null!= subscriberId)
 			try {			
 				purchaseOrderList = purchaseOrderDataDAO.getAllBySubscriberId(subscriberId);
