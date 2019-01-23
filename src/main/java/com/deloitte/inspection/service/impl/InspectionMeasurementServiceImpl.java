@@ -286,7 +286,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				partIdentification.setActualBaseMeasure(inspectionLineItemMaster.getBaseMeasure());
 				partIdentification.setMeasurementName(inspectionLineItemMaster.getMeasurmentName());
 				partIdentification.setActualLowerLimit(inspectionLineItemMaster.getLowerLimit());
-				partIdentification.setActualLowerLimit(inspectionLineItemMaster.getUpperLimit());
+				partIdentification.setActualUpperLimit(inspectionLineItemMaster.getUpperLimit());
 				partIdentification.setPartIdentificationNumber(inspectionMeasurements.getPartIdentificationNumber());
 				partIdentification.setInspectionMeasurements(inspectionMeasurements);
 				partIdentificationList.add(partIdentification);
