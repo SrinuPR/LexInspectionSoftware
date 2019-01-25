@@ -221,7 +221,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	}
 
 	private boolean quantityChangeValidation(String customerPONumber, Integer subscriberId, Integer customerPOQuantity) {
-		boolean valid = false;
+		boolean valid = true;
 		try{
 			List<LISWorkJobOrderMaster> wjList = workJobOrderDAO.getWJOListByPONumAndSubId(customerPONumber.toLowerCase(),subscriberId);
 			if(null != wjList && wjList.size() > 0){
@@ -234,10 +234,10 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 					if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
 						int producedQuantity = 0;
 						for(LISInspectionMeasurements row:inspectionMeasurements){
-							producedQuantity = producedQuantity + row.getProducedQuantity();
+							producedQuantity = producedQuantity + (null != row.getProducedQuantity()?row.getProducedQuantity():0);
 						}
-						if((customerPOQuantity - producedQuantity) >= 0)
-							valid = true;
+						if((customerPOQuantity - producedQuantity) < 0)
+							valid = false;
 					}
 				}
 			}

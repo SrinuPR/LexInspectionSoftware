@@ -104,7 +104,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public String deleteInspectionMaster(Integer inspectionMasterId) {
 		logger.info("inside deleteInspectionMaster DAO method");
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_INMDC master WHERE master.INSPECTION_ID = :inspId");
+		Query query = getSession().createSQLQuery("DELETE FROM LIS_INMDC WHERE INSPECTION_ID = :inspId");
 		query.setParameter("inspId", inspectionMasterId);
 		int result = query.executeUpdate();
 		if (result > 0) {

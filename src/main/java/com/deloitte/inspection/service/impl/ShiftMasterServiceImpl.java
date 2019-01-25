@@ -39,11 +39,13 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 			if (!shiftId.isEmpty()) {
 				if (null != shiftMasater && null != shiftMasater.getShiftId()) {
 					commonDTO.setMessage(ShiftMasterConstants.SHIFT_ID_EXISTS);
+					commonDTO.setStatus(StatusConstants.FAILURE);
+				}else{
+					commonDTO.setMessage(ShiftMasterConstants.SHIFT_DOESNT_ID_EXISTS);
 					commonDTO.setStatus(StatusConstants.SUCCESS);
-					return commonDTO;
 				}
+				return commonDTO;
 			}
-
 		} catch (ShiftMasterException cue) {
 			cue.printStackTrace();
 		} catch (Exception e) {
