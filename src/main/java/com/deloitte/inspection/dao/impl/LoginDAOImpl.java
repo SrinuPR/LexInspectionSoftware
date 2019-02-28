@@ -4,17 +4,20 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.exception.LoginException;
+import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISUserMasterCreate;
 
@@ -25,19 +28,15 @@ public class LoginDAOImpl implements LoginDAO{
 	private static final Logger logger = LogManager.getLogger(LoginDAOImpl.class);  
 	
 	@Autowired
-    private SessionFactory sessionFactory;
+	MongoTemplate mongoTemplate;
 
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LISLogin validateLoginCredentials(String userId) throws LoginException {
 		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISLogin l where l.userMasterCreate.userId = :userId or l.adminId = :userId");
-		query.setParameter("userId", userId);
-		List<LISLogin> loginList = query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId))));
+		List<LISLogin> loginList = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class)
+				.getMappedResults();
 		if(null != loginList && loginList.size() > 0){
 			return loginList.get(0);
 		}
@@ -46,68 +45,67 @@ public class LoginDAOImpl implements LoginDAO{
 	
 	@Override
 	public String changePassword(LISUserMasterCreate userMasterModel) throws LoginException {
-		
 		logger.info("Inside ChangePasswordDAOImpl");
 		String status = new String();
-		try {
-			if (null != userMasterModel) {
-				getSession().saveOrUpdate(userMasterModel);
-			}
+		if (null != userMasterModel) {
+			mongoTemplate.save(userMasterModel);
+		}
+		if (userMasterModel.getId() != null) {
 			status = StatusConstants.SUCCESS;
-		}catch (HibernateException exception) {
-			logger.info("Exception in updating password " + exception.getMessage());
+		} else {
 			status = StatusConstants.FAILURE;
 		}
 		return status;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISUserMasterCreate validateUser(String userId) throws LoginException {
 		logger.info("Inside LoginDAOImpl validateUser");
-		Query query = getSession().createQuery("from LISUserMasterCreate where userId = :userId");
-		query.setParameter("userId", userId);
-		List<LISUserMasterCreate> userList = query.list();
+		Query query = new Query();
+		query.addCriteria(Criteria.where("userId").in(userId));
+		List<LISUserMasterCreate> userList = mongoTemplate.find(query, LISUserMasterCreate.class, "LIS_UMACS");
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "deprecation", "rawtypes" })
 	@Override
 	public void updateLoginPassword(String userId, String password) throws LoginException {
-		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET PASSWORD = :password WHERE USER_ID = :userId or ADMIN_ID = :userId");
-		query.setParameter("password", password);
-		query.setParameter("userId",userId);
-		query.executeUpdate();	
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId)))
+				);
+		LISLogin lisLogin = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class).getUniqueMappedResult();
+		lisLogin.setPassword(password);
+		mongoTemplate.save(lisLogin);
 	}
 
-	@SuppressWarnings({ "deprecation", "rawtypes" })
 	@Override
 	public void logout(String userId) throws LoginException {
 		logger.info("Inside LoginDAOImpl logout");
-		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET IS_SESSION_ACTIVE = :inActive WHERE USER_ID = :userId or ADMIN_ID = :userId");
-		query.setParameter("userId",userId);
-		query.setParameter("inActive", StatusConstants.IN_ACTIVE);
-		query.executeUpdate();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId)))
+				);
+		LISLogin lisLogin = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class).getUniqueMappedResult();
+		lisLogin.setIsActive(StatusConstants.IN_ACTIVE);
+		mongoTemplate.save(lisLogin);
 	}
 
-	@SuppressWarnings({ "deprecation", "rawtypes" })
 	@Override
 	public void updateSessionActiveSwToN() throws LoginException {
 		logger.info("Inside LoginDAOImpl updateSessionActiveSwToN");
-		Query query = getSession().createSQLQuery("UPDATE LIS_LOGIN SET IS_SESSION_ACTIVE = :inActive WHERE IS_ACTIVE = :isActive");
-		query.setParameter("inActive", StatusConstants.IN_ACTIVE);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.executeUpdate();
+		Query query = new Query();
+		query.addCriteria(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE));
+		List<LISLogin> lisLoginList = mongoTemplate.find(query, LISLogin.class,"LIS_LOGIN");
+		for(LISLogin lisLogin : lisLoginList){
+			lisLogin.setIsSessionActive(StatusConstants.IN_ACTIVE);
+			mongoTemplate.save(lisLogin);
+		}	
 	}
 
 	@Override
 	public void updateLogin(LISLogin login) throws LoginException {
 		logger.info("Inside LoginDAOImpl updateLogin");
-		getSession().saveOrUpdate(login);
-		
-	}		
-
+		mongoTemplate.save(login);
+	}	
 }

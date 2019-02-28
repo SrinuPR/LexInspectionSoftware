@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,41 +23,37 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 	private static final Logger logger = LogManager.getLogger(MasterListOfScreensForSubscriberDAOImpl.class);
 	
 	@Autowired
-    private SessionFactory sessionFactory;
+    private MongoTemplate mongoTemplate;
 
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-	@SuppressWarnings({ "deprecation", "rawtypes" })
 	@Override
 	public void deleteScreenForSubscriber(Integer subscriberId, String screenId) throws MasterListOfScreensForSubscriberException {
 		logger.info("Inside deleteScreenForSubscriber DAO");
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_MLOSS WHERE IS_ACTIVE = :isActive AND SUBSCRIBER_ID = :subscriberId AND lower(SCREEN_NUMBER) = :screenNumber");
-		query.setParameter("screenNumber", screenId.toLowerCase());
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.executeUpdate();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				Aggregation.match(Criteria.where("screenNumber").is(screenId.toLowerCase())));
+		List<LISMasterListOfScreensForSubscriber> list = mongoTemplate.aggregate(aggregation, "LIS_MLOSS", LISMasterListOfScreensForSubscriber.class).getMappedResults();
+		for (LISMasterListOfScreensForSubscriber item : list) {
+			mongoTemplate.remove(item);
+		}
 	}
 
 	@Override
 	public void insertScreensForSubscribers(List<LISMasterListOfScreensForSubscriber> insertList)
 			throws MasterListOfScreensForSubscriberException {
 		logger.info("Inside insertScreensForSubscribers DAO");
-		Session session = getSession();
 		for(LISMasterListOfScreensForSubscriber masterScreen : insertList){
-			session.saveOrUpdate(masterScreen);
+			mongoTemplate.save(masterScreen);
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISMasterListOfScreensForSubscriber> getScreensforSubscriber(Integer subscriberId)
 			throws MasterListOfScreensForSubscriberException {
 		logger.info("Inside getScreensforSubscriber DAO");
-		Query query = getSession().createQuery("FROM LISMasterListOfScreensForSubscriber l where l.isActive = :isActive and l.subscriberId = :subscriberId ");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
+		return mongoTemplate.aggregate(aggregation, "LIS_MLOSS", LISMasterListOfScreensForSubscriber.class).getMappedResults();
 	}
 }

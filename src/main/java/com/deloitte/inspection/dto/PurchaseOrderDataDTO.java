@@ -12,6 +12,14 @@ public class PurchaseOrderDataDTO {
 	private Integer customerPOQuantity;
 	private String poNotes;
 	private Integer componentId;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getCustomerPoId() {
 		return customerPoId;

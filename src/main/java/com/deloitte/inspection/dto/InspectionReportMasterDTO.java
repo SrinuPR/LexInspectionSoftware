@@ -36,6 +36,14 @@ public class InspectionReportMasterDTO {
 	private String inspectiontypeName;
 	private String inspectionDate;
 	private List<InspectionLineItemDTO> lineItemData;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the inspReportNumber

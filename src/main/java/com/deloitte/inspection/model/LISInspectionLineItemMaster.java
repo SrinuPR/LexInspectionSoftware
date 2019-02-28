@@ -3,64 +3,70 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_ILIMC")
+@Document(collection = "LIS_ILIMC")
 public class LISInspectionLineItemMaster implements Serializable{
 
 	private static final long serialVersionUID = -236523268575818079L;
-
+	
 	@Id
-	@Column(name = "ILIMC_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Field(value = "ILIMC_ID")
 	private Integer InspectionLineItemId;
 	
-	@Column(name = "INMDC_COMPONENT_PRODUCT_DRAW_NUM", length = 50, nullable = false)
+	@Field(value = "INSPECTION_ID")
+	private Integer inspectionID;
+	
+	@Field(value = "INSPECTION_LINE_ID")
+	private Integer inspectionLineID;
+	
+	@Field(value = "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
 	private String componentProductDrawNumber;
 	
-	@Column(name = "MEASUREMENT_NAME", length =50 ,nullable = false)
+	@Field(value = "MEASUREMENT_NAME")
 	private String measurmentName;
+	
+	@Field(value = "COMP_PROD_DRAW_NUM")
+	private String CompProdDrawNum;
 			
-	@Column(name = "BASE_MEASURE" , nullable = false, length = 5)
+	@Field(value = "BASE_MEASURE")
 	private String baseMeasure;
 	
-	@Column(name = "BASE_MEASURE_UNITS" , nullable = false, length = 5)
+	@Field(value = "BASE_MEASURE_UNITS")
 	private String baseMeasureUnits;
 	
-	@Column(name = "UPPER_LIMIT" , nullable = false)
+	@Field(value = "UPPER_LIMIT")
 	private Float upperLimit;
 	
-	@Column(name = "LOWER_LIMIT", nullable = false)
+	@Field(value = "LOWER_LIMIT")
 	private Float lowerLimit;
 	
-	@Column(name = "USER_ID" , nullable = false)
+	@Field(value = "USER_ID")
 	private String userID;
 	
-	@Column(name="SUBSCRIBER_ID", length = 5 , nullable = false)
+	@Field(value = "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Column(name = "SUBSCRIBER_NAME" , length = 150)
+	@Field(value = "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "IS_ACTIVE")
+	@Field(value = "IS_ACTIVE")
 	private char isActive;
 
 	public Integer getInspectionLineItemId() {
@@ -181,6 +187,34 @@ public class LISInspectionLineItemMaster implements Serializable{
 
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public Integer getInspectionID() {
+		return inspectionID;
+	}
+
+	public void setInspectionID(Integer inspectionID) {
+		this.inspectionID = inspectionID;
+	}
+
+	public Integer getInspectionLineID() {
+		return inspectionLineID;
+	}
+
+	public void setInspectionLineID(Integer inspectionLineID) {
+		this.inspectionLineID = inspectionLineID;
+	}
+
+	public String getCompProdDrawNum() {
+		return CompProdDrawNum;
+	}
+
+	public void setCompProdDrawNum(String compProdDrawNum) {
+		CompProdDrawNum = compProdDrawNum;
 	}
 	
 }

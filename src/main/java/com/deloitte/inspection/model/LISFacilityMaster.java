@@ -6,55 +6,50 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * @author rnarne
  *
- */@Entity
- @Table(name = "LIS_FMACS")
- public class LISFacilityMaster implements Serializable{
- 		
- 	private static final long serialVersionUID = 382945870712132210L;
+ */
+@Document(collection = "LIS_FMACS")
+public class LISFacilityMaster implements Serializable {
 
- 	@Column(name = "FACILITY_ID", unique = true)
- 	private Integer facilityId;
- 	
- 	@Id
- 	@Column(name = "FACILITY_NUMBER", length = 10)
- 	private String facilityNumber;
- 	
- 	@Column(name = "FACILITY_NAME" , length = 150)
- 	private String facilityName;
- 	
- 	@Column(name = "CREATED_BY")
- 	private String createdBy;
- 	
- 	@Column(name = "CREATED_TIMESTAMP")
- 	private Date createdTimestamp;
- 	
- 	@Column(name = "UPDATED_BY")
- 	private String updatedBy;
- 	
- 	@Column(name = "UPDATED_TIMESTAMP")
- 	private Date updatedTimestamp;
- 	
- 	@Column(name = "IS_ACTIVE")
- 	private char isActive;
- 	
- 	@Column(name = "USER_ID")
- 	private String userId;
- 	
- 	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
- 	@JoinColumn(name="SUBSCRIBER_ID")
-    private LISSubscriberMaster subscriberMaster;
+	private static final long serialVersionUID = 382945870712132210L;
+	
+	@Id
+	private Long id;
+
+	@Field(value = "FACILITY_ID")
+	private Integer facilityId;
+
+	@Field(value = "FACILITY_NUMBER")
+	private String facilityNumber;
+
+	@Field(value = "FACILITY_NAME")
+	private String facilityName;
+
+	@Field(value = "CREATED_BY")
+	private String createdBy;
+
+	@Field(value = "CREATED_TIMESTAMP")
+	private Date createdTimestamp;
+
+	@Field(value = "UPDATED_BY")
+	private String updatedBy;
+
+	@Field(value = "UPDATED_TIMESTAMP")
+	private Date updatedTimestamp;
+
+	@Field(value = "IS_ACTIVE")
+	private char isActive;
+
+	@Field(value = "USER_ID")
+	private String userId;
+	
+	private LISSubscriberMaster subscriber;
 
 	/**
 	 * @return the facilityNumber
@@ -154,20 +149,6 @@ import javax.persistence.Table;
 		this.isActive = isActive;
 	}
 
-	/**
-	 * @return the subscriberMaster
-	 */
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	/**
-	 * @param subscriberMaster the subscriberMaster to set
-	 */
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
 	public Integer getFacilityId() {
 		return facilityId;
 	}
@@ -183,5 +164,17 @@ import javax.persistence.Table;
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
+	}
+
 }

@@ -3,51 +3,45 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_SHMCS")
+@Document(collection = "LIS_SHMCS")
 public class LISShiftMaster implements Serializable{
 		
 	private static final long serialVersionUID = 382945870712132210L;
 
 	@Id
-	@Column(name = "SHIFT_ID", length = 10)
+	private long id;
+	
+	@Field(value =  "SHIFT_ID")
 	private String shiftId;
 	
-	@Column(name = "SHIFT_NAME" , length = 150)
+	@Field(value =  "SHIFT_NAME")
 	private String shiftName;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "IS_ACTIVE")
-	private char isActive;
+	@Field(value =  "IS_ACTIVE")
+	private String isActive;
 	
-	@Column(name = "RECORD_IN_PROCESS")
+	@Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="SUBSCRIBER_ID")
-    private LISSubscriberMaster subscriberMaster;
+	private LISSubscriberMaster subscriber;
 	
-	@Column(name = "USER_ID")
+	@Field(value =  "USER_ID")
 	private String userId;	
 
 	public String getShiftId() {
@@ -98,20 +92,12 @@ public class LISShiftMaster implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
-	}
-
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
 	}
 
 	public String getUserId() {
@@ -128,6 +114,18 @@ public class LISShiftMaster implements Serializable{
 
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
 	}
 	
 }

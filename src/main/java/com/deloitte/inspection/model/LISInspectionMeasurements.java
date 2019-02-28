@@ -2,131 +2,125 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_IMDES")
+@Document(collection = "LIS_IMDES")
 public class LISInspectionMeasurements implements Serializable{
 
 	private static final long serialVersionUID = -7719637509662433018L;
 	
 	@Id
-	@Column(name = "IMDES_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
+	@Field(value =  "IMDES_ID")
 	private Integer inspectionMeasurementId;
 	
-	@Column(name = "SUBSCRIBER_ID", length = 5, nullable = false)
+	@Field(value =  "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Column(name = "RECORD_IN_PROCESS")
+	@Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
 	
-	@Column(name = "SUBSCRIBER_NAME", length = 50, nullable = false)
+	@Field(value =  "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	@Column(name = "USER_ID", length = 10)
+	@Field(value =  "USER_ID")
 	private String userId;
 	
-	@Column(name = "IRMCS_COMP_PRD_DRAW_NUM", length = 50, nullable = false)
+	@Field(value =  "IRMCS_COMP_PRD_DRAW_NUM")
+	private String irmcsCompProductDrawNum;
+	
+	@Field(value =  "COMP_PROD_DRAW_NUM")
 	private String compProductDrawNum;
 	
-	@Column(name = "INSPECTION_REPORT_NUMBER", length = 30, nullable= false)
+	@Field(value =  "INSPECTION_REPORT_NUMBER")
 	private String inspectionReportNumber;
 	
-	@Column(name = "WORK_JOB_ORDER_NUMBER", length = 30, nullable = false)
+	@Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	@Column(name = "LOT_NUMBER", length = 10)
+	@Field(value =  "LOT_NUMBER")
 	private String lotNumber;
 	
-	@Column(name = "LOT_SIZE", length = 5)
+	@Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	@Column(name = "MANUFACTURING_BATCH_NUMBER", length = 30)
+	@Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	@Column(name = "MANUFACTURING_BATCH_SIZE", length = 5)
+	@Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	@Column(name = "COMP_PROD_NAME", length = 50)
+	@Field(value =  "COMP_PROD_NAME")
 	private String componentProductName;
 	
-	@Column(name = "INSPECTION_TYPE", length = 30)
+	@Field(value =  "INSPECTION_TYPE")
 	private String inspectionType;
 	
-	@Column(name = "INSPECTION_STAGE", length = 10)
+	@Field(value =  "INSPECTION_STAGE")
 	private Integer InspectionStage;
 	
-	@Column(name = "FACILITY_MACHINE_NUMBER", length = 10, nullable = false)
+	@Field(value =  "FACILITY_MACHINE_NUMBER")
 	private Integer facilityMachineNumber;
 	
-	@Column(name = "FACILITY_MACHINE_NAME", length = 150)
+	@Field(value =  "FACILITY_MACHINE_NAME")
 	private String facilityMachineName;
 	
-	@Column(name = "USER_NAME", length = 150)
+	@Field(value =  "USER_NAME")
 	private String userName;
 	
-	@Column(name = "INSPECTION_DATE")
+	@Field(value =  "INSPECTION_DATE")
 	private Date inspectionDate;
 	
-	@Column(name = "SHIFT_ID", length = 10, nullable = false)
+	@Field(value =  "SHIFT_ID")
 	private String shiftID;
 	
-	@Column(name = "SHIFT_NAME", length = 10)
+	@Field(value =  "SHIFT_NAME")
 	private String shiftName;
 	
-	@Column(name = "CUSTOMER_PO_NUMBER", length = 30)
+	@Field(value =  "CUSTOMER_PO_NUMBER")
 	private String customerPONumber;
 	
-	@Column(name = "CUSTOMER_PO_DATE")
+	@Field(value =  "CUSTOMER_PO_DATE")
 	private Date customerPODate;
 	
-	@Column(name = "CUSTOMER_PO_QUANTITY", length = 5)
+	@Field(value =  "CUSTOMER_PO_QUANTITY")
 	private Integer customerPOQuantity;
 	
-	@Column(name = "CUSTOMER_NAME_ADDRESS", length = 250)
+	@Field(value =  "CUSTOMER_NAME_ADDRESS")
 	private String customerNameAddress;
 	
-	@Column(name = "PART_IDENTIFICATION_NUMBER", length = 30, nullable = false)
+	@Field(value =  "PART_IDENTIFICATION_NUMBER")
 	private String partIdentificationNumber;
 	
-	@Column(name = "MEASUREMENT_RECORD_STATUS", length = 20)
+	@Field(value =  "MEASUREMENT_RECORD_STATUS")
 	private String measurementRecordstatus;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "IS_ACTIVE")
+	@Field(value =  "IS_ACTIVE")
 	private char isActive;
 	
-	@Column(name = "PART_STATUS", length = 10)
+	@Field(value =  "PART_STATUS")
 	private String partStatus;
-	
-	@OneToMany(mappedBy="inspectionMeasurements", cascade = CascadeType.ALL)
-	private List<LISPartIdentification> partIdentifications;
 
-	@Column(name = "INSPECTED_QUANTITY", length = 3)
+	@Field(value =  "INSPECTED_QUANTITY")
 	private Integer inspectedQuantity;
 	
-	@Column(name = "PRODUCED_QUANTITY", length = 3)
+	@Field(value =  "PRODUCED_QUANTITY")
 	private Integer producedQuantity;
 	
 	public Integer getInspectionMeasurementId() {
@@ -393,14 +387,6 @@ public class LISInspectionMeasurements implements Serializable{
 		this.partStatus = partStatus;
 	}
 
-	public List<LISPartIdentification> getPartIdentifications() {
-		return partIdentifications;
-	}
-
-	public void setPartIdentifications(List<LISPartIdentification> partIdentifications) {
-		this.partIdentifications = partIdentifications;
-	}
-
 	public Integer getInspectedQuantity() {
 		return inspectedQuantity;
 	}
@@ -415,6 +401,18 @@ public class LISInspectionMeasurements implements Serializable{
 
 	public void setProducedQuantity(Integer producedQuantity) {
 		this.producedQuantity = producedQuantity;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getIrmcsCompProductDrawNum() {
+		return irmcsCompProductDrawNum;
+	}
+
+	public void setIrmcsCompProductDrawNum(String irmcsCompProductDrawNum) {
+		this.irmcsCompProductDrawNum = irmcsCompProductDrawNum;
 	}
 	
 }

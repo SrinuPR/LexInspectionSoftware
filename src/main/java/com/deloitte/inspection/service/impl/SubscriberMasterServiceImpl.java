@@ -6,12 +6,11 @@ package com.deloitte.inspection.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.constant.SubscriberConstants;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
@@ -90,7 +89,6 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 	}
 	
 	@Override
-	@Transactional
 	public List<SubscriberMasterDTO> getAllSubscriberMasterData() throws SubscriberMasterException {
 		try{
 			List<SubscriberMasterDTO> subscriberMasterDTOList = new ArrayList<SubscriberMasterDTO>();

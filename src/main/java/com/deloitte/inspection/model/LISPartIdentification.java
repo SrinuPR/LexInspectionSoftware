@@ -1,57 +1,49 @@
 package com.deloitte.inspection.model;
 
-
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_PIFIM")
+@Document(collection = "LIS_PIFIM")
 public class LISPartIdentification implements Serializable{
 	
 	private static final long serialVersionUID = -4113989812466679809L;
 	
-	@Id	
-	@Column(name = "PIFIM_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	private long id;
+	
+	@Field(value = "PIFIM_ID")
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer partVerifId;
 	
-	@Column(name = "MEASUREMENT_NAME", length = 50)
+	@Field(value = "MEASUREMENT_NAME")
 	private String measurementName;
 	
-	@Column(name = "MEASURED_VALUE", nullable = false)
+	@Field(value = "MEASURED_VALUE")
 	private Float measuredValue;
 	
-	@Column(name = "ACTUAL_BASE_MEASURE", length = 5, nullable = false)
+	@Field(value = "ACTUAL_BASE_MEASURE")
 	private String actualBaseMeasure;
 	
-	@Column(name = "ACTUAL_UPPER_LIMIT")
+	@Field(value = "ACTUAL_UPPER_LIMIT")
 	private Float actualUpperLimit;
 	
-	@Column(name = "ACTUAL_LOWER_LIMIT")
+	@Field(value = "ACTUAL_LOWER_LIMIT")
 	private Float actualLowerLimit;
 	
-	@Column(name = "DEVIATION")
+	@Field(value = "DEVIATION")
 	private Float deviation;
 	
-	@Column(name = "STATUS", length = 8)
+	@Field(value = "STATUS")
 	private String status;
 	
-	@Column(name = "PART_IDENTIFICATION_NUMBER", length = 30, nullable = false)
+	@Field(value = "PART_IDENTIFICATION_NUMBER")
 	private String partIdentificationNumber;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name="IMDES_ID")
-	private LISInspectionMeasurements inspectionMeasurements;
+	@Field(value = "IMDES_ID")
+	private Integer inspectionMeasurementId;
 
 	public Integer getPartVerifId() {
 		return partVerifId;
@@ -117,14 +109,6 @@ public class LISPartIdentification implements Serializable{
 		this.status = status;
 	}
 
-	public LISInspectionMeasurements getInspectionMeasurements() {
-		return inspectionMeasurements;
-	}
-
-	public void setInspectionMeasurements(LISInspectionMeasurements inspectionMeasurements) {
-		this.inspectionMeasurements = inspectionMeasurements;
-	}
-
 	public String getPartIdentificationNumber() {
 		return partIdentificationNumber;
 	}
@@ -133,4 +117,19 @@ public class LISPartIdentification implements Serializable{
 		this.partIdentificationNumber = partIdentificationNumber;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Integer getInspectionMeasurementId() {
+		return inspectionMeasurementId;
+	}
+
+	public void setInspectionMeasurementId(Integer inspectionMeasurementId) {
+		this.inspectionMeasurementId = inspectionMeasurementId;
+	}
 }

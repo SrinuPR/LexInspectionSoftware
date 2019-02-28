@@ -21,6 +21,14 @@ public class InspectionStageMasterDTO extends CommonDTO{
 	private String createdBy;
 	private String updatedBy;
 	private List<InspectionStageMasterDTO> inspStageMasterList;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the inspStageId

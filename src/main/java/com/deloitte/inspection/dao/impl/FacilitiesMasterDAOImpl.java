@@ -8,11 +8,12 @@ import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
@@ -20,6 +21,8 @@ import com.deloitte.inspection.dao.FacilitiesMasterDAO;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
 import com.deloitte.inspection.exception.FacilityMasterException;
 import com.deloitte.inspection.model.LISFacilityMaster;
+import com.deloitte.inspection.model.LISLogin;
+import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 
 /**
@@ -30,28 +33,23 @@ import com.deloitte.inspection.model.LISSubscriberMaster;
 @Transactional
 public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 
-	private static final Logger logger = LogManager.getLogger(FacilitiesMasterDAOImpl.class);  
-	
-	@Autowired
-    private SessionFactory sessionFactory;
+	private static final Logger logger = LogManager.getLogger(FacilitiesMasterDAOImpl.class);
 
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    
-    /**
-     * @param facilityNum
-     * @return
-     * @throws FacilityMasterException
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@Autowired
+	MongoTemplate mongoTemplate;
+
+	/**
+	 * @param facilityNum
+	 * @return
+	 * @throws FacilityMasterException
+	 */
 	@Override
 	public LISFacilityMaster getFacilityNumber(String facilityNum) throws FacilityMasterException {
-		logger.info("Entered into getFacilityNumber");	
-		Query query = getSession().createQuery(" From LISFacilityMaster FMACS where FMACS.facilityNumber = :facilityNumber");
-		query.setString("facilityNumber", facilityNum);
-		List<LISFacilityMaster> facilitiesMasterList = query.list();
-		if(null != facilitiesMasterList && facilitiesMasterList.size() > 0) {
+		logger.info("Entered into getFacilityNumber");
+		Query query = new Query();
+		query.addCriteria(Criteria.where("facilityNumber").in(facilityNum));
+		List<LISFacilityMaster> facilitiesMasterList = mongoTemplate.find(query, LISFacilityMaster.class,"LIS_FMACS");
+		if (null != facilitiesMasterList && facilitiesMasterList.size() > 0) {
 			return facilitiesMasterList.get(0);
 		}
 		return null;
@@ -63,8 +61,9 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 	 * @throws FacilityMasterException
 	 */
 	@Override
-	public FacilityMasterDTO createFacility(FacilityMasterDTO facilityMasterDTO, String userName) throws FacilityMasterException {
-		logger.info("Entered into createFacility");	
+	public FacilityMasterDTO createFacility(FacilityMasterDTO facilityMasterDTO, String userName)
+			throws FacilityMasterException {
+		logger.info("Entered into createFacility");
 		try {
 			LISFacilityMaster facilityMaster = new LISFacilityMaster();
 			facilityMaster.setCreatedBy(userName);
@@ -74,41 +73,43 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 			facilityMaster.setUserId(userName);
 			LISSubscriberMaster subMaster = new LISSubscriberMaster();
 			subMaster.setSubscriberId(facilityMasterDTO.getSubscriberId());
-			facilityMaster.setSubscriberMaster(subMaster);
+			mongoTemplate.save(subMaster,"LIS_SUMAS");
+			facilityMaster.setSubscriber(subMaster);
 			facilityMaster.setIsActive(StatusConstants.IS_ACTIVE);
-			String value = (String) getSession().save(facilityMaster);
-			if(value != null)
+			mongoTemplate.save(facilityMaster,"LIS_FMACS");
+			if (facilityMaster.getId() != null)
 				return facilityMasterDTO;
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error(ex.getMessage());
-		} 
+		}
 		return null;
 	}
-	
+
 	/**
 	 * @return
 	 * @throws FacilityMasterException
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISFacilityMaster> getFacilitiesMasterData(Integer subscriberId) throws FacilityMasterException {
-		logger.info("Entered into getFacilitiesMasterData");	
-		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE lower(FMACS.subscriberMaster.subscriberId) = :subscriberId and FMACS.isActive = :isActive ORDER BY FMACS.createdTimestamp DESC");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISFacilityMaster> list = query.list();
+		logger.info("Entered into getFacilitiesMasterData");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		List<LISFacilityMaster> list = mongoTemplate
+				.aggregate(aggregation, "LIS_FMACS", LISFacilityMaster.class).getMappedResults();
 		return list;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISFacilityMaster> getFacilityDetailsBySubscriberID(Integer subscriberId)
 			throws FacilityMasterException {
-		logger.info("Entered into getFacilityDetailsBySubscriberID DAO");	
-		Query query = getSession().createQuery(" From LISFacilityMaster FMACS WHERE FMACS.isActive = :isActive and FMACS.subscriberMaster.subscriberId = :subscriberId  ORDER BY FMACS.createdTimestamp DESC");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		logger.info("Entered into getFacilityDetailsBySubscriberID DAO");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_FMACS", LISFacilityMaster.class).getMappedResults();
 	}
 }

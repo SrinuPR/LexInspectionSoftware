@@ -34,6 +34,14 @@ public class InspectionMeasurementDTO {
 	private Integer customerPOQuantity;
 	private Integer inspectedQuantity;
 	private Integer producedQuantity;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getCustomerPOQuantity() {
 		return customerPOQuantity;

@@ -14,6 +14,14 @@ public class InspectionLineItemDTO {
 	private String userId;
 	private String userName;
 	private String status;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getSubscriberId() {
 		return subscriberId;

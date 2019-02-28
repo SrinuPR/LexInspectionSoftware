@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,75 +20,72 @@ import com.deloitte.inspection.model.LISUserTypeMaster;
 
 @Repository
 @Transactional
-public class AccessMasterDAOImpl implements AccessMasterDAO{
-	
+public class AccessMasterDAOImpl implements AccessMasterDAO {
+
 	private static final Logger logger = LogManager.getLogger(AccessMasterDAOImpl.class);
-	
+
 	@Autowired
-    private SessionFactory sessionFactory;
-	
-	private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
+	MongoTemplate mongoTemplate;
 
 	@Override
 	public void saveAccessMaster(LISAccessMaster lisAccessMaster) throws Exception {
-		getSession().saveOrUpdate(lisAccessMaster);
+		mongoTemplate.save(lisAccessMaster,"LIS_ACMDS");
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+
 	@Override
 	public LISAccessMaster getAccessScreens(Integer subscriberId, Integer userTypId) throws Exception {
 		logger.info("Entered into getAccessScreens");
 		if (null != subscriberId && null != userTypId) {
 			logger.info("Fetching data on basis of subdId and UserTpyeId");
-			Query query = getSession().createQuery(" From LISAccessMaster LACM where LACM.subsId = :subsId AND LACM.userTypeId = :userTypeId");
-			query.setInteger("subsId", subscriberId);
-			query.setInteger("userTypeId", userTypId);
-			List<LISAccessMaster> accessMasterScreenList = query.list();
-			if(null != accessMasterScreenList && accessMasterScreenList.size() > 0) {
+			Aggregation aggregation = Aggregation.newAggregation(
+					Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+					Aggregation.match(Criteria.where("userType.userTypeId").is(userTypId)));
+			List<LISAccessMaster> accessMasterScreenList = mongoTemplate
+					.aggregate(aggregation, "LIS_ACMDS", LISAccessMaster.class).getMappedResults();
+			if (null != accessMasterScreenList && accessMasterScreenList.size() > 0) {
 				return accessMasterScreenList.get(0);
 			}
 		} else if (null != subscriberId) {
 			logger.info("Fetching data on basis of subdId");
-			Query query = getSession().createQuery(" From LISAccessMaster LACM where LACM.subsId = :subsId");
-			query.setInteger("subsId", subscriberId);
-			List<LISAccessMaster> accessMasterScreenList = query.list();
-			if(null != accessMasterScreenList && accessMasterScreenList.size() > 0) {
+			Aggregation aggregation1 = Aggregation.newAggregation(
+					Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)));
+			List<LISAccessMaster> accessMasterScreenList = mongoTemplate
+					.aggregate(aggregation1, "LIS_ACMDS", LISAccessMaster.class).getMappedResults();
+			if (null != accessMasterScreenList && accessMasterScreenList.size() > 0) {
 				return accessMasterScreenList.get(0);
 			}
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISUserTypeMaster> getUserTypeListforSubscriber(Integer subscriberId) throws Exception {
 		logger.info("inside getUserTypeListforSubscriber DAO");
-		Query query = getSession().createQuery(" From LISUserTypeMaster l where l.subscriberMaster.subscriberId = :subscriberId and l.isActive = :isActive order by l.userTypeName ASC");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.ASC, "userTypeName"));
+		return mongoTemplate.aggregate(aggregation, "LIS_UTMCS", LISUserTypeMaster.class).getMappedResults();
 	}
 
 	@Override
 	public LISAccessMaster getAccessMaster(Integer accessMasterId) throws Exception {
 		logger.info("Inside getAccessMaster DAO");
-		Session session = getSession();
-		LISAccessMaster accessMaster = (LISAccessMaster)session.get(LISAccessMaster.class,accessMasterId);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("accessMasterId").is(accessMasterId));
+		LISAccessMaster accessMaster = mongoTemplate.findOne(query, LISAccessMaster.class,"LIS_ACMDS");
 		return accessMaster;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public LISAccessMaster getAccessMasterByUserTypeId(Integer userTypeId) throws Exception {
 		logger.info("inside getAccessMasterByUserTypeId DAO");
-		Query query = getSession().createQuery(" From LISAccessMaster l where l.userTypeMaster.userTypeId = :userTypeId and l.isActive = :isActive");
-		query.setParameter("userTypeId", userTypeId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		@SuppressWarnings("unchecked")
-		List<LISAccessMaster> master = query.list();
-		if(null != master && master.size() > 0){
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("userType.userTypeId").is(userTypeId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		List<LISAccessMaster> master = mongoTemplate.aggregate(aggregation, "LIS_ACMDS", LISAccessMaster.class)
+				.getMappedResults();
+		if (null != master && master.size() > 0) {
 			return master.get(0);
 		}
 		return null;

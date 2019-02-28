@@ -2,15 +2,14 @@ package com.deloitte.inspection.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,35 +26,24 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	private static final Logger logger = LogManager.getLogger(PurchaseOrderDataDAOImpl.class);
 	
 	@Autowired
-    private SessionFactory sessionFactory;
-
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    
-    @PersistenceContext
-    private EntityManager em;
+    private MongoTemplate mongoTemplate;
 
 	@Override
 	public void savePurchaseOrderData(LISPurchaseOrderMaster purchaseOrderMaster)
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into savePurchaseOrderData DAO");	
-		getSession().saveOrUpdate(purchaseOrderMaster);		
+		mongoTemplate.save(purchaseOrderMaster);		
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISPurchaseOrderMaster> getAllByUserId(String userId)
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllByUserId");	
-		Query query = getSession().createQuery("FROM LISPurchaseOrderMaster i where i.userMasterCreate.userId = :userId and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
-		query.setParameter("userId", userId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();
-		if(null != LISPurchaseOrderMaster && LISPurchaseOrderMaster.size() > 0){
-			return LISPurchaseOrderMaster;
-		}
-		return null;
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("user.userId").is(userId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+						Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMaster.class).getMappedResults();
 	}
 
 
@@ -65,52 +53,41 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 		return null;
 	}
 
-
-	@SuppressWarnings({ "deprecation", "rawtypes" })
 	@Override
 	public String deletePurchaseOrder(Integer customerPoId) throws PurchaseOrderMasterException {
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_CPMCS WHERE CUSTOMER_PO_ID = :customerPoId");
-		query.setParameter("customerPoId", customerPoId);
-		int result = query.executeUpdate();
-		if(result > 0){
+		Query query = new Query(new Criteria("customerPoId").is(customerPoId));
+		LISPurchaseOrderMaster master = mongoTemplate.findAndRemove(query, LISPurchaseOrderMaster.class);
+		if(master != null){
 			status = StatusConstants.SUCCESS;
 		}
 		return status;	
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LISPurchaseOrderMaster getByCustomerPONumber(String customerPONumber) throws PurchaseOrderMasterException {
-		logger.info("Entered into validatePoNumber");	
-		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where lower(CPMCS.customerPONumber) = :customerPONumber and CPMCS.isActive = :isActive");
-		query.setParameter("customerPONumber", customerPONumber);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISPurchaseOrderMaster> LISPurchaseOrderMaster = query.list();
-		if(null != LISPurchaseOrderMaster && LISPurchaseOrderMaster.size() > 0){
-			return LISPurchaseOrderMaster.get(0);
-		}
-		return null;
+		logger.info("Entered into validatePoNumber");
+		Query query = new Query();
+		query.addCriteria(new Criteria("customerPONumber").is(customerPONumber)
+				.and("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
+		query.with(new Sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.findOne(query, LISPurchaseOrderMaster.class);
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISPurchaseOrderMaster> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException {
 		logger.info("Entered into getCustomerPOData DAO");	
-		Query query = getSession().createQuery(" From LISPurchaseOrderMaster CPMCS where CPMCS.subscriberMaster.subscriberId = :subscriberId and CPMCS.isActive = :isActive ");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+						Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMaster.class).getMappedResults();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISPurchaseOrderMaster> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllBySubscriberId");	
-		Query query = getSession().createQuery("FROM LISPurchaseOrderMaster i where i.subscriberMaster.subscriberId = :subscriberId and i.isActive = :isActive ORDER BY i.customerPONumber ASC ");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		return getCustomerPOData(subscriberId);
 	}
 	
 }

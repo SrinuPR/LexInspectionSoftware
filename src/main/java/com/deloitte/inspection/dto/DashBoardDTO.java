@@ -8,6 +8,14 @@ public class DashBoardDTO {
 	private Integer inspectionLineItemCount;
 	private Integer inspectionReportCount;
 	private Integer InspectionMeasurementCount;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getComponentCount() {
 		return componentCount;

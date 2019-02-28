@@ -1,7 +1,8 @@
 package com.deloitte.inspection.dto;
 
 public class ShiftMasterDTO extends AbstractDTO {
-	 
+	
+	private Long id;
 	private String shiftId;
 	private String shiftName;
 	private Integer subscriberId;
@@ -23,6 +24,11 @@ public class ShiftMasterDTO extends AbstractDTO {
 	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
-	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}	
 
 }

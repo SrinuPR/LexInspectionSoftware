@@ -20,6 +20,14 @@ public class WorkJobOrderDTO {
 	private String customerPONumber;
 	private Date customerPODate;
 	private Integer customerPOQuantity;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getWjOrderId() {
 		return wjOrderId;

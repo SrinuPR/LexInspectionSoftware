@@ -21,6 +21,14 @@ public class SubscriberMasterDTO extends CommonDTO{
 	private String updatedBy;
 	private List<String> userId;
 	private int userCount;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public int getUserCount() {
 		return userCount;

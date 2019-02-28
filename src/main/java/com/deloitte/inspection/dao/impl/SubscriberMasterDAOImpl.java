@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,26 +33,15 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 	private static final Logger logger = LogManager.getLogger(SubscriberMasterDAOImpl.class);  
 	
 	@Autowired
-    private SessionFactory sessionFactory;
-
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
+	MongoTemplate mongoTemplate;
     
     /* (non-Javadoc)
      * @see com.deloitte.inspection.dao.SubscriberMasterDAO#validateSubscriber(java.lang.Integer)
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LISSubscriberMaster validateSubscriber(Integer subscriberId) throws SubscriberMasterException {
 		logger.info("Entered into validateSubscriber");	
-		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS where SUMAS.subscriberId = :subscriberId");
-		query.setParameter("subscriberId", subscriberId);
-		List<LISSubscriberMaster> subscriberList = query.list();
-		if(null != subscriberList && subscriberList.size() > 0) {
-			return subscriberList.get(0);
-		}
-		return null;
+		return getSubscriberById(subscriberId);
 	}
 
 	/* (non-Javadoc)
@@ -68,11 +57,10 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 			subMasterModel.setSubscriberId(subMasterDTO.getSubscriberId());
 			subMasterModel.setSubscriberName(subMasterDTO.getSubscriberName());
 			subMasterModel.setSubscriberAddress(subMasterDTO.getSubscriberAddress());
-			subMasterModel.setIsActive(StatusConstants.IS_ACTIVE);
-			Integer value = (Integer) getSession().save(subMasterModel);
-			if(value != null)
-				return subMasterDTO;
-		} catch (HibernateException ex) {
+			subMasterModel.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
+			mongoTemplate.save(subMasterModel);
+			return subMasterDTO;
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.error(ex.getMessage());
 		} 
@@ -82,37 +70,31 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 	/* (non-Javadoc)
 	 * @see com.deloitte.inspection.dao.SubscriberMasterDAO#getSubscriberById(java.lang.Integer)
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISSubscriberMaster getSubscriberById(Integer subscriberId) throws SubscriberMasterException {
 		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISSubscriberMaster l where l.subscriberId = :subscriberId");
-		query.setParameter("subscriberId", subscriberId);
-		List<LISSubscriberMaster> subscriberMasterlist = query.list();
-		if(null != subscriberMasterlist && subscriberMasterlist.size() > 0)
-			return subscriberMasterlist.get(0);
-		return null;
+		Query query = new Query();
+		query.addCriteria(new Criteria("subscriberId").is(subscriberId));
+		return mongoTemplate.findOne(query, LISSubscriberMaster.class, "LIS_SUMAS");
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.deloitte.inspection.dao.SubscriberMasterDAO#getAllSubscriberMasterData()
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISSubscriberMaster> getAllSubscriberMasterData() throws SubscriberMasterException {
-		logger.info("Entered into getAllSubscriberMasterData");	
-		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS ORDER BY SUMAS.subscriberId ASC");
-		List<LISSubscriberMaster> list = query.list();
-		return list;
+		logger.info("Entered into getAllSubscriberMasterData");
+		Query query = new Query();
+		query.with(new Sort(Sort.Direction.ASC, "subscriberId"));
+		return mongoTemplate.find(query, LISSubscriberMaster.class);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
 	@Override
 	public List<LISSubscriberMaster> getSubscriberData(String userId) throws SubscriberMasterException {
-		logger.info("Entered into getSubscriberData");	
-		Query query = getSession().createQuery(" From LISSubscriberMaster SUMAS WHERE SUMAS.createdBy = :userId ORDER BY SUMAS.createdTimestamp DESC");
-		query.setString("userId", userId);
-		List<LISSubscriberMaster> list = query.list();
-		return list;
+		logger.info("Entered into getSubscriberData");
+		Query query = new Query();
+		query.addCriteria(new Criteria("createdBy").is(userId));
+		query.with(new Sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.find(query, LISSubscriberMaster.class);
 	}
 }

@@ -2,74 +2,53 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_UMACS")
-public class LISUserMasterCreate implements Serializable{
+@Document(collection = "LIS_UMACS")
+public class LISUserMasterCreate implements Serializable {
 
 	private static final long serialVersionUID = 6533302101506254629L;
 	
 	@Id
-	@Column(name = "USER_ID" , length = 10)
+    private Long id;
+
+	@Field(value = "USER_ID")
 	private String userId;
 	
-	@Column(name = "USER_NAME" , length = 20)
+	@Field(value = "USER_NAME")
 	private String userName;
 	
-	@Column(name = "OLD_PASSWORD1" , length = 20)
+	@Field(value = "OLD_PASSWORD1")
 	private String oldPassword1;
 	
-	@Column(name = "OLD_PASSWORD2" , length = 20)
+	@Field(value = "OLD_PASSWORD2")
 	private String oldPassword2;
 	
-	@Column(name = "ACTIVE_PASSWORD" , length = 20)
+	@Field(value = "ACTIVE_PASSWORD")
 	private String activePassword;
 	
-	@Column(name = "USER_TYPE_ID", length =30)
+	@Field(value = "USER_TYPE_ID")
 	private Integer userTypeId;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value = "UPDATED_BY")
 	private String updatedBy;
-	
-	@Column(name = "UPDATED_TIMESTAMP")
+
+	@Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "IS_ACTIVE")
+	@Field(value = "IS_ACTIVE")
 	private char isActive;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name="SUBSCRIBER_ID")
-	private LISSubscriberMaster subscriberMaster;
-	
-	@OneToOne(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private LISLogin loginDetails;
-	
-	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL)
-	private List<LISMaintainMasterDataComponent> maintainMasterDataComponents;
-
-	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private List<LISPurchaseOrderMaster> purchaseOrderMaster;
-	
-	@OneToMany(mappedBy="userMasterCreate", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private List<LISWorkJobOrderMaster> workJobOrderMasters;
+	private LISSubscriberMaster subscriber;
 
 	public String getUserId() {
 		return userId;
@@ -118,7 +97,7 @@ public class LISUserMasterCreate implements Serializable{
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+
 	public Integer getUserTypeId() {
 		return userTypeId;
 	}
@@ -151,30 +130,6 @@ public class LISUserMasterCreate implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
-	public LISLogin getLoginDetails() {
-		return loginDetails;
-	}
-
-	public void setLoginDetails(LISLogin loginDetails) {
-		this.loginDetails = loginDetails;
-	}
-
-	public List<LISPurchaseOrderMaster> getPurchaseOrderMaster() {
-		return purchaseOrderMaster;
-	}
-
-	public void setPurchaseOrderMaster(List<LISPurchaseOrderMaster> purchaseOrderMaster) {
-		this.purchaseOrderMaster = purchaseOrderMaster;
-	}
-
 	public char getIsActive() {
 		return isActive;
 	}
@@ -183,19 +138,19 @@ public class LISUserMasterCreate implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public List<LISMaintainMasterDataComponent> getMaintainMasterDataComponents() {
-		return maintainMasterDataComponents;
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
 	}
 
-	public void setMaintainMasterDataComponents(List<LISMaintainMasterDataComponent> maintainMasterDataComponents) {
-		this.maintainMasterDataComponents = maintainMasterDataComponents;
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
 	}
 
-	public List<LISWorkJobOrderMaster> getWorkJobOrderMasters() {
-		return workJobOrderMasters;
+	public Long getId() {
+		return id;
 	}
-
-	public void setWorkJobOrderMasters(List<LISWorkJobOrderMaster> workJobOrderMasters) {
-		this.workJobOrderMasters = workJobOrderMasters;
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

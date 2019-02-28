@@ -12,6 +12,14 @@ public class ComponentMasterDataDTO {
 	private String componentProductMeterial;
 	private String componentProductManufacturerUnits;
 	private String componentProductNotes;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getComponentId() {
 		return componentId;

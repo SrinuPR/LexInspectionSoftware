@@ -3,53 +3,41 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_ACMDS")
+@Document(collection = "LIS_ACMDS")
 public class LISAccessMaster implements Serializable{
 	
 	private static final long serialVersionUID = 5112717685665555840L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ACMDS_ID")
+    private Long id;
+	
+	@Field(value = "ACMDS_ID")
 	private Integer accessMasterId;
 	
-	@Column(name = "SCREEN_NUMBER")
+	@Field(value = "SCREEN_NUMBER")
 	private String screenNumber;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimeStamp;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimeStamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name="SUBSCRIBER_ID")
-	private LISSubscriberMaster subscriberMaster;
+	private LISSubscriberMaster subscriber;
 	
-	@OneToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinColumn(name="USER_TYPE_ID")
-	private LISUserTypeMaster userTypeMaster;
+	private LISUserTypeMaster userType;
 	
-	@Column(name = "IS_ACTIVE")
+	@Field(value = "IS_ACTIVE")
 	private char isActive;
 	
 	public String getScreenNumber() {
@@ -104,28 +92,36 @@ public class LISAccessMaster implements Serializable{
 		this.accessMasterId = accessMasterId;
 	}
 
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
-	public LISUserTypeMaster getUserTypeMaster() {
-		return userTypeMaster;
-	}
-
-	public void setUserTypeMaster(LISUserTypeMaster userTypeMaster) {
-		this.userTypeMaster = userTypeMaster;
-	}
-
 	public char getIsActive() {
 		return isActive;
 	}
 
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
+	}
+
+	public LISUserTypeMaster getUserType() {
+		return userType;
+	}
+
+	public void setUserType(LISUserTypeMaster userType) {
+		this.userType = userType;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 }

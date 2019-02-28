@@ -4,16 +4,18 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ShiftMasterDAO;
+import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
 import com.deloitte.inspection.exception.ShiftMasterException;
 import com.deloitte.inspection.model.LISShiftMaster;
@@ -26,78 +28,60 @@ public class ShiftMasterDAOImpl implements ShiftMasterDAO {
 private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.class);  
 	
 	@Autowired
-    private SessionFactory sessionFactory;
+    private MongoTemplate mongoTemplate;
 	
-	private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
+	@Autowired
+	private SubscriberMasterDAO subcriberDAO;
 
 	
 	@Override
-	public ShiftMasterDTO createShiftMaster(ShiftMasterDTO createShiftMasterDTO,String userId) throws ShiftMasterException {
+	public ShiftMasterDTO createShiftMaster(ShiftMasterDTO shiftMasterDTO, String userId) throws ShiftMasterException {
 		logger.info("Entered into createShiftMaster");	
 		try {
-			LISShiftMaster shiftMaster =new LISShiftMaster();
-			shiftMaster.setIsActive(StatusConstants.IS_ACTIVE);
-			shiftMaster.setShiftId(createShiftMasterDTO.getShiftId());
+			LISShiftMaster shiftMaster = new LISShiftMaster();
+			shiftMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
+			shiftMaster.setShiftId(shiftMasterDTO.getShiftId());
 			shiftMaster.setUserId(userId);
-			shiftMaster.setShiftName(createShiftMasterDTO.getShiftName());
-			LISSubscriberMaster subMaster = new LISSubscriberMaster();
-			subMaster.setSubscriberId(createShiftMasterDTO.getSubscriberId());
-			shiftMaster.setSubscriberMaster(subMaster);
-			shiftMaster.setCreatedBy(createShiftMasterDTO.getCreatedBy());
-			shiftMaster.setCreatedTimestamp(createShiftMasterDTO.getCreatedTimestamp());
-			
-			String value = getSession().save(shiftMaster).toString();
-			if(value != null)
-			return createShiftMasterDTO;
+			shiftMaster.setShiftName(shiftMasterDTO.getShiftName());
+			LISSubscriberMaster subMaster = subcriberDAO.getSubscriberById(shiftMasterDTO.getSubscriberId());
+			shiftMaster.setSubscriber(subMaster);
+			shiftMaster.setCreatedBy(shiftMasterDTO.getCreatedBy());
+			shiftMaster.setCreatedTimestamp(shiftMasterDTO.getCreatedTimestamp());			
+			mongoTemplate.save(shiftMaster);
+			return shiftMasterDTO;
 				
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		} 
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Override
 	public LISShiftMaster getShiftId(String shiftId) throws ShiftMasterException {
-
 		logger.info("Entered into getShiftId");	
-		Query query = getSession().createQuery(" From LISShiftMaster SHMCS where SHMCS.shiftId = :shiftId AND SHMCS.isActive = :isactive");
-		query.setString("shiftId", shiftId);
-		query.setParameter("isactive", StatusConstants.IS_ACTIVE);
-		List<LISShiftMaster> shiftMasterList = query.list();
-		if(null != shiftMasterList && shiftMasterList.size() > 0) {
-			return shiftMasterList.get(0);
-		}
-		return null;
-	
+		Query query = new Query();
+		query.addCriteria(new Criteria("shiftId").is(shiftId).and("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
+		return mongoTemplate.findOne(query, LISShiftMaster.class, "LIS_SHMCS");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes"})
 	@Override
 	public List<LISShiftMaster> findBySubscriberId(Integer subscriberId) throws ShiftMasterException {
 		logger.info("Entered into getAllShifts");	
-		Query query = getSession().createQuery(" From LISShiftMaster SHMCS where SHMCS.subscriberMaster.subscriberId = :subscriberId AND SHMCS.isActive = :isactive");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isactive", StatusConstants.IS_ACTIVE);
-		List<LISShiftMaster> shiftMasterList = query.list();
-		if(null != shiftMasterList && shiftMasterList.size() > 0) {
-			return shiftMasterList;
-		}
-		return null;
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+						Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_SHMCS", LISShiftMaster.class).getMappedResults();
 	}
 
-	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	public String deleteByShiftId(String shiftId,String userId) throws ShiftMasterException {
 		logger.info("Entered into deleteByShiftId");
 		String status = StatusConstants.FAILURE;
-		//Query query = getSession().createSQLQuery("UPDATE LISShiftMaster SET isActive = :inactive,UPDATED_BY=:userId  WHERE shiftId = :shiftId ");
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_SHMCS WHERE SHIFT_ID = :shiftId ");
-		query.setParameter("shiftId", shiftId);
-		int result = query.executeUpdate();
-		if(result > 0){
+		Query query = new Query();
+		query.addCriteria(new Criteria("shiftId").is(shiftId));
+		LISShiftMaster deleted = mongoTemplate.findAndRemove(query, LISShiftMaster.class);
+		if(deleted != null){
 			status = StatusConstants.SUCCESS;
 		}
 		return status;	
@@ -107,41 +91,33 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 	public ShiftMasterDTO updateShiftMaster(ShiftMasterDTO createShiftMasterDTO) throws ShiftMasterException {
 		logger.info("Entered into updateShiftMaster");	
 		try {
-			LISShiftMaster shiftMaster =new LISShiftMaster();
-			shiftMaster=getShiftId(createShiftMasterDTO.getShiftId());
-			shiftMaster.setIsActive(StatusConstants.IS_ACTIVE);
+			LISShiftMaster shiftMaster = this.getShiftId(createShiftMasterDTO.getShiftId());
+			shiftMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			shiftMaster.setShiftId(createShiftMasterDTO.getShiftId());
 			shiftMaster.setShiftName(createShiftMasterDTO.getShiftName());
-			/*LISSubscriberMaster subMaster = new LISSubscriberMaster();
-			subMaster.setSubscriberId(createShiftMasterDTO.getSubscriberId());
-			shiftMaster.setSubscriberMaster(subMaster);*/
+			LISSubscriberMaster subMaster = subcriberDAO.getSubscriberById(createShiftMasterDTO.getSubscriberId());
+			shiftMaster.setSubscriber(subMaster);
 			shiftMaster.setUpdatedBy(createShiftMasterDTO.getUpdatedBy());
 			shiftMaster.setUpdatedTimestamp(createShiftMasterDTO.getUpdatedTimestamp());
 			
-			if(null==shiftMaster.getCreatedBy()) {
+			if(null == shiftMaster.getCreatedBy()) {
 				shiftMaster.setCreatedBy(createShiftMasterDTO.getUpdatedBy());
 				shiftMaster.setCreatedTimestamp(createShiftMasterDTO.getUpdatedTimestamp());	
 			}
 			
-			getSession().saveOrUpdate(shiftMaster);
-			
+			mongoTemplate.save(shiftMaster);			
 			return createShiftMasterDTO;
 				
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		} 
 		return null;
 	}
 
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISShiftMaster> getAllShiftsBySubscriberId(Integer subscriberId) throws ShiftMasterException {
 		logger.info("Entered into getAllShifts");	
-		Query query = getSession().createQuery(" From LISShiftMaster SHMCS where SHMCS.subscriberMaster.subscriberId = :subscriberId AND SHMCS.isActive = :isactive");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isactive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		return findBySubscriberId(subscriberId);
 	}
 	
 }

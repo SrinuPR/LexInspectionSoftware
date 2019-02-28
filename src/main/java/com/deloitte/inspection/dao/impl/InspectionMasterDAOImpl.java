@@ -1,17 +1,19 @@
 package com.deloitte.inspection.dao.impl;
 
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
+import com.mongodb.client.result.DeleteResult;
 
 @Repository
 @Transactional
@@ -27,23 +30,20 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.class);
 
 	@Autowired
-	private SessionFactory sessionFactory;
+	MongoTemplate mongoTemplate;
 
-	private Session getSession() {
-		return sessionFactory.getCurrentSession();
-	}
-
-	@SuppressWarnings({ "unchecked" })
 	@Override
 	public LISInspectionMaster getInspectionStage(InspectionMasterDTO inspectionDTO) {
 		logger.info("Inside getInspectionStage DAO");
-		Query<LISInspectionMaster> query = getSession().createQuery(
-				" From LISInspectionMaster master where master.componentMasterData.componentProductDrawNumber = :componentProductDrawNumber and lower(master.inspTypeId) = :inspTypeId and lower(master.inspStageId) = :inspStageId and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
-		query.setParameter("componentProductDrawNumber", inspectionDTO.getComponentProductDrawNumber());
-		query.setParameter("inspTypeId", inspectionDTO.getInspectionType());
-		query.setParameter("inspStageId", inspectionDTO.getInspectionStage());
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISInspectionMaster> list = query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("componentMasterData.componentProductDrawNumber")
+						.is(inspectionDTO.getComponentProductDrawNumber())),
+				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
+				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		List<LISInspectionMaster> list = mongoTemplate
+				.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class).getMappedResults();
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
@@ -53,93 +53,96 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	@Override
 	public void saveInspectionMaster(LISInspectionMaster inspectionMaster) {
 		logger.info("InspectionMasterDAOImpl - Saving Inspection Master");
-		this.getSession().saveOrUpdate(inspectionMaster);
+		mongoTemplate.save(inspectionMaster,"LIS_INMDC");
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<LISInspectionMaster> getInspectionMasterList(Integer subscriberId) {
 		logger.info("Entered into getInspectionMasterList DAO");
-		Query query = getSession().createQuery("From LISInspectionMaster master where master.subscriberMaster.subscriberId = :subscriberId and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("subscriberId", subscriberId);
-		return query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class)
+				.getMappedResults();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISInspectionMaster getInspectionMasterById(Integer inspectionMasterId) {
 		logger.info("Inside getWorkJobOrderById DAO");
-		Query query = getSession().createQuery(
-				" From LISInspectionMaster master where master.inspId = :inspectionMasterId and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
-		query.setParameter("inspectionMasterId", inspectionMasterId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISInspectionMaster> list = query.list();
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("inspId").in(inspectionMasterId)
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		List<LISInspectionMaster> list = mongoTemplate.find(query, LISInspectionMaster.class,"LIS_INMDC");
 		if (list.size() > 0) {
 			return list.get(0);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	@Override
 	public LISInspectionMaster getInspectionStageOtherThanCurrent(InspectionMasterDTO inspectionDTO) {
 		logger.info("Inside getInspectionStage DAO");
-		Query<LISInspectionMaster> query = getSession().createQuery(
-				" From LISInspectionMaster master where master.componentMasterData.componentProductDrawNumber = :componentProductDrawNumber and lower(master.inspTypeId) = :inspTypeId and lower(master.inspId) != :inspId and lower(master.inspStageId) = :inspStageId and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
-		query.setParameter("componentProductDrawNumber", inspectionDTO.getComponentProductDrawNumber());
-		query.setParameter("inspTypeId", inspectionDTO.getInspectionType());
-		query.setParameter("inspStageId", inspectionDTO.getInspectionStage());
-		query.setParameter("inspId", inspectionDTO.getInspectionMasterId());
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISInspectionMaster> list = query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("component.componentProductDrawNumber")
+						.is(inspectionDTO.getComponentProductDrawNumber())),
+				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
+				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		List<LISInspectionMaster> list = mongoTemplate
+				.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class).getMappedResults();
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	public String deleteInspectionMaster(Integer inspectionMasterId) {
 		logger.info("inside deleteInspectionMaster DAO method");
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_INMDC WHERE INSPECTION_ID = :inspId");
-		query.setParameter("inspId", inspectionMasterId);
-		int result = query.executeUpdate();
-		if (result > 0) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("inspId").in(inspectionMasterId));
+		DeleteResult result = mongoTemplate.remove(query, "LIS_INMDC");
+		if (result.wasAcknowledged()) {
 			status = StatusConstants.SUCCESS;
 		}
 		return status;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISInspectionMaster> getInspectionTypesByCompProdDrawNum(String compProdDrawNum) {
 		logger.info("Inside getInspectionTypesByCompProdDrawNum DAO");
-		Query query = getSession().createQuery(" From LISInspectionMaster master where lower(master.componentMasterData.componentProductDrawNumber) = :compProdDrawNum and master.isActive = :isActive ORDER BY master.createdTimestamp DESC");
-		query.setParameter("compProdDrawNum",compProdDrawNum);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		return query.list();
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("component.componentProductDrawNumber").is(compProdDrawNum)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class)
+				.getMappedResults();
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+
 	@Override
 	public List<LISMaintainMasterDataComponent> getCompDrawNumsBySubscriberId(Integer subscriberId) {
 		logger.info("getCompDrawNumsBySubscriberId DAO");
-		Criteria criteria = getSession().createCriteria(LISInspectionMaster.class);
-		criteria.setProjection(Projections.distinct(Projections.property("componentMasterData.componentProductDrawNumber")));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("subscriberMaster.subscriberId", subscriberId));
-		criteria.add(Restrictions.eq("isActive", StatusConstants.IS_ACTIVE));
-		List<String> drawNums = criteria.list();
-		
-		Query query = getSession().createQuery("FROM LISMaintainMasterDataComponent i where i.subscriberMaster.subscriberId = :subscriberId and i.componentProductDrawNumber in (:drawNums) and i.isActive = :isActive ORDER BY i.createdTimestamp DESC ");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameterList("drawNums", drawNums);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-			
-		return query.list();
-		
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.project("component.componentProductDrawNumber"));
+		AggregationResults<String> output = mongoTemplate.aggregate(aggregation, "LIS_INMDC", String.class);
+		Set<String> drawNums = new HashSet<String>();
+		if (output != null) {
+			for (String result : output) {
+				drawNums.add(result);
+			}
+		}
+		Aggregation aggregation1 = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("componentProductDrawNumber").in(drawNums)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		return mongoTemplate
+				.aggregate(aggregation1, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
+				.getMappedResults();
+
 	}
 }

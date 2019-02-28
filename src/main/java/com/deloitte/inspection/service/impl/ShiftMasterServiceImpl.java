@@ -66,7 +66,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 				subscriberId = shiftMasterDTO.getSubscriberId();
 				if( null!=shiftMasterDTO.getShiftId()) {
 					shiftMasterDTO.setCreatedTimestamp(new Date());
-					shiftMasterDTO= ShiftMasterDAO.createShiftMaster(shiftMasterDTO,userId);
+					shiftMasterDTO = ShiftMasterDAO.createShiftMaster(shiftMasterDTO,userId);
 					if(null!=shiftMasterDTO) {
 						resShiftMasterDTO.setMessage(ShiftMasterConstants.SHIFT_SAVE_SUCCESS);
 					}else {
@@ -81,7 +81,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 					masterDTO.setShiftId(tempMaster.getShiftId());
 					masterDTO.setShiftName(tempMaster.getShiftName());
-					masterDTO.setSubscriberId(tempMaster.getSubscriberMaster().getSubscriberId());
+					masterDTO.setSubscriberId(tempMaster.getSubscriber().getSubscriberId());
 					shiftMasterDTOList.add(masterDTO);
 				}
 				resShiftMasterDTO.setResult(shiftMasterDTOList);
@@ -105,7 +105,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 				ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 				masterDTO.setShiftId(tempMaster.getShiftId());
 				masterDTO.setShiftName(tempMaster.getShiftName());
-				masterDTO.setSubscriberId(tempMaster.getSubscriberMaster().getSubscriberId());
+				masterDTO.setSubscriberId(tempMaster.getSubscriber().getSubscriberId());
 				shiftMasterDTOList.add(masterDTO);
 			}
 		}
@@ -156,7 +156,7 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 					masterDTO.setShiftId(tempMaster.getShiftId());
 					masterDTO.setShiftName(tempMaster.getShiftName());
-					masterDTO.setSubscriberId(tempMaster.getSubscriberMaster().getSubscriberId());
+					masterDTO.setSubscriberId(tempMaster.getSubscriber().getSubscriberId());
 					shiftMasterDTOList.add(masterDTO);
 				}
 				resShiftMasterDTO.setResult(shiftMasterDTOList);

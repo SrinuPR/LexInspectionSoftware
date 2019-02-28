@@ -2,76 +2,58 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_CPMCS")
+@Document(collection = "LIS_CPMCS")
 public class LISPurchaseOrderMaster implements Serializable{
 	
 	private static final long serialVersionUID = 382945870712132280L;
 
+	@Id
+	private long id;
 	
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CUSTOMER_PO_ID" , unique = true)
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Field(value =  "CUSTOMER_PO_ID")
 	private Integer customerPoId;
 	
-	@Id
-	@Column(name = "CUSTOMERPO_NUMBER" , length = 20)
+	@Field(value =  "CUSTOMERPO_NUMBER")
 	private String customerPONumber;
 	
-	@Column(name = "CUSTOMERPO_DATE" )
+	@Field(value =  "CUSTOMERPO_DATE" )
 	private Date customerPODate;
 	
-	@Column(name = "CUSTOMERPO_QUANTITY" , length = 5)
+	@Field(value =  "CUSTOMERPO_QUANTITY")
 	private Integer customerPOQuantity;
 	
-	@Column(name = "NOTES_PO" , length = 150)
+	@Field(value =  "NOTES_PO")
 	private String notesPO;
 	
-	@Column(name = "CREATED_BY" , length = 50)
+	@Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY", length = 50)
+	@Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="SUBSCRIBER_ID")
-    private LISSubscriberMaster subscriberMaster;
-
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="USER_ID")
-    private LISUserMasterCreate userMasterCreate;
-	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="COMP_PROD_DRAW_NUM")
-    private LISMaintainMasterDataComponent componentMasterData;
-	
-	@OneToMany(mappedBy="purchaseOrderMaster", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private List<LISWorkJobOrderMaster> workJobOrderMasters;
-    
-    @Column(name = "IS_ACTIVE")
-    private char isActive;
-    
-    @Column(name = "RECORD_IN_PROCESS")
+	@Field(value =  "IS_ACTIVE")
+	private char isActive;
+	    
+    @Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
+	
+	private LISSubscriberMaster subscriber;
+
+    private LISUserMasterCreate user;
+    
+    private LISMaintainMasterDataComponent component;
 
 	public String getCustomerPONumber() {
 		return customerPONumber;
@@ -138,36 +120,12 @@ public class LISPurchaseOrderMaster implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
-	public LISUserMasterCreate getUserMasterCreate() {
-		return userMasterCreate;
-	}
-
-	public void setUserMasterCreate(LISUserMasterCreate userMasterCreate) {
-		this.userMasterCreate = userMasterCreate;
-	}
-
 	public Integer getCustomerPoId() {
 		return customerPoId;
 	}
 
 	public void setCustomerPoId(Integer customerPoId) {
 		this.customerPoId = customerPoId;
-	}
-
-	public LISMaintainMasterDataComponent getComponentMasterData() {
-		return componentMasterData;
-	}
-
-	public void setComponentMasterData(LISMaintainMasterDataComponent componentMasterData) {
-		this.componentMasterData = componentMasterData;
 	}
 
 	public char getIsActive() {
@@ -178,19 +136,35 @@ public class LISPurchaseOrderMaster implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public List<LISWorkJobOrderMaster> getWorkJobOrderMasters() {
-		return workJobOrderMasters;
-	}
-
-	public void setWorkJobOrderMasters(List<LISWorkJobOrderMaster> workJobOrderMasters) {
-		this.workJobOrderMasters = workJobOrderMasters;
-	}
-
 	public char getRecordInProcess() {
 		return recordInProcess;
 	}
 
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
+	}
+
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
+	}
+
+	public LISUserMasterCreate getUser() {
+		return user;
+	}
+
+	public void setUser(LISUserMasterCreate user) {
+		this.user = user;
+	}
+
+	public LISMaintainMasterDataComponent getComponent() {
+		return component;
+	}
+
+	public void setComponent(LISMaintainMasterDataComponent component) {
+		this.component = component;
 	}
 }

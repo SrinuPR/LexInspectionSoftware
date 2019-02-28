@@ -3,91 +3,93 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_IRMCS")
+@Document(collection = "LIS_IRMCS")
 public class LISInspectionReportMaster implements Serializable{
 
 	private static final long serialVersionUID = 382945870712132210L;
 	
 	@Id
-	@Column(name = "IRMCS_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
+	public long getId() {
+		return id;
+	}
+
+	@Field(value =  "IRMCS_ID")
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer inspRptMasterId;
 	
-	@Column(name = "INSPECTION_REPORT_NUMBER" , length = 50)
+	@Field(value =  "INSPECTION_REPORT_NUMBER")
 	private Integer inspReportNumber;
 	
-	@Column(name = "SUBSCRIBER_ID", length = 5, nullable = false)
+	@Field(value =  "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Column(name = "SUBSCRIBER_NAME", length = 50, nullable = false)
+	@Field(value =  "SUBSCRIBER_NAME")
 	private String subscriberName;
 		
-	@Column(name = "INMDC_COMPONENT_PRODUCT_DRAW_NUM", length = 50, nullable = false)
+	@Field(value =  "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
 	private String compProdDrawNum;
 	
-	@Column(name = "COMP_PROD_NAME" , length = 50)
+	@Field(value =  "COMP_PROD_NAME")
 	private String componentProdcuctName;
 		
-	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
+	@Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	@Column(name = "WORK_JOB_ORDER_ID")
+	@Field(value =  "WORK_JOB_ORDER_ID")
 	private Integer workJobOrderId;
 	
-	@Column(name = "LOT_NUMBER" , length = 10)
+	@Field(value =  "LOT_NUMBER")
 	private String lotNumber;
 	
-	@Column(name = "LOT_SIZE" , length = 5)
+	@Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	@Column(name = "INSPECTION_TYPE_ID", length = 5)
+	@Field(value =  "INSPECTION_TYPE_ID")
 	private Integer inspectionTypeId;
 	
-	@Column(name = "INSPECTION_STAGE_ID", length = 5)
+	@Field(value =  "INSPECTION_STAGE_ID")
 	private Integer InspectionStageId;
 	
-	@Column(name = "MANUFACTURING_BATCH_NUMBER" , length = 30)
+	@Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	@Column(name = "MANUFACTURING_BATCH_SIZE" , length = 5)
+	@Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	@Column(name = "CUSTOMER_PO_NUMBER" , length = 20)
+	@Field(value =  "CUSTOMER_PO_NUMBER")
 	private String customerPoNumber;
 	
-	@Column(name = "CUSTOMER_PO_DATE" )
+	@Field(value =  "CUSTOMER_PO_DATE" )
 	private Date customerPoDate;
 	
-	@Column(name = "CUSTOMER_PO_QUANTITY" , length = 5)
+	@Field(value =  "CUSTOMER_PO_QUANTITY")
 	private Integer customerPoQuantity;
 	
-	@Column(name = "USER_ID" , nullable = false)
+	@Field(value =  "USER_ID")
 	private String userID;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "IS_ACTIVE")
+	@Field(value =  "IS_ACTIVE")
 	private char isActive;
 	
-	@Column(name = "REPORT_STATUS")
+	@Field(value =  "REPORT_STATUS")
 	private String reportStatus;
 	
 	/**

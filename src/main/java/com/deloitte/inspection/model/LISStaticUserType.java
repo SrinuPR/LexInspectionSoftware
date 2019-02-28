@@ -6,38 +6,37 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * @author 
  * This class will be used to map User Type Master table data
  */
 
-@Entity
-@Table(name = "LIS_DATATABLE_USERTYPEID")
+@Document(collection = "LIS_DATATABLE_USERTYPEID")
 public class LISStaticUserType implements Serializable {
 
 	
 	private static final long serialVersionUID = 5112717685665555841L;
 
 	@Id
-	/*@GeneratedValue(strategy = GenerationType.AUTO)*/
-	@Column(name = "USER_TYPE_ID")
+	private long id;
+	
+	@Field(value = "USER_TYPE_ID")
 	private String userTypeId;
 	
-	@Column(name = "USER_TYPE_NAME")
+	@Field(value = "USER_TYPE_NAME")
 	private String userTypeName;
 	
-	@Column(name = "ACTIVE_SW")
+	@Field(value = "ACTIVE_SW")
 	private String activeSw;
 	
-	@Column(name = "EFF_START_DT")
+	@Field(value = "EFF_START_DT")
 	private Timestamp effStartDt;
 	
-	@Column(name = "EFF_END_DT")
+	@Field(value = "EFF_END_DT")
 	private Timestamp effEndDt;
 
 	public String getUserTypeId() {
@@ -80,5 +79,7 @@ public class LISStaticUserType implements Serializable {
 		this.effEndDt = effEndDt;
 	}
 
-	
+	public long getId() {
+		return id;
+	}	
 }

@@ -3,88 +3,73 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_WOMCS")
+@Document(collection = "LIS_WOMCS")
 public class LISWorkJobOrderMaster implements Serializable{
 
 	private static final long serialVersionUID = 917212548437079358L;
 	
 	@Id
-	@Column(name = "WOMCS_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
+	@Field(value =  "WOMCS_ID")
 	private Integer wjOrderId;
 	
-	@Column(name = "WORK_JOB_ORDER_NUMBER" , length = 30)
+	@Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	@Column(name = "WORK_JOB_ORDER_DATE")
+	@Field(value =  "WORK_JOB_ORDER_DATE")
 	private Date workJobOrderDate;
 	
-	@Column(name = "LOT_NUMBER" , length = 10)
+	@Field(value =  "LOT_NUMBER")
 	private String lotNumber;
 	
-	@Column(name = "LOT_SIZE" , length = 5)
+	@Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	@Column(name = "LOT_SIZE_UNITS" , length = 5)
+	@Field(value =  "LOT_SIZE_UNITS")
 	private String lotSizeUnits;
 	
-	@Column(name = "MANUFACTURING_BATCH_NUMBER" , length = 30)
+	@Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	@Column(name = "MANUFACTURING_BATCH_SIZE" , length = 5)
+	@Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	@Column(name = "MANUFACTURING_BATCH_UNITS" , length = 5)
+	@Field(value =  "MANUFACTURING_BATCH_UNITS")
 	private String manufacturingBatchUnits;
 	
-	@Column(name = "WORK_ORDER_JOB_NOTES" , length = 250)
+	@Field(value =  "WORK_ORDER_JOB_NOTES")
 	private String workOrderJobNotes;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "IS_ACTIVE" , length = 1)
-	private char isActive;
+	@Field(value =  "IS_ACTIVE")
+	private String isActive;
 	
-	@Column(name = "RECORD_IN_PROCESS")
+	@Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
+
+	private LISSubscriberMaster subscriber;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name="SUBSCRIBER_ID")
-	private LISSubscriberMaster subscriberMaster;
+	private LISUserMasterCreate user;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name="USER_ID")
-	private LISUserMasterCreate userMasterCreate;
+	private LISMaintainMasterDataComponent componentData;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="COMP_PROD_DRAW_NUM")
-    private LISMaintainMasterDataComponent componentMasterData;
-	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-	@JoinColumn(name="CUSTOMERPO_NUMBER")
-    private LISPurchaseOrderMaster purchaseOrderMaster;
+	private LISPurchaseOrderMaster purchaseOrder;
 
 	public Integer getWjOrderId() {
 		return wjOrderId;
@@ -198,44 +183,12 @@ public class LISWorkJobOrderMaster implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
-	}
-
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
-	public LISUserMasterCreate getUserMasterCreate() {
-		return userMasterCreate;
-	}
-
-	public void setUserMasterCreate(LISUserMasterCreate userMasterCreate) {
-		this.userMasterCreate = userMasterCreate;
-	}
-
-	public LISMaintainMasterDataComponent getComponentMasterData() {
-		return componentMasterData;
-	}
-
-	public void setComponentMasterData(LISMaintainMasterDataComponent componentMasterData) {
-		this.componentMasterData = componentMasterData;
-	}
-
-	public LISPurchaseOrderMaster getPurchaseOrderMaster() {
-		return purchaseOrderMaster;
-	}
-
-	public void setPurchaseOrderMaster(LISPurchaseOrderMaster purchaseOrderMaster) {
-		this.purchaseOrderMaster = purchaseOrderMaster;
 	}
 
 	public char getRecordInProcess() {
@@ -245,5 +198,36 @@ public class LISWorkJobOrderMaster implements Serializable{
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
 	}
-		
+
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
+	}
+
+	public LISUserMasterCreate getUser() {
+		return user;
+	}
+
+	public void setUser(LISUserMasterCreate user) {
+		this.user = user;
+	}
+
+	public LISMaintainMasterDataComponent getComponentData() {
+		return componentData;
+	}
+
+	public void setComponentData(LISMaintainMasterDataComponent componentData) {
+		this.componentData = componentData;
+	}
+
+	public LISPurchaseOrderMaster getPurchaseOrder() {
+		return purchaseOrder;
+	}
+
+	public void setPurchaseOrder(LISPurchaseOrderMaster purchaseOrder) {
+		this.purchaseOrder = purchaseOrder;
+	}
 }

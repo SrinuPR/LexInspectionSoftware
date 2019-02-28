@@ -1,42 +1,38 @@
 package com.deloitte.inspection.model;
-
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "LIS_MLOSS")
-public class LISMasterListOfScreensForSubscriber implements Serializable{
+@Document(collection = "LIS_MLOSS")
+public class LISMasterListOfScreensForSubscriber implements Serializable {
 
 	private static final long serialVersionUID = 8730811844910414462L;
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "MLOSS_ID")
+	private long id;
+	
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Field(value = "MLOSS_ID")
 	private Integer masterListId;
-	
-	@Column(name = "SUBSCRIBER_ID" , nullable = false)
-	private Integer subscriberId;
-	
-	@Column(name = "IS_ACTIVE")
+
+	private LISSubscriberMaster subscriber;
+
+	@Field(value = "IS_ACTIVE")
 	private char isActive;
-	
-	@Column(name = "CREATED_BY")
+
+	@Field(value = "CREATED_BY")
 	private String createdBy;
-	
-	@Column(name = "CREATED_TIMESTAMP")
+
+	@Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
-	
-	@Column(name = "SCREEN_NAME" , length = 150, nullable = false)
+
+	@Field(value = "SCREEN_NAME")
 	private String screenName;
-	
-	@Column(name = "SCREEN_NUMBER" , length = 4, nullable = false)
+
+	@Field(value = "SCREEN_NUMBER")
 	private String screenNumber;
 
 	public Integer getMasterListId() {
@@ -47,12 +43,12 @@ public class LISMasterListOfScreensForSubscriber implements Serializable{
 		this.masterListId = masterListId;
 	}
 
-	public Integer getSubscriberId() {
-		return subscriberId;
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
 	}
 
-	public void setSubscriberId(Integer subscriberId) {
-		this.subscriberId = subscriberId;
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
 	}
 
 	public char getIsActive() {
@@ -93,6 +89,10 @@ public class LISMasterListOfScreensForSubscriber implements Serializable{
 
 	public void setScreenNumber(String screenNumber) {
 		this.screenNumber = screenNumber;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 }

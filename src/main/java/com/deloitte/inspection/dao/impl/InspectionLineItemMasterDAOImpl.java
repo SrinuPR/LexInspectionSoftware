@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,108 +23,105 @@ import com.deloitte.inspection.model.LISInspectionMaster;
 
 @Repository
 @Transactional
-public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMasterDAO{
-	
-	private static final Logger logger = LogManager.getLogger(InspectionLineItemMasterDAOImpl.class);
-	
-	@Autowired
-    private SessionFactory sessionFactory;
+public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMasterDAO {
 
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
+	private static final Logger logger = LogManager.getLogger(InspectionLineItemMasterDAOImpl.class);
+
+	@Autowired
+	MongoTemplate mongoTemplate;
 
 	@Override
-	public void saveInspectionLineItem(List<LISInspectionLineItemMaster> lineItemsList) throws InspectionLineItemMasterException {
+	public void saveInspectionLineItem(List<LISInspectionLineItemMaster> lineItemsList)
+			throws InspectionLineItemMasterException {
 		logger.info("Inside saveInspectionLineItem DAO");
-		Session session = getSession();
-		for(LISInspectionLineItemMaster list:lineItemsList){
-			session.saveOrUpdate(list);
+		for (LISInspectionLineItemMaster list : lineItemsList) {
+			mongoTemplate.save(list,"LIS_ILIMC");
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISInspectionMaster> getComponentProductDrawNumbers(Integer subscriberId)
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into getComponentProductDrawNumbers DAO");	
-		Query query = getSession().createQuery(" From LISInspectionMaster l where l.subscriberMaster.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.componentMasterData.componentProductDrawNumber ASC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("subscriberId", subscriberId);
-		List<LISInspectionMaster> list = query.list();
+		logger.info("Entered into getComponentProductDrawNumbers DAO");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriberMaster.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.ASC, "componentMasterData.componentProductDrawNumber"));
+
+		List<LISInspectionMaster> list = mongoTemplate
+				.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class).getMappedResults();
 		return list;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISInspectionLineItemMaster> getAllInspectionLineItems(Integer subscriberId)
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into getAllInspectionLineItems DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("subscriberId", subscriberId);
-		List<LISInspectionLineItemMaster> list = query.list();
+		logger.info("Entered into getAllInspectionLineItems DAO");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriberMaster.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		List<LISInspectionLineItemMaster> list = mongoTemplate
+				.aggregate(aggregation, "LIS_ILIMC", LISInspectionLineItemMaster.class)
+				.getMappedResults();
 		return list;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISInspectionLineItemMaster validateMeasurementName(InspectionLineItemDTO inspectionLineItem)
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into validateMeasurementName DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where lower(l.componentProductDrawNumber) = :componentProductDrawNumber and lower(l.measurmentName) = :measurmentName and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("measurmentName", inspectionLineItem.getMeasurementName().toLowerCase());
-		query.setParameter("componentProductDrawNumber", inspectionLineItem.getComponentProductDrawNumber().toLowerCase());
-		List<LISInspectionLineItemMaster> list = query.list();
-		if(null != list && list.size() > 0)
+		logger.info("Entered into validateMeasurementName DAO");
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("componentProductDrawNumber")
+				.in(inspectionLineItem.getComponentProductDrawNumber().toLowerCase())
+				.andOperator(Criteria.where("measurmentName").is(inspectionLineItem.getMeasurementName().toLowerCase()))
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		List<LISInspectionLineItemMaster> list = mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
+		if (null != list && list.size() > 0)
 			return list.get(0);
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LISInspectionLineItemMaster getInspectionItem(Integer inspectionLineItemId)
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into validateMeasurementName DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.InspectionLineItemId = :inspectionLineItemId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("inspectionLineItemId", inspectionLineItemId);
-		List<LISInspectionLineItemMaster> list = query.list();
-		if(null != list && list.size() > 0)
+		logger.info("Entered into validateMeasurementName DAO");
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("InspectionLineItemId").in(inspectionLineItemId)
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		List<LISInspectionLineItemMaster> list = mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
+		if (null != list && list.size() > 0)
 			return list.get(0);
 		return null;
 	}
-    
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<LISInspectionLineItemMaster>  getComponentProductDrawNumbers(String compDraNum) throws InspectionLineItemMasterException {
-		logger.info("Entered into getComponentProductDrawNumbers DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where lower(l.componentProductDrawNumber) = :compDraNum and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("compDraNum", compDraNum);
-		List<LISInspectionLineItemMaster> list = query.list();
+
+	public List<LISInspectionLineItemMaster> getComponentProductDrawNumbers(String compDraNum)
+			throws InspectionLineItemMasterException {
+		logger.info("Entered into getComponentProductDrawNumbers DAO");
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("componentProductDrawNumber").in(compDraNum.toLowerCase())
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		List<LISInspectionLineItemMaster> list = mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 		return list;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISInspectionLineItemMaster> getAllInspectionLineItemByUserID(String userId)
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into getAllInspectionLineItems DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where l.userID = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("userId", userId);
-		return query.list();
+		logger.info("Entered into getAllInspectionLineItems DAO");
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("userID").in(userId)
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		return mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<LISInspectionLineItemMaster> getAllInspectionLineItemsByDrawNum(String compDrawNum)
 			throws InspectionLineItemMasterException {
-		logger.info("Entered into getAllInspectionLineItems DAO");	
-		Query query = getSession().createQuery(" From LISInspectionLineItemMaster l where lower(l.componentProductDrawNumber) = :compDrawNum and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("compDrawNum", compDrawNum);
-		return query.list();
+		logger.info("Entered into getAllInspectionLineItems DAO");
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("componentProductDrawNumber").in(compDrawNum.toLowerCase())
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		return mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 	}
 }

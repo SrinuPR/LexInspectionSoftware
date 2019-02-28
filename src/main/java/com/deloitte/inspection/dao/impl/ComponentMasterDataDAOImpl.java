@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,121 +18,128 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
+import com.mongodb.client.result.DeleteResult;
 
 @Repository
 @Transactional
-public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO{
-	
-	private static final Logger logger = LogManager.getLogger(ComponentMasterDataDAOImpl.class);
-	
-	@Autowired
-    private SessionFactory sessionFactory;
+public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
+	private static final Logger logger = LogManager.getLogger(ComponentMasterDataDAOImpl.class);
+
+	@Autowired
+	MongoTemplate mongoTemplate;
 
 	@Override
-	public void saveComponentMasterData(LISMaintainMasterDataComponent masterDataComponent)	throws ComponentMasterDataException {
-		logger.info("Entered into saveComponentMasterData DAO");	
-		getSession().saveOrUpdate(masterDataComponent);		
+	public void saveComponentMasterData(LISMaintainMasterDataComponent masterDataComponent)
+			throws ComponentMasterDataException {
+		logger.info("Entered into saveComponentMasterData DAO");
+		mongoTemplate.save(masterDataComponent,"LIS_CMDCS");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public LISMaintainMasterDataComponent getComponentDataById(Integer componentId)	throws ComponentMasterDataException {
-		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.cmdcsId = :componentId");
-		query.setParameter("componentId", componentId);
-		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = query.list();
-		if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
+	public LISMaintainMasterDataComponent getComponentDataById(Integer componentId)
+			throws ComponentMasterDataException {
+		logger.info("Entered into validateLoginCredentials");
+		Query query = new Query();
+		query.addCriteria(Criteria.where("cmdcsId").in(componentId));
+		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = mongoTemplate.find(query,
+				LISMaintainMasterDataComponent.class,"LIS_CMDCS");
+		if (null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0) {
 			return maintainMasterDataComponents.get(0);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISMaintainMasterDataComponent> getAllComponentMasterData(Integer subscriberId) throws ComponentMasterDataException {
-		logger.info("Entered into validateLoginCredentials");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.subscriberMaster.subscriberId = :subscriberId and isActive = :isActive ORDER BY l.componentProductDrawNumber ASC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("subscriberId", subscriberId);
-		List<LISMaintainMasterDataComponent> list = query.list();
-		return list;
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public List<LISMaintainMasterDataComponent> getAllComponentMasterDataByUserID(String userId) throws ComponentMasterDataException {
-		logger.info("Entered into getAllComponentMasterDataByUserID");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.userMasterCreate.userId = :userId and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		query.setParameter("userId", userId);
-		List<LISMaintainMasterDataComponent> list = query.list();
+	public List<LISMaintainMasterDataComponent> getAllComponentMasterData(Integer subscriberId)
+			throws ComponentMasterDataException {
+		logger.info("Entered into validateLoginCredentials");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.ASC, "componentProductDrawNumber"));
+		List<LISMaintainMasterDataComponent> list = mongoTemplate
+				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
+				.getMappedResults();
 		return list;
 	}
 
-	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
+	public List<LISMaintainMasterDataComponent> getAllComponentMasterDataByUserID(String userId)
+			throws ComponentMasterDataException {
+		logger.info("Entered into getAllComponentMasterDataByUserID");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("user.userId").in(userId)),
+				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.DESC, "createdTimestamp"));
+		List<LISMaintainMasterDataComponent> list = mongoTemplate
+				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
+				.getMappedResults();
+		return list;
+	}
+
 	@Override
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
 		String status = StatusConstants.FAILURE;
-		Query query = getSession().createSQLQuery("DELETE FROM LIS_CMDCS WHERE CMDCS_ID = :componentId ");
-		query.setParameter("componentId", componentId);
-		int result = query.executeUpdate();
-		if(result > 0){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("cmdcsId").in(componentId));
+		DeleteResult result = mongoTemplate.remove(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
+		if (result.wasAcknowledged()) {
 			status = StatusConstants.SUCCESS;
 		}
-		return status;	
+		return status;
 	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	@Override
-	public List<LISMaintainMasterDataComponent> getAllBySubscriberId(Integer subscriberId) throws ComponentMasterDataException{
-		logger.info("Entered into getAllBySubscriberId");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent CMDCS where CMDCS.subscriberMaster.subscriberId = :subscriberId");
-		query.setParameter("subscriberId", subscriberId);
-		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = query.list();
-		if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
+	public List<LISMaintainMasterDataComponent> getAllBySubscriberId(Integer subscriberId)
+			throws ComponentMasterDataException {
+		logger.info("Entered into getAllBySubscriberId");
+		Aggregation aggregation = Aggregation
+				.newAggregation(Aggregation.match(Criteria.where("subscriber.subscriberId").in(subscriberId)));
+		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = mongoTemplate
+				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
+				.getMappedResults();
+		if (null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0) {
 			return maintainMasterDataComponents;
 		}
 		return null;
 	}
 
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public LISMaintainMasterDataComponent getComponentDataByDrwNum(String productDrawNumber)
 			throws ComponentMasterDataException {
-		logger.info("Entered into getComponentDataByDrwNum");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where lower(l.componentProductDrawNumber) = :productDrawNumber and isActive = :isActive ORDER BY l.createdTimestamp DESC");
-		query.setParameter("productDrawNumber", productDrawNumber);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISMaintainMasterDataComponent> list = query.list();
-		if(list.size() > 0){
+		logger.info("Entered into getComponentDataByDrwNum");
+		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
+		query.addCriteria(Criteria.where("componentProductDrawNumber").in(productDrawNumber.toLowerCase())
+				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+		List<LISMaintainMasterDataComponent> list = mongoTemplate.find(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
+		if (list.size() > 0) {
 			return list.get(0);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LISMaintainMasterDataComponent> getAllComponentDrawingNumber() throws ComponentMasterDataException {
-		logger.info("Entered into getComponentDataByDrwNum");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.isActive = :isActive ORDER BY l.componentProductDrawNumber ASC");
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISMaintainMasterDataComponent> list = query.list();
+		logger.info("Entered into getComponentDataByDrwNum");
+		Query query = new Query().with(new Sort(Direction.ASC, "componentProductDrawNumber"));
+		query.addCriteria(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE));
+		List<LISMaintainMasterDataComponent> list = mongoTemplate.find(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		return list;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISMaintainMasterDataComponent> getComponentData(Integer subscriberId) throws ComponentMasterDataException {
-		logger.info("Entered into getComponentData DAO");	
-		Query query = getSession().createQuery(" From LISMaintainMasterDataComponent l where l.isActive = :isActive and l.subscriberMaster.subscriberId = :subscriberId ORDER BY l.componentProductDrawNumber ASC");
-		query.setParameter("subscriberId", subscriberId);
-		query.setParameter("isActive", StatusConstants.IS_ACTIVE);
-		List<LISMaintainMasterDataComponent> list = query.list();
+	public List<LISMaintainMasterDataComponent> getComponentData(Integer subscriberId)
+			throws ComponentMasterDataException {
+		logger.info("Entered into getComponentData DAO");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.sort(Direction.ASC, "componentProductDrawNumber"));
+		List<LISMaintainMasterDataComponent> list = mongoTemplate
+				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
+				.getMappedResults();
 		return list;
 	}
-	
+
 }

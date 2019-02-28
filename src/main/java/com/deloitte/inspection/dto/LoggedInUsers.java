@@ -11,6 +11,14 @@ public class LoggedInUsers implements HttpSessionBindingListener{
 	private String userId;
 	private String password;
 	private boolean alreadyLoggedIn = false;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public String getUserId() {
 		return userId;

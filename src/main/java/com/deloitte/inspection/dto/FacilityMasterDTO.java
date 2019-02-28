@@ -20,6 +20,14 @@ public class FacilityMasterDTO{
 	private Date updatedTimestamp;
 	private String createdBy;
 	private String updatedBy;
+	private Long id;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the facilityNumber

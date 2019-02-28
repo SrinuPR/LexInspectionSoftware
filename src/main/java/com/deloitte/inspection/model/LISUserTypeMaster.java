@@ -6,57 +6,46 @@ package com.deloitte.inspection.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * @author rnarne
  * This class will be used to map User Type Master table data
  */
 
-@Entity
-@Table(name = "LIS_UTMCS")
+@Document(collection = "LIS_UTMCS")
 public class LISUserTypeMaster implements Serializable {
 
 	
 	private static final long serialVersionUID = 5112717685665555841L;
 
 	@Id
-	/*@GeneratedValue(strategy = GenerationType.AUTO)*/
-	@Column(name = "USER_TYPE_ID")
+	private long id;
+
+	@Field(value =  "USER_TYPE_ID")
 	private Integer userTypeId;
 	
-	@Column(name = "USER_TYPE_NAME")
+	@Field(value =  "USER_TYPE_NAME")
 	private String userTypeName;
 	
-	@Column(name = "CREATED_TIMESTAMP")
+	@Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Column(name = "UPDATED_TIMESTAMP")
+	@Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Column(name = "CREATED_BY")
+	@Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Column(name = "UPDATED_BY")
+	@Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinColumn(name="SUBSCRIBER_ID")
-    private LISSubscriberMaster subscriberMaster;
+	@Field(value =  "IS_ACTIVE")
+	private String isActive;
 	
-	@OneToOne(mappedBy="userTypeMaster", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private LISAccessMaster lisAccessMaster;
-	
-	@Column(name = "IS_ACTIVE")
-	private char isActive;
+	private LISSubscriberMaster subscriber;
 	
 	/**
 	 * @return the userTypeId
@@ -142,34 +131,23 @@ public class LISUserTypeMaster implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
-	/**
-	 * @return the subscriberMaster
-	 */
-	public LISSubscriberMaster getSubscriberMaster() {
-		return subscriberMaster;
-	}
-
-	/**
-	 * @param subscriberMaster the subscriberMaster to set
-	 */
-	public void setSubscriberMaster(LISSubscriberMaster subscriberMaster) {
-		this.subscriberMaster = subscriberMaster;
-	}
-
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
-	public LISAccessMaster getLisAccessMaster() {
-		return lisAccessMaster;
+	public long getId() {
+		return id;
 	}
 
-	public void setLisAccessMaster(LISAccessMaster lisAccessMaster) {
-		this.lisAccessMaster = lisAccessMaster;
+	public LISSubscriberMaster getSubscriber() {
+		return subscriber;
 	}
-	
+
+	public void setSubscriber(LISSubscriberMaster subscriber) {
+		this.subscriber = subscriber;
+	}
 }

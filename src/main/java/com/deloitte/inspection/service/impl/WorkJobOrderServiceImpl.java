@@ -9,12 +9,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.transaction.Transactional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.constant.WorkJobOrderConstants;
@@ -176,19 +175,19 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	private LISWorkJobOrderMaster setForeignKeys(WorkJobOrderDTO workJobOrderDTO, LISWorkJobOrderMaster workJobOrderMaster, String userId) throws Exception{
 		if(null != workJobOrderDTO.getSubscriberId()){
 			LISSubscriberMaster subscriberMaster = subscriberMasterDAO.getSubscriberById(workJobOrderDTO.getSubscriberId());
-			workJobOrderMaster.setSubscriberMaster(subscriberMaster);
+			workJobOrderMaster.setSubscriber(subscriberMaster);
 		}
 		if(null != workJobOrderDTO.getSubscriberId()){
 			LISUserMasterCreate userMasterCreate = createUserDAO.validateUserId(userId);
-			workJobOrderMaster.setUserMasterCreate(userMasterCreate);
+			workJobOrderMaster.setUser(userMasterCreate);
 		}
 		if(null != workJobOrderDTO.getComponentProductDrawNumber()){
 			LISMaintainMasterDataComponent maintainMasterDataComponent = componentMasterDataDAO.getComponentDataByDrwNum(workJobOrderDTO.getComponentProductDrawNumber());
-			workJobOrderMaster.setComponentMasterData(maintainMasterDataComponent);
+			workJobOrderMaster.setComponentData(maintainMasterDataComponent);
 		}
 		if(null != workJobOrderDTO.getCustomerPONumber()){
 			LISPurchaseOrderMaster purchaseOrderMaster = purchaseOrderDataDAO.getByCustomerPONumber(workJobOrderDTO.getCustomerPONumber());
-			workJobOrderMaster.setPurchaseOrderMaster(purchaseOrderMaster);
+			workJobOrderMaster.setPurchaseOrder(purchaseOrderMaster);
 		}
 		return workJobOrderMaster;
 	}
@@ -228,10 +227,10 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
 			for(LISWorkJobOrderMaster workJobOrderMaster : workJobOrderMasters){
 				WorkJobOrderDTO workJobOrderDTO = new WorkJobOrderDTO();
-				workJobOrderDTO.setSubscriberId(workJobOrderMaster.getSubscriberMaster().getSubscriberId());
-				workJobOrderDTO.setSubscriberName(workJobOrderMaster.getSubscriberMaster().getSubscriberName());
-				workJobOrderDTO.setCustomerPONumber(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPONumber());
-				workJobOrderDTO.setComponentProductDrawNumber(workJobOrderMaster.getComponentMasterData().getComponentProductDrawNumber());
+				workJobOrderDTO.setSubscriberId(workJobOrderMaster.getSubscriber().getSubscriberId());
+				workJobOrderDTO.setSubscriberName(workJobOrderMaster.getSubscriber().getSubscriberName());
+				workJobOrderDTO.setCustomerPONumber(workJobOrderMaster.getPurchaseOrder().getCustomerPONumber());
+				workJobOrderDTO.setComponentProductDrawNumber(workJobOrderMaster.getComponentData().getComponentProductDrawNumber());
 				workJobOrderDTO.setLotNumber(workJobOrderMaster.getLotNumber());
 				workJobOrderDTO.setLotSize(workJobOrderMaster.getLotSize());
 				workJobOrderDTO.setLotSizeUnits(workJobOrderMaster.getLotSizeUnits());
@@ -242,10 +241,10 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 				workJobOrderDTO.setWjOrderId(workJobOrderMaster.getWjOrderId());
 				workJobOrderDTO.setWorkOrderJobNotes(workJobOrderMaster.getWorkOrderJobNotes());
 				workJobOrderDTO.setWorkJobOrderDate(InspectionUtils.convertDateToString(workJobOrderMaster.getWorkJobOrderDate()));
-				if(null != workJobOrderMaster.getPurchaseOrderMaster()){
-					workJobOrderDTO.setCustomerPONumber(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPONumber());
-					workJobOrderDTO.setCustomerPODate(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPODate());
-					workJobOrderDTO.setCustomerPOQuantity(workJobOrderMaster.getPurchaseOrderMaster().getCustomerPOQuantity());
+				if(null != workJobOrderMaster.getPurchaseOrder()){
+					workJobOrderDTO.setCustomerPONumber(workJobOrderMaster.getPurchaseOrder().getCustomerPONumber());
+					workJobOrderDTO.setCustomerPODate(workJobOrderMaster.getPurchaseOrder().getCustomerPODate());
+					workJobOrderDTO.setCustomerPOQuantity(workJobOrderMaster.getPurchaseOrder().getCustomerPOQuantity());
 				}
 				workJobOrderDTOs.add(workJobOrderDTO);
 			}
@@ -528,7 +527,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 			Map<String, ComponentMasterDataDTO> componentDataMap = new HashMap<String, ComponentMasterDataDTO>();
 			if(lisWorkJobOrderMasterList != null && lisWorkJobOrderMasterList.size() > 0){
 				for(LISWorkJobOrderMaster masterDataComponent : lisWorkJobOrderMasterList){
-					LISMaintainMasterDataComponent  componentData = masterDataComponent.getComponentMasterData();
+					LISMaintainMasterDataComponent  componentData = masterDataComponent.getComponentData();
 					if (componentData != null && !componentDataMap.containsKey(componentData.getComponentProductDrawNumber())) {
 						ComponentMasterDataDTO component = new ComponentMasterDataDTO();
 						component.setComponentProductDrawNumber(componentData.getComponentProductDrawNumber());
