@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +52,8 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				if(null != accessMasterDTO.getAccessMasterId()){
 					LISAccessMaster accessMaster = accessMasterDao.getAccessMaster(accessMasterDTO.getAccessMasterId());
 					accessMaster.setScreenNumber(accessMasterDTO.getScreenNumbers());
-					accessMaster.setSubscriberMaster(subscriberMaster);
-					accessMaster.setUserTypeMaster(userTypeMaster);
+					accessMaster.setSubscriber(subscriberMaster);
+					accessMaster.setUserType(userTypeMaster);
 					accessMaster.setUpdatedBy(accessMasterDTO.getUserId());
 					accessMaster.setUpdatedTimeStamp(new Date());
 					accessMasterDao.saveAccessMaster(accessMaster);
@@ -63,8 +62,8 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 					accessMaster.setCreatedBy(accessMasterDTO.getUserId());
 					accessMaster.setIsActive(StatusConstants.IS_ACTIVE);
 					accessMaster.setScreenNumber(accessMasterDTO.getScreenNumbers());
-					accessMaster.setSubscriberMaster(subscriberMaster);
-					accessMaster.setUserTypeMaster(userTypeMaster);
+					accessMaster.setSubscriber(subscriberMaster);
+					accessMaster.setUserType(userTypeMaster);
 					accessMaster.setCreatedTimestamp(new Date());
 					accessMasterDao.saveAccessMaster(accessMaster);
 				}
@@ -109,14 +108,14 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				List<AccessMasterDTO> accessMasterDTOs = new ArrayList<AccessMasterDTO>();
 				for(LISUserTypeMaster usertype : userTypeMasters){
 					AccessMasterDTO accessMasterDTO = new AccessMasterDTO();
-					if(null != usertype.getLisAccessMaster()){
-						accessMasterDTO.setAccessMasterId(usertype.getLisAccessMaster().getAccessMasterId());
+					if(null != usertype.getAccess()){
+						accessMasterDTO.setAccessMasterId(usertype.getAccess().getAccessMasterId());
 					}
-					accessMasterDTO.setSubscriberId(usertype.getSubscriberMaster().getSubscriberId());
+					accessMasterDTO.setSubscriberId(usertype.getSubscriber().getSubscriberId());
 					accessMasterDTO.setUserTypeId(usertype.getUserTypeId());
 					accessMasterDTO.setUserTypeName(usertype.getUserTypeName());
-					if(null != usertype.getLisAccessMaster() && null != usertype.getLisAccessMaster().getScreenNumber()){
-						accessMasterDTO.setScreenNumbers(usertype.getLisAccessMaster().getScreenNumber());
+					if(null != usertype.getAccess() && null != usertype.getAccess().getScreenNumber()){
+						accessMasterDTO.setScreenNumbers(usertype.getAccess().getScreenNumber());
 					}
 					accessMasterDTOs.add(accessMasterDTO);
 				}

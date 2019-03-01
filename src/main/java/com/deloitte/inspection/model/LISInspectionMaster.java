@@ -20,8 +20,6 @@ public class LISInspectionMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132210L;
 	
 	@Id
-	private Long id;
-
 	@Field(value = "INSPECTION_ID")
 	private Integer inspId;
 	
@@ -240,11 +238,7 @@ public class LISInspectionMaster implements Serializable{
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
+	
 	public LISSubscriberMaster getSubscriber() {
 		return subscriber;
 	}

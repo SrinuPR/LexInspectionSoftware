@@ -11,10 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class LISAccessMaster implements Serializable{
 	
 	private static final long serialVersionUID = 5112717685665555840L;
-
-	@Id
-    private Long id;
 	
+	@Id
 	@Field(value = "ACMDS_ID")
 	private Integer accessMasterId;
 	
@@ -100,10 +98,6 @@ public class LISAccessMaster implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
 	public LISSubscriberMaster getSubscriber() {
 		return subscriber;
 	}
@@ -119,9 +113,4 @@ public class LISAccessMaster implements Serializable{
 	public void setUserType(LISUserTypeMaster userType) {
 		this.userType = userType;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
 }

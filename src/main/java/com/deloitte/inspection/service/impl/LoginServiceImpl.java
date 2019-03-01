@@ -51,7 +51,7 @@ public class LoginServiceImpl implements LoginService{
 			System.out.println(loginDTO.getUserId()+" , "+loginDTO.getPassword());
 			try{
 				LISLogin login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
-				if(null != login && null == login.getSubscriberMaster() && null == login.getUserMasterCreate()){
+				if(null != login && null == login.getSubscriber() && null == login.getUser()){
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.ADMIN_ROLE,responseDTO,loginDTO);
 				}else{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
@@ -94,23 +94,23 @@ public class LoginServiceImpl implements LoginService{
 			}
 			if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
 				responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
-			}else if(null != login.getUserMasterCreate() && login.getUserMasterCreate().getIsActive() != 'Y' && !adminFlag){
+			}else if(null != login.getUser() && login.getUser().getIsActive() != 'Y' && !adminFlag){
 				responseDTO.setErrorMessage(StatusConstants.IN_ACTIVE_LOGIN_USER);
 			}else{
-				if(null != login.getSubscriberMaster()){
-					responseDTO.setSubscriberId(login.getSubscriberMaster().getSubscriberId());
-					responseDTO.setSubscriberName(login.getSubscriberMaster().getSubscriberName());
+				if(null != login.getSubscriber()){
+					responseDTO.setSubscriberId(login.getSubscriber().getSubscriberId());
+					responseDTO.setSubscriberName(login.getSubscriber().getSubscriberName());
 				}
-				if(null != login.getUserMasterCreate()){
-					logger.info("login credentails "+login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
-					responseDTO.setUserId(login.getUserMasterCreate().getUserId());
-					responseDTO.setUserName(login.getUserMasterCreate().getUserName());
+				if(null != login.getUser()){
+					logger.info("login credentails "+login.getUser().getUserId()+" , "+login.getPassword());
+					responseDTO.setUserId(login.getUser().getUserId());
+					responseDTO.setUserName(login.getUser().getUserName());
 					responseDTO.setIsAdmin('N');
-					if(null == login.getUserMasterCreate().getOldPassword1() && null == login.getUserMasterCreate().getOldPassword2() 
-							&& null != login.getUserMasterCreate().getActivePassword()){
+					if(null == login.getUser().getOldPassword1() && null == login.getUser().getOldPassword2() 
+							&& null != login.getUser().getActivePassword()){
 						responseDTO.setFirstTimeLogin(true);
 					}
-					Integer userTypeId = login.getUserMasterCreate().getUserTypeId();
+					Integer userTypeId = login.getUser().getUserTypeId();
 					LISAccessMaster lisAccessMaster = accessMasterDAO.getAccessMasterByUserTypeId(userTypeId);
 					if(null != lisAccessMaster)
 						responseDTO.setScreenList(lisAccessMaster.getScreenNumber());
@@ -139,7 +139,7 @@ public class LoginServiceImpl implements LoginService{
 		}
 		if (null == userMasterModel) {
 			LISLogin login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
-			if(null != login && null == login.getSubscriberMaster() && null != login.getAdminId()){
+			if(null != login && null == login.getSubscriber() && null != login.getAdminId()){
 				response = passwordReset(null,passwordMaintenanceDTO,login,StatusConstants.ADMIN_ROLE);
 			}else{
 				response = StatusConstants.INVALID_USER;

@@ -89,8 +89,8 @@ public class InspectionStageMasterServiceImpl implements InspectionStageMasterSe
 					InspectionStageMasterDTO inspTypeMasterDTO = new InspectionStageMasterDTO();
 					inspTypeMasterDTO.setInspStageId(lisInspTypeMaster.getInspStageId());
 					inspTypeMasterDTO.setInspStageName(lisInspTypeMaster.getInspStageName());
-					inspTypeMasterDTO.setSubscriberId(lisInspTypeMaster.getSubscriberMaster().getSubscriberId());
-					inspTypeMasterDTO.setSubscriberName(lisInspTypeMaster.getSubscriberMaster().getSubscriberName());
+					inspTypeMasterDTO.setSubscriberId(lisInspTypeMaster.getSubscriber().getSubscriberId());
+					inspTypeMasterDTO.setSubscriberName(lisInspTypeMaster.getSubscriber().getSubscriberName());
 					inspTypeMasterList.add(inspTypeMasterDTO);
 				}
 			}

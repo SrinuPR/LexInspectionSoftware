@@ -2,6 +2,7 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -42,8 +43,18 @@ public class LISSubscriberMaster implements Serializable {
 	private Date updatedTimestamp;
 	
 	@Field(value = "IS_ACTIVE")
-	private String isActive;	
+	private String isActive;
+	
+	private Set<LISUserMasterCreate> userMasterCreateList;
 			
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public Integer getSubscriberId() {
 		return subscriberId;
 	}
@@ -106,5 +117,13 @@ public class LISSubscriberMaster implements Serializable {
 
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
+	}
+
+	public Set<LISUserMasterCreate> getUserMasterCreateList() {
+		return userMasterCreateList;
+	}
+
+	public void setUserMasterCreateList(Set<LISUserMasterCreate> userMasterCreateList) {
+		this.userMasterCreateList = userMasterCreateList;
 	}
 }

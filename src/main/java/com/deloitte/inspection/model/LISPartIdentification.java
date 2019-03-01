@@ -44,6 +44,8 @@ public class LISPartIdentification implements Serializable{
 	
 	@Field(value = "IMDES_ID")
 	private Integer inspectionMeasurementId;
+	
+	private LISInspectionMeasurements inspectionMeasurements;
 
 	public Integer getPartVerifId() {
 		return partVerifId;
@@ -131,5 +133,13 @@ public class LISPartIdentification implements Serializable{
 
 	public void setInspectionMeasurementId(Integer inspectionMeasurementId) {
 		this.inspectionMeasurementId = inspectionMeasurementId;
+	}
+
+	public LISInspectionMeasurements getInspectionMeasurements() {
+		return inspectionMeasurements;
+	}
+
+	public void setInspectionMeasurements(LISInspectionMeasurements inspectionMeasurements) {
+		this.inspectionMeasurements = inspectionMeasurements;
 	}
 }

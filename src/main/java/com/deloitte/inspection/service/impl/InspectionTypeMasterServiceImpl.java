@@ -90,8 +90,8 @@ public class InspectionTypeMasterServiceImpl implements InspectionTypeMasterServ
 					InspectionTypeMasterDTO inspTypeMasterDTO = new InspectionTypeMasterDTO();
 					inspTypeMasterDTO.setInspTypeId(lisInspTypeMaster.getInspTypeId());
 					inspTypeMasterDTO.setInspTypeName(lisInspTypeMaster.getInspTypeName());
-					inspTypeMasterDTO.setSubscriberId(lisInspTypeMaster.getSubscriberMaster().getSubscriberId());
-					inspTypeMasterDTO.setSubscriberName(lisInspTypeMaster.getSubscriberMaster().getSubscriberName());
+					inspTypeMasterDTO.setSubscriberId(lisInspTypeMaster.getSubscriber().getSubscriberId());
+					inspTypeMasterDTO.setSubscriberName(lisInspTypeMaster.getSubscriber().getSubscriberName());
 					inspTypeMasterList.add(inspTypeMasterDTO);
 				}
 			}

@@ -13,8 +13,6 @@ public class LISInspectionLineItemMaster implements Serializable{
 	private static final long serialVersionUID = -236523268575818079L;
 	
 	@Id
-	private Long id;
-	
 	@Field(value = "ILIMC_ID")
 	private Integer InspectionLineItemId;
 	
@@ -187,10 +185,6 @@ public class LISInspectionLineItemMaster implements Serializable{
 
 	public void setIsActive(char isActive) {
 		this.isActive = isActive;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public Integer getInspectionID() {

@@ -17,6 +17,8 @@ public class LISMasterListOfScreensForSubscriber implements Serializable {
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Field(value = "MLOSS_ID")
 	private Integer masterListId;
+	
+	private Integer subscriberId;
 
 	private LISSubscriberMaster subscriber;
 
@@ -37,6 +39,18 @@ public class LISMasterListOfScreensForSubscriber implements Serializable {
 
 	public Integer getMasterListId() {
 		return masterListId;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Integer getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Integer subscriberId) {
+		this.subscriberId = subscriberId;
 	}
 
 	public void setMasterListId(Integer masterListId) {

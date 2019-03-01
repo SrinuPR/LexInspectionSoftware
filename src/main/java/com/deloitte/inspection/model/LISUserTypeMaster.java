@@ -45,6 +45,8 @@ public class LISUserTypeMaster implements Serializable {
 	@Field(value =  "IS_ACTIVE")
 	private String isActive;
 	
+	private LISAccessMaster access;
+	
 	private LISSubscriberMaster subscriber;
 	
 	/**
@@ -133,6 +135,14 @@ public class LISUserTypeMaster implements Serializable {
 
 	public String getIsActive() {
 		return isActive;
+	}
+
+	public LISAccessMaster getAccess() {
+		return access;
+	}
+
+	public void setAccess(LISAccessMaster access) {
+		this.access = access;
 	}
 
 	public void setIsActive(String isActive) {

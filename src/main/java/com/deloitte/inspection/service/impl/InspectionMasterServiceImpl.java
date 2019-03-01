@@ -120,7 +120,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		if(null != masterDTO.getSubscriberId()){
 			try {
 				LISSubscriberMaster subscriberMaster = subscriberMasterDAO.getSubscriberById(masterDTO.getSubscriberId());
-				master.setSubscriberMaster(subscriberMaster);
+				master.setSubscriber(subscriberMaster);
 			} catch (SubscriberMasterException exception) {
 				logger.error("Error while retrieving Subscriber details " + exception.getMessage());
 			}
@@ -128,7 +128,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		if(null != masterDTO.getComponentProductDrawNumber()){
 			try {
 				LISMaintainMasterDataComponent maintainMasterDataComponent = componentMasterDataDAO.getComponentDataByDrwNum(masterDTO.getComponentProductDrawNumber());
-				master.setComponentMasterData(maintainMasterDataComponent);
+				master.setComponent(maintainMasterDataComponent);
 			} catch (ComponentMasterDataException exception) {
 				logger.error("Error while retrieving Component Master Data " + exception.getMessage());
 			}
@@ -154,7 +154,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 	public InspectionMasterDTO toInspectionMasterDTO(LISInspectionMaster master) {
 		InspectionMasterDTO masterDTO = new InspectionMasterDTO();
 		masterDTO.setComponentProductName(master.getFacilityName());
-		LISMaintainMasterDataComponent componentData = master.getComponentMasterData();
+		LISMaintainMasterDataComponent componentData = master.getComponent();
 		masterDTO.setComponentProductDrawNumber(componentData.getComponentProductDrawNumber());
 		masterDTO.setComponentProductMaterial(componentData.getComponentProductMeterial());
 		masterDTO.setComponentProductNotes(componentData.getComponentProductNotes());
@@ -163,8 +163,8 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		masterDTO.setInspectionMasterId(master.getInspId());
 		masterDTO.setInspectionStage(master.getInspStageId());
 		masterDTO.setInspectionType(master.getInspTypeId());
-		masterDTO.setSubscriberId(master.getSubscriberMaster().getSubscriberId());
-		masterDTO.setSubscriberName(master.getSubscriberMaster().getSubscriberName());
+		masterDTO.setSubscriberId(master.getSubscriber().getSubscriberId());
+		masterDTO.setSubscriberName(master.getSubscriber().getSubscriberName());
 		return masterDTO;
 	}
 

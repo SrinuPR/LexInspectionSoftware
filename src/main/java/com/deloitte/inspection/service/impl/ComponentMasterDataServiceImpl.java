@@ -46,11 +46,11 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 				LISMaintainMasterDataComponent masterDataComponent =  new LISMaintainMasterDataComponent();
 				if(null != componentMasterDataDTO.getSubscriberId()){
 					LISSubscriberMaster subscriberMaster = subscriberMasterDAO.getSubscriberById(componentMasterDataDTO.getSubscriberId());
-					masterDataComponent.setSubscriberMaster(subscriberMaster);
+					masterDataComponent.setSubscriber(subscriberMaster);
 				}
 				if(null != componentMasterDataDTO.getSubscriberId()){
 					LISUserMasterCreate userMasterCreate = createUserDAO.validateUserId(userId);
-					masterDataComponent.setUserMasterCreate(userMasterCreate);
+					masterDataComponent.setUser(userMasterCreate);
 				}
 				masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber().trim());
 				masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial().trim());
@@ -158,9 +158,9 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 					componentMasterDataDTO.setComponentProductNotes(masterDataComponent.getComponentProductNotes());
 					componentMasterDataDTO.setComponentProductNumber(masterDataComponent.getComponentProductNumber());
 					componentMasterDataDTO.setCustomerNameAddress(masterDataComponent.getCustomerNameAddress());
-					if(null != masterDataComponent.getSubscriberMaster()){
-						componentMasterDataDTO.setSubscriberId(masterDataComponent.getSubscriberMaster().getSubscriberId());
-						componentMasterDataDTO.setSubscriberName(masterDataComponent.getSubscriberMaster().getSubscriberName());
+					if(null != masterDataComponent.getSubscriber()){
+						componentMasterDataDTO.setSubscriberId(masterDataComponent.getSubscriber().getSubscriberId());
+						componentMasterDataDTO.setSubscriberName(masterDataComponent.getSubscriber().getSubscriberName());
 					}
 					componentMasterDataDTOs.add(componentMasterDataDTO);
 				}

@@ -69,17 +69,17 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			LISSubscriberMaster subscriberMaster=null;
 			if(null != purchaseOrderDataDTO.getSubscriberId()){
 				subscriberMaster = subscriberMasterDAO.getSubscriberById(purchaseOrderDataDTO.getSubscriberId());
-				purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
+				purchaseOrderMaster.setSubscriber(subscriberMaster);
 			}
 			try {
 				LISMaintainMasterDataComponent masterDataComponent = componentMasterDataDAO.getComponentDataById(purchaseOrderDataDTO.getComponentId());
-				purchaseOrderMaster.setComponentMasterData(masterDataComponent);
+				purchaseOrderMaster.setComponent(masterDataComponent);
 			} catch (ComponentMasterDataException e) {
 				e.printStackTrace();
 				logger.error("Error while getting the component");
 			}
 			userMaster = createUserDAO.validateUserId(userId);
-			purchaseOrderMaster.setUserMasterCreate(userMaster);
+			purchaseOrderMaster.setUser(userMaster);
 			purchaseOrderMaster.setCreatedBy(userName);
 			purchaseOrderMaster.setCreatedTimestamp(new Date());
 			try {
@@ -90,7 +90,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			purchaseOrderMaster.setCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
 			purchaseOrderMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
 			purchaseOrderMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
-			purchaseOrderMaster.setSubscriberMaster(subscriberMaster);
+			purchaseOrderMaster.setSubscriber(subscriberMaster);
 			purchaseOrderMaster.setIsActive(StatusConstants.IS_ACTIVE);
 			purchaseOrderDataDAO.savePurchaseOrderData(purchaseOrderMaster);
 			status = StatusConstants.SUCCESS;
@@ -109,16 +109,16 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 				if(null != purchaseOrderList && purchaseOrderList.size() > 0){
 					for(LISPurchaseOrderMaster purchaseOrder:purchaseOrderList) {
 						PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
-						if(null != purchaseOrder.getComponentMasterData()){
-							purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponentMasterData().getComponentProductDrawNumber());
-							purchaseOrderDto.setComponentId(purchaseOrder.getComponentMasterData().getCmdcsId());
+						if(null != purchaseOrder.getComponent()){
+							purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponent().getComponentProductDrawNumber());
+							purchaseOrderDto.setComponentId(purchaseOrder.getComponent().getCmdcsId());
 						}
 						purchaseOrderDto.setCustomerPODate(InspectionUtils.convertDateToString(purchaseOrder.getCustomerPODate()));
 						purchaseOrderDto.setCustomerPONumber(purchaseOrder.getCustomerPONumber());
 						purchaseOrderDto.setCustomerPOQuantity(purchaseOrder.getCustomerPOQuantity());
 						purchaseOrderDto.setPoNotes(purchaseOrder.getNotesPO());
-						purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriberMaster().getSubscriberId());
-						purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriberMaster().getSubscriberName());
+						purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriber().getSubscriberId());
+						purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriber().getSubscriberName());
 						purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId());
 						purchaseOrderDTOList.add(purchaseOrderDto);
 					}

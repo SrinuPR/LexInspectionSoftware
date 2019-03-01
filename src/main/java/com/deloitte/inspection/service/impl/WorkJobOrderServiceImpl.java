@@ -73,7 +73,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 							workJobOrderMaster =  new LISWorkJobOrderMaster();
 							workJobOrderMaster.setCreatedTimestamp(new Date());
 							workJobOrderMaster.setCreatedBy(userName);
-							workJobOrderMaster.setIsActive(StatusConstants.IS_ACTIVE);
+							workJobOrderMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 							workJobOrderMaster = setForeignKeys(workJobOrderDTO,workJobOrderMaster,userId);
 							workJobOrderMaster.setLotNumber(workJobOrderDTO.getLotNumber());
 							workJobOrderMaster.setLotSizeUnits(workJobOrderDTO.getLotSizeUnits());

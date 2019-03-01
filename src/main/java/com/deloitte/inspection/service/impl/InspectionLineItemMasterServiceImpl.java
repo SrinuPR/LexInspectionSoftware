@@ -98,7 +98,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 			List<LISInspectionMaster> mastersList = inspectionLineMasterDAO.getComponentProductDrawNumbers(subscriberId);
 			if(null != mastersList && mastersList.size() > 0){
 				for(LISInspectionMaster lisInspectionMaster : mastersList){
-					componentProductDrawNumList.add(lisInspectionMaster.getComponentMasterData().getComponentProductDrawNumber());
+					componentProductDrawNumList.add(lisInspectionMaster.getComponent().getComponentProductDrawNumber());
 				}
 			}
 			List<String> ProductDrawNumList = new ArrayList<String>(componentProductDrawNumList);

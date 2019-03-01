@@ -2,6 +2,7 @@ package com.deloitte.inspection.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -122,6 +123,8 @@ public class LISInspectionMeasurements implements Serializable{
 	
 	@Field(value =  "PRODUCED_QUANTITY")
 	private Integer producedQuantity;
+	
+	private List<LISPartIdentification> partIdentifications;
 	
 	public Integer getInspectionMeasurementId() {
 		return inspectionMeasurementId;
@@ -413,6 +416,14 @@ public class LISInspectionMeasurements implements Serializable{
 
 	public void setIrmcsCompProductDrawNum(String irmcsCompProductDrawNum) {
 		this.irmcsCompProductDrawNum = irmcsCompProductDrawNum;
+	}
+
+	public List<LISPartIdentification> getPartIdentifications() {
+		return partIdentifications;
+	}
+
+	public void setPartIdentifications(List<LISPartIdentification> partIdentifications) {
+		this.partIdentifications = partIdentifications;
 	}
 	
 }
