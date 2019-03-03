@@ -41,7 +41,7 @@ public class CreateUserServiceImpl implements CreateUserService {
 	public String validateUserId(String userId) {
 		LISUserMasterCreate userMaster=new LISUserMasterCreate();
 		try {
-			userMaster=createUserDAO.validateUserId(userId.toLowerCase());
+			userMaster=createUserDAO.validateUserId(userId);
 			if(null != userMaster)
 				return StatusConstants.ERROR;
 			else
@@ -126,7 +126,7 @@ public class CreateUserServiceImpl implements CreateUserService {
 			LISLogin login = new LISLogin();
 			login.setAdminId(createUserDTO.getAdminId());
 			login.setPassword(cryptoComponent.encrypt(createUserDTO.getPassword()));
-			login.setIsActive(StatusConstants.IS_ACTIVE);
+			login.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			login.setCreatedBy(createUserDTO.getAdminId());
 			login.setCreatedTimestamp(new Date());
 			createUserDAO.saveAdmin(login);

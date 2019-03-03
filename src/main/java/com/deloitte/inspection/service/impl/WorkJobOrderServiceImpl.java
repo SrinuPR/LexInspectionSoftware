@@ -227,7 +227,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
 			for(LISWorkJobOrderMaster workJobOrderMaster : workJobOrderMasters){
 				WorkJobOrderDTO workJobOrderDTO = new WorkJobOrderDTO();
-				workJobOrderDTO.setSubscriberId(workJobOrderMaster.getSubscriber().getSubscriberId());
+				workJobOrderDTO.setSubscriberId(workJobOrderMaster.getSubscriber().getSubscriberId().intValue());
 				workJobOrderDTO.setSubscriberName(workJobOrderMaster.getSubscriber().getSubscriberName());
 				workJobOrderDTO.setCustomerPONumber(workJobOrderMaster.getPurchaseOrder().getCustomerPONumber());
 				workJobOrderDTO.setComponentProductDrawNumber(workJobOrderMaster.getComponentData().getComponentProductDrawNumber());

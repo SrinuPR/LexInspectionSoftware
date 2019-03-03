@@ -45,7 +45,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		logger.info("Entered into getComponentProductDrawNumbers DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMaster.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.ASC, "componentMasterData.componentProductDrawNumber"));
 
 		List<LISInspectionMaster> list = mongoTemplate
@@ -59,7 +59,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		logger.info("Entered into getAllInspectionLineItems DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMaster.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionLineItemMaster> list = mongoTemplate
 				.aggregate(aggregation, "LIS_ILIMC", LISInspectionLineItemMaster.class)
@@ -75,7 +75,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		query.addCriteria(Criteria.where("componentProductDrawNumber")
 				.in(inspectionLineItem.getComponentProductDrawNumber().toLowerCase())
 				.andOperator(Criteria.where("measurmentName").is(inspectionLineItem.getMeasurementName().toLowerCase()))
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionLineItemMaster> list = mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 		if (null != list && list.size() > 0)
 			return list.get(0);
@@ -88,7 +88,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		logger.info("Entered into validateMeasurementName DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("InspectionLineItemId").in(inspectionLineItemId)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionLineItemMaster> list = mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 		if (null != list && list.size() > 0)
 			return list.get(0);
@@ -100,7 +100,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		logger.info("Entered into getComponentProductDrawNumbers DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("componentProductDrawNumber").in(compDraNum.toLowerCase())
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionLineItemMaster> list = mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 		return list;
 	}
@@ -111,7 +111,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		logger.info("Entered into getAllInspectionLineItems DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("userID").in(userId)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 	}
 
@@ -121,7 +121,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 		logger.info("Entered into getAllInspectionLineItems DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("componentProductDrawNumber").in(compDrawNum.toLowerCase())
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionLineItemMaster.class,"LIS_ILIMC");
 	}
 }

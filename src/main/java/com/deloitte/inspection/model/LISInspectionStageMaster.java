@@ -4,6 +4,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -19,36 +20,34 @@ public class LISInspectionStageMaster implements Serializable{
 		
 	private static final long serialVersionUID = 382945870712132210L;
 
-	@Id
-	private Long id;
+	@Id	
+	// @Field(value = "INSPECTION_STAGE_UNIQUE_ID")
+	private BigInteger inspStageUniqueId;
 	
-	@Field(value = "INSPECTION_STAGE_UNIQUE_ID")
-	private Integer inspStageUniqueId;
-	
-	@Field(value = "INSPECTION_STAGE_ID")
+	// @Field(value = "INSPECTION_STAGE_ID")
 	private Integer inspStageId;
 	
-	@Field(value = "INSPECTION_STAGE_NAME")
+	// @Field(value = "INSPECTION_STAGE_NAME")
 	private String inspStageName;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 	
     private LISSubscriberMaster subscriber;
 	
-	@Field(value = "USER_ID")
+	// @Field(value = "USER_ID")
 	private String userId;
 
 	/**
@@ -138,14 +137,14 @@ public class LISInspectionStageMaster implements Serializable{
 	/**
 	 * @return the isActive
 	 */
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
 	/**
 	 * @param isActive the isActive to set
 	 */
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
@@ -163,11 +162,11 @@ public class LISInspectionStageMaster implements Serializable{
 		this.subscriber = subscriber;
 	}
 
-	public Integer getInspStageUniqueId() {
+	public BigInteger getInspStageUniqueId() {
 		return inspStageUniqueId;
 	}
 
-	public void setInspStageUniqueId(Integer inspStageUniqueId) {
+	public void setInspStageUniqueId(BigInteger inspStageUniqueId) {
 		this.inspStageUniqueId = inspStageUniqueId;
 	}
 
@@ -177,13 +176,5 @@ public class LISInspectionStageMaster implements Serializable{
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 }

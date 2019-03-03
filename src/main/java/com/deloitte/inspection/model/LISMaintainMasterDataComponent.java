@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -13,59 +14,57 @@ public class LISMaintainMasterDataComponent implements Serializable{
 	private static final long serialVersionUID = 382945870712132280L;
 	
 	@Id
-	private Long id;
-
-	@Field(value = "CMDCS_ID")
-	private Integer cmdcsId;
+	// @Field(value = "CMDCS_ID")
+	private BigInteger cmdcsId;
 	
-	@Field(value = "COMP_PROD_DRAW_NUM")
+	// @Field(value = "COMP_PROD_DRAW_NUM")
 	private String componentProductDrawNumber;
 	
-	@Field(value = "CUST_NAME_ADDR")
+	// @Field(value = "CUST_NAME_ADDR")
 	private String customerNameAddress;
 	
-	@Field(value = "COMP_PROD_NAME")
+	// @Field(value = "COMP_PROD_NAME")
 	private String componentProductName;
 	
-	@Field(value = "COMP_PROD_NUM")
+	// @Field(value = "COMP_PROD_NUM")
 	private String componentProductNumber;
 	
-	@Field(value = "COMP_PROD_MATERIAL")
+	// @Field(value = "COMP_PROD_MATERIAL")
 	private String componentProductMeterial;
 	
-	@Field(value = "COMP_PROD_MANUFAC_UNITS")
+	// @Field(value = "COMP_PROD_MANUFAC_UNITS")
 	private String componentProductManufacturerUnits;
 	
-	@Field(value = "COMP_PROD_NOTES")
+	// @Field(value = "COMP_PROD_NOTES")
 	private String componentProductNotes;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
 	private LISSubscriberMaster subscriber;
 	
 	private LISUserMasterCreate user;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 	
-	@Field(value = "RECORD_IN_PROCESS")
+	// @Field(value = "RECORD_IN_PROCESS")
 	private char recordInProcess;
 	
-	public Integer getCmdcsId() {
+	public BigInteger getCmdcsId() {
 		return cmdcsId;
 	}
 
-	public void setCmdcsId(Integer cmdcsId) {
+	public void setCmdcsId(BigInteger cmdcsId) {
 		this.cmdcsId = cmdcsId;
 	}
 
@@ -157,11 +156,11 @@ public class LISMaintainMasterDataComponent implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
@@ -171,14 +170,6 @@ public class LISMaintainMasterDataComponent implements Serializable{
 
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public LISSubscriberMaster getSubscriber() {

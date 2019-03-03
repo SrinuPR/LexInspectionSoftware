@@ -22,27 +22,27 @@ public class LISUserTypeMaster implements Serializable {
 	private static final long serialVersionUID = 5112717685665555841L;
 
 	@Id
-	private long id;
-
-	@Field(value =  "USER_TYPE_ID")
+	private String id;
+	
+	// @Field(value =  "USER_TYPE_ID")
 	private Integer userTypeId;
 	
-	@Field(value =  "USER_TYPE_NAME")
+	// @Field(value =  "USER_TYPE_NAME")
 	private String userTypeName;
 	
-	@Field(value =  "CREATED_TIMESTAMP")
+	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value =  "UPDATED_TIMESTAMP")
+	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value =  "CREATED_BY")
+	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value =  "UPDATED_BY")
+	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value =  "IS_ACTIVE")
+	// @Field(value =  "IS_ACTIVE")
 	private String isActive;
 	
 	private LISAccessMaster access;
@@ -149,15 +149,19 @@ public class LISUserTypeMaster implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public long getId() {
-		return id;
-	}
-
 	public LISSubscriberMaster getSubscriber() {
 		return subscriber;
 	}
 
 	public void setSubscriber(LISSubscriberMaster subscriber) {
 		this.subscriber = subscriber;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

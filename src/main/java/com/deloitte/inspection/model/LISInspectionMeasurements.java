@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -14,123 +15,121 @@ public class LISInspectionMeasurements implements Serializable{
 	private static final long serialVersionUID = -7719637509662433018L;
 	
 	@Id
-	private long id;
+	// @Field(value =  "IMDES_ID")
+	private BigInteger inspectionMeasurementId;
 	
-	@Field(value =  "IMDES_ID")
-	private Integer inspectionMeasurementId;
-	
-	@Field(value =  "SUBSCRIBER_ID")
+	// @Field(value =  "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Field(value =  "RECORD_IN_PROCESS")
+	// @Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
 	
-	@Field(value =  "SUBSCRIBER_NAME")
+	// @Field(value =  "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	@Field(value =  "USER_ID")
+	// @Field(value =  "USER_ID")
 	private String userId;
 	
-	@Field(value =  "IRMCS_COMP_PRD_DRAW_NUM")
+	// @Field(value =  "IRMCS_COMP_PRD_DRAW_NUM")
 	private String irmcsCompProductDrawNum;
 	
-	@Field(value =  "COMP_PROD_DRAW_NUM")
+	// @Field(value =  "COMP_PROD_DRAW_NUM")
 	private String compProductDrawNum;
 	
-	@Field(value =  "INSPECTION_REPORT_NUMBER")
+	// @Field(value =  "INSPECTION_REPORT_NUMBER")
 	private String inspectionReportNumber;
 	
-	@Field(value =  "WORK_JOB_ORDER_NUMBER")
+	// @Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	@Field(value =  "LOT_NUMBER")
+	// @Field(value =  "LOT_NUMBER")
 	private String lotNumber;
 	
-	@Field(value =  "LOT_SIZE")
+	// @Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	@Field(value =  "MANUFACTURING_BATCH_NUMBER")
+	// @Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	@Field(value =  "MANUFACTURING_BATCH_SIZE")
+	// @Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	@Field(value =  "COMP_PROD_NAME")
+	// @Field(value =  "COMP_PROD_NAME")
 	private String componentProductName;
 	
-	@Field(value =  "INSPECTION_TYPE")
+	// @Field(value =  "INSPECTION_TYPE")
 	private String inspectionType;
 	
-	@Field(value =  "INSPECTION_STAGE")
+	// @Field(value =  "INSPECTION_STAGE")
 	private Integer InspectionStage;
 	
-	@Field(value =  "FACILITY_MACHINE_NUMBER")
+	// @Field(value =  "FACILITY_MACHINE_NUMBER")
 	private Integer facilityMachineNumber;
 	
-	@Field(value =  "FACILITY_MACHINE_NAME")
+	// @Field(value =  "FACILITY_MACHINE_NAME")
 	private String facilityMachineName;
 	
-	@Field(value =  "USER_NAME")
+	// @Field(value =  "USER_NAME")
 	private String userName;
 	
-	@Field(value =  "INSPECTION_DATE")
+	// @Field(value =  "INSPECTION_DATE")
 	private Date inspectionDate;
 	
-	@Field(value =  "SHIFT_ID")
+	// @Field(value =  "SHIFT_ID")
 	private String shiftID;
 	
-	@Field(value =  "SHIFT_NAME")
+	// @Field(value =  "SHIFT_NAME")
 	private String shiftName;
 	
-	@Field(value =  "CUSTOMER_PO_NUMBER")
+	// @Field(value =  "CUSTOMER_PO_NUMBER")
 	private String customerPONumber;
 	
-	@Field(value =  "CUSTOMER_PO_DATE")
+	// @Field(value =  "CUSTOMER_PO_DATE")
 	private Date customerPODate;
 	
-	@Field(value =  "CUSTOMER_PO_QUANTITY")
+	// @Field(value =  "CUSTOMER_PO_QUANTITY")
 	private Integer customerPOQuantity;
 	
-	@Field(value =  "CUSTOMER_NAME_ADDRESS")
+	// @Field(value =  "CUSTOMER_NAME_ADDRESS")
 	private String customerNameAddress;
 	
-	@Field(value =  "PART_IDENTIFICATION_NUMBER")
+	// @Field(value =  "PART_IDENTIFICATION_NUMBER")
 	private String partIdentificationNumber;
 	
-	@Field(value =  "MEASUREMENT_RECORD_STATUS")
+	// @Field(value =  "MEASUREMENT_RECORD_STATUS")
 	private String measurementRecordstatus;
 	
-	@Field(value =  "CREATED_BY")
+	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value =  "CREATED_TIMESTAMP")
+	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value =  "UPDATED_BY")
+	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value =  "UPDATED_TIMESTAMP")
+	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value =  "IS_ACTIVE")
-	private char isActive;
+	// @Field(value =  "IS_ACTIVE")
+	private String isActive;
 	
-	@Field(value =  "PART_STATUS")
+	// @Field(value =  "PART_STATUS")
 	private String partStatus;
 
-	@Field(value =  "INSPECTED_QUANTITY")
+	// @Field(value =  "INSPECTED_QUANTITY")
 	private Integer inspectedQuantity;
 	
-	@Field(value =  "PRODUCED_QUANTITY")
+	// @Field(value =  "PRODUCED_QUANTITY")
 	private Integer producedQuantity;
 	
 	private List<LISPartIdentification> partIdentifications;
 	
-	public Integer getInspectionMeasurementId() {
+	public BigInteger getInspectionMeasurementId() {
 		return inspectionMeasurementId;
 	}
 
-	public void setInspectionMeasurementId(Integer inspectionMeasurementId) {
+	public void setInspectionMeasurementId(BigInteger inspectionMeasurementId) {
 		this.inspectionMeasurementId = inspectionMeasurementId;
 	}
 
@@ -350,11 +349,11 @@ public class LISInspectionMeasurements implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
@@ -404,10 +403,6 @@ public class LISInspectionMeasurements implements Serializable{
 
 	public void setProducedQuantity(Integer producedQuantity) {
 		this.producedQuantity = producedQuantity;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public String getIrmcsCompProductDrawNum() {

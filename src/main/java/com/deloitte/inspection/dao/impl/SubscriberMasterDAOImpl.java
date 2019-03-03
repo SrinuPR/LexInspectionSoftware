@@ -3,6 +3,7 @@
  */
 package com.deloitte.inspection.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +73,7 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 	 */
 	@Override
 	public LISSubscriberMaster getSubscriberById(Integer subscriberId) throws SubscriberMasterException {
-		logger.info("Entered into validateLoginCredentials");	
+		logger.info("Entered into validateLoginCredentials " + subscriberId);	
 		Query query = new Query();
 		query.addCriteria(new Criteria("subscriberId").is(subscriberId));
 		return mongoTemplate.findOne(query, LISSubscriberMaster.class, "LIS_SUMAS");

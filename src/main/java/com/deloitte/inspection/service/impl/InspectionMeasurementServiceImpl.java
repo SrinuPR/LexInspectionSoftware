@@ -85,7 +85,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				for(LISInspectionReportMaster reportMaster : inspectionReportMasters){
 					ComponentMasterDataDTO componentMasterDataDTO = new ComponentMasterDataDTO();
 					LISMaintainMasterDataComponent component = componentMasterDataDAO.getComponentDataByDrwNum(reportMaster.getCompProdDrawNum());
-					componentMasterDataDTO.setComponentId(component.getCmdcsId());
+					componentMasterDataDTO.setComponentId(component.getCmdcsId().intValue());
 					componentMasterDataDTO.setComponentProductDrawNumber(component.getComponentProductDrawNumber());
 					componentMasterDataDTO.setComponentProductName(component.getComponentProductName());
 					componentMasterDataDTOs.add(componentMasterDataDTO);
@@ -98,7 +98,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				List<FacilityMasterDTO> facilityMasterDTOs = new ArrayList<FacilityMasterDTO>();
 				for(LISFacilityMaster facilityMaster : facilityMasters){
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();
-					facilityMasterDTO.setFacilityId(facilityMaster.getFacilityId());
+					facilityMasterDTO.setFacilityId(facilityMaster.getFacilityId().intValue());
 					facilityMasterDTO.setFacilityName(facilityMaster.getFacilityName());
 					facilityMasterDTO.setFacilityNumber(facilityMaster.getFacilityNumber());
 					facilityMasterDTOs.add(facilityMasterDTO);
@@ -139,7 +139,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				List<InspectionReportMasterDTO> inspectionReportMasterDTOs = new ArrayList<InspectionReportMasterDTO>();
 				for(LISInspectionReportMaster report:inspectionReportMasters){
 					InspectionReportMasterDTO inspectionReportMasterDTO = new InspectionReportMasterDTO();
-					inspectionReportMasterDTO.setInspRptMasterId(report.getInspRptMasterId());
+					inspectionReportMasterDTO.setInspRptMasterId(report.getInspRptMasterId().intValue());
 					inspectionReportMasterDTO.setInspReportNumber(report.getInspReportNumber());
 					inspectionReportMasterDTO.setWorkJobOrderId(report.getWorkJobOrderId());
 					inspectionReportMasterDTO.setWorkJobOrderNumber(report.getWorkJobOrderNumber());
@@ -247,7 +247,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 	}
 	
 	private InspectionMeasurementDTO inspectionData(InspectionMeasurementDTO inspectionMeasurementDTO, LISInspectionMeasurements inspectionMeasurements) throws ParseException{
-		inspectionMeasurementDTO.setInspectionMeasurementId(inspectionMeasurements.getInspectionMeasurementId());
+		inspectionMeasurementDTO.setInspectionMeasurementId(inspectionMeasurements.getInspectionMeasurementId().intValue());
 		inspectionMeasurementDTO.setComponentProductName(inspectionMeasurements.getComponentProductName());
 		inspectionMeasurementDTO.setCompProductDrawNum(inspectionMeasurements.getCompProductDrawNum());
 		inspectionMeasurementDTO.setCustomerNameAddress(inspectionMeasurements.getCustomerNameAddress());
@@ -299,7 +299,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		logger.info("Inside transformToDTO Service");
 		for(LISPartIdentification partIdentification:partsFromDB){
 			PartIdentificationDTO partIdentificationDTO = new PartIdentificationDTO();
-			partIdentificationDTO.setPartVerifId(partIdentification.getPartVerifId());
+			partIdentificationDTO.setPartVerifId(partIdentification.getPartVerifId().intValue());
 			partIdentificationDTO.setActualLowerLimit(partIdentification.getActualLowerLimit());
 			partIdentificationDTO.setActualUpperLimit(partIdentification.getActualUpperLimit());
 			partIdentificationDTO.setPartIdentificationNumber(partIdentification.getPartIdentificationNumber());
@@ -333,7 +333,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 			inspectionMeasurements.setInspectionReportNumber(inspectionMeasurementDTO.getInspectionReportNumber());
 			inspectionMeasurements.setInspectionStage(inspectionMeasurementDTO.getInspectionStage());
 			inspectionMeasurements.setInspectionType(inspectionMeasurementDTO.getInspectionType());
-			inspectionMeasurements.setIsActive(StatusConstants.IS_ACTIVE);
+			inspectionMeasurements.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			inspectionMeasurements.setLotNumber(inspectionMeasurementDTO.getLotNumber());
 			inspectionMeasurements.setLotSize(inspectionMeasurementDTO.getLotSize());
 			inspectionMeasurements.setManufacturingBatchNumber(inspectionMeasurementDTO.getManufacturingBatchNumber());

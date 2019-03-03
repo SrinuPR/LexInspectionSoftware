@@ -1,5 +1,6 @@
 package com.deloitte.inspection.model;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -12,48 +13,41 @@ public class LISMasterListOfScreensForSubscriber implements Serializable {
 	private static final long serialVersionUID = 8730811844910414462L;
 
 	@Id
-	private long id;
+	// @Field(value = "MLOSS_ID")
+	private BigInteger masterListId;
 	
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Field(value = "MLOSS_ID")
-	private Integer masterListId;
-	
-	private Integer subscriberId;
+	private BigInteger subscriberId;
 
 	private LISSubscriberMaster subscriber;
 
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 
-	@Field(value = "SCREEN_NAME")
+	// @Field(value = "SCREEN_NAME")
 	private String screenName;
 
-	@Field(value = "SCREEN_NUMBER")
+	// @Field(value = "SCREEN_NUMBER")
 	private String screenNumber;
 
-	public Integer getMasterListId() {
+	public BigInteger getMasterListId() {
 		return masterListId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public Integer getSubscriberId() {
+	public BigInteger getSubscriberId() {
 		return subscriberId;
 	}
 
-	public void setSubscriberId(Integer subscriberId) {
+	public void setSubscriberId(BigInteger subscriberId) {
 		this.subscriberId = subscriberId;
 	}
 
-	public void setMasterListId(Integer masterListId) {
+	public void setMasterListId(BigInteger masterListId) {
 		this.masterListId = masterListId;
 	}
 
@@ -65,11 +59,11 @@ public class LISMasterListOfScreensForSubscriber implements Serializable {
 		this.subscriber = subscriber;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
@@ -103,10 +97,6 @@ public class LISMasterListOfScreensForSubscriber implements Serializable {
 
 	public void setScreenNumber(String screenNumber) {
 		this.screenNumber = screenNumber;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 }

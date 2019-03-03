@@ -63,7 +63,7 @@ public class AccessMasterDAOImpl implements AccessMasterDAO {
 		logger.info("inside getUserTypeListforSubscriber DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.ASC, "userTypeName"));
 		return mongoTemplate.aggregate(aggregation, "LIS_UTMCS", LISUserTypeMaster.class).getMappedResults();
 	}
@@ -82,7 +82,7 @@ public class AccessMasterDAOImpl implements AccessMasterDAO {
 		logger.info("inside getAccessMasterByUserTypeId DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("userType.userTypeId").is(userTypeId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISAccessMaster> master = mongoTemplate.aggregate(aggregation, "LIS_ACMDS", LISAccessMaster.class)
 				.getMappedResults();
 		if (null != master && master.size() > 0) {

@@ -37,7 +37,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		logger.info("getCompDrawNumList DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("subscriberId").in(subscriberId)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionReportMaster.class,"LIS_IRMCS");
 		
 	}
@@ -48,7 +48,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		logger.info("getProducedQuantityListByBatchNumber DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("manufacturingBatchNumber").in(manufacturingBatchNumber.toLowerCase())
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 
@@ -58,7 +58,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		logger.info("getProducedQuantityListByLotchNumber DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("lotNumber").in(lotNumber.toLowerCase())
-				.andOperator(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 	
@@ -69,7 +69,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("workJobOrderNumber").in(workJobOrderNumber.toLowerCase())
 				.andOperator(Criteria.where("customerPONumber").in(customerPONumber.toLowerCase()))
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 
@@ -79,7 +79,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		logger.info("getProducedQuantityListByWJandPO DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("inspectionReportNumber").in(reportNumber)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionReportMaster> list = mongoTemplate.find(query, LISInspectionReportMaster.class,"LIS_IRMCS");
 		if(null != list && list.size() > 0)
 			return list.get(0);
@@ -91,7 +91,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		logger.info("Entered into getAllMeasurementList");	
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("userId").in(userId)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 
@@ -103,7 +103,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("subscriberId").in(subscriberId)
 				.andOperator(Criteria.where("partIdentificationNumber").in(partIdententificationId.toLowerCase()))
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 
@@ -121,7 +121,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("subscriberId").in(subscriberId)
 				.andOperator(Criteria.where("workJobOrderNumber").in(wjoNum))
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 

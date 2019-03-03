@@ -4,6 +4,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -20,60 +21,60 @@ public class LISInspectionMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132210L;
 	
 	@Id
-	@Field(value = "INSPECTION_ID")
-	private Integer inspId;
+	// @Field(value = "INSPECTION_ID")
+	private BigInteger inspId;
 	
-	@Field(value = "COMPONENT_NAME")
+	// @Field(value = "COMPONENT_NAME")
 	private String facilityName;
 		
-	@Field(value = "COMPONENT_NUM")
+	// @Field(value = "COMPONENT_NUM")
 	private String compNum;
 	
-	@Field(value = "COMPONENT_MATERIAL")
+	// @Field(value = "COMPONENT_MATERIAL")
 	private String compMaterial;
 	
-	@Field(value = "COMPONENT_NOTES")
+	// @Field(value = "COMPONENT_NOTES")
 	private String compNotes;
 
-	@Field(value = "INSPECTION_TYPE_ID")
+	// @Field(value = "INSPECTION_TYPE_ID")
 	private Integer inspTypeId; 
 	
-	@Field(value = "INSPECTION_STAGE_ID")
+	// @Field(value = "INSPECTION_STAGE_ID")
 	private Integer inspStageId;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 
 	private LISSubscriberMaster subscriber;
 	
 	private LISMaintainMasterDataComponent component;
 	
-	@Field(value = "RECORD_IN_PROCESS")
+	// @Field(value = "RECORD_IN_PROCESS")
 	private char recordInProcess;
 
 	/**
 	 * @return the inspId
 	 */
-	public Integer getInspId() {
+	public BigInteger getInspId() {
 		return inspId;
 	}
 
 	/**
 	 * @param inspId the inspId to set
 	 */
-	public void setInspId(Integer inspId) {
+	public void setInspId(BigInteger inspId) {
 		this.inspId = inspId;
 	}
 
@@ -220,14 +221,14 @@ public class LISInspectionMaster implements Serializable{
 	/**
 	 * @return the isActive
 	 */
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
 	/**
 	 * @param isActive the isActive to set
 	 */
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 

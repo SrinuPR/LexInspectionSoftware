@@ -96,14 +96,14 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 			if(null != lisSubscriberMasterList && lisSubscriberMasterList.size() > 0){
 				for(LISSubscriberMaster lisSubscriberMaster : lisSubscriberMasterList){
 					SubscriberMasterDTO subscriberMasterDTO = new SubscriberMasterDTO();
-					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId());
+					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId().intValue());
 					subscriberMasterDTO.setSubscriberName(lisSubscriberMaster.getSubscriberName());
 					if(null != lisSubscriberMaster.getUserMasterCreateList() && lisSubscriberMaster.getUserMasterCreateList().size() > 0){
 						subscriberMasterDTO.setUserCount(lisSubscriberMaster.getUserMasterCreateList().size());
 						List<String> users = new ArrayList<String>();
 						int count = 0;
 						for(LISUserMasterCreate user : lisSubscriberMaster.getUserMasterCreateList()){
-							if(StatusConstants.IS_ACTIVE == user.getIsActive()){
+							if(String.valueOf(StatusConstants.IS_ACTIVE) == user.getIsActive()){
 								users.add(user.getUserId());
 								count = count+1;
 							}
@@ -129,7 +129,7 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 			if(null != lisSubscriberMasterList && lisSubscriberMasterList.size() > 0){
 				for(LISSubscriberMaster lisSubscriberMaster : lisSubscriberMasterList){
 					SubscriberMasterDTO subscriberMasterDTO = new SubscriberMasterDTO();
-					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId());
+					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId().intValue());
 					subscriberMasterDTO.setSubscriberName(lisSubscriberMaster.getSubscriberName());
 					subscriberMasterDTOList.add(subscriberMasterDTO);
 				}

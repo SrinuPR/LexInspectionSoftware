@@ -21,22 +21,20 @@ public class LISStaticUserType implements Serializable {
 	
 	private static final long serialVersionUID = 5112717685665555841L;
 
-	@Id
-	private long id;
-	
-	@Field(value = "USER_TYPE_ID")
+	@Id	
+	// @Field(value = "USER_TYPE_ID")
 	private String userTypeId;
 	
-	@Field(value = "USER_TYPE_NAME")
+	// @Field(value = "USER_TYPE_NAME")
 	private String userTypeName;
 	
-	@Field(value = "ACTIVE_SW")
+	// @Field(value = "ACTIVE_SW")
 	private String activeSw;
 	
-	@Field(value = "EFF_START_DT")
+	// @Field(value = "EFF_START_DT")
 	private Timestamp effStartDt;
 	
-	@Field(value = "EFF_END_DT")
+	// @Field(value = "EFF_END_DT")
 	private Timestamp effEndDt;
 
 	public String getUserTypeId() {
@@ -77,9 +75,5 @@ public class LISStaticUserType implements Serializable {
 
 	public void setEffEndDt(Timestamp effEndDt) {
 		this.effEndDt = effEndDt;
-	}
-
-	public long getId() {
-		return id;
 	}	
 }

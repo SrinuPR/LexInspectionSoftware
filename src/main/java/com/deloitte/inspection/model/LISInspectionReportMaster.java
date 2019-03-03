@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -13,83 +14,76 @@ public class LISInspectionReportMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132210L;
 	
 	@Id
-	private long id;
+	// @Field(value =  "IRMCS_ID")
+	private BigInteger inspRptMasterId;
 	
-	public long getId() {
-		return id;
-	}
-
-	@Field(value =  "IRMCS_ID")
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer inspRptMasterId;
-	
-	@Field(value =  "INSPECTION_REPORT_NUMBER")
+	// @Field(value =  "INSPECTION_REPORT_NUMBER")
 	private Integer inspReportNumber;
 	
-	@Field(value =  "SUBSCRIBER_ID")
+	// @Field(value =  "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Field(value =  "SUBSCRIBER_NAME")
+	// @Field(value =  "SUBSCRIBER_NAME")
 	private String subscriberName;
 		
-	@Field(value =  "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
+	// @Field(value =  "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
 	private String compProdDrawNum;
 	
-	@Field(value =  "COMP_PROD_NAME")
+	// @Field(value =  "COMP_PROD_NAME")
 	private String componentProdcuctName;
 		
-	@Field(value =  "WORK_JOB_ORDER_NUMBER")
+	// @Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	@Field(value =  "WORK_JOB_ORDER_ID")
+	// @Field(value =  "WORK_JOB_ORDER_ID")
 	private Integer workJobOrderId;
 	
-	@Field(value =  "LOT_NUMBER")
+	// @Field(value =  "LOT_NUMBER")
 	private String lotNumber;
 	
-	@Field(value =  "LOT_SIZE")
+	// @Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	@Field(value =  "INSPECTION_TYPE_ID")
+	// @Field(value =  "INSPECTION_TYPE_ID")
 	private Integer inspectionTypeId;
 	
-	@Field(value =  "INSPECTION_STAGE_ID")
+	// @Field(value =  "INSPECTION_STAGE_ID")
 	private Integer InspectionStageId;
 	
-	@Field(value =  "MANUFACTURING_BATCH_NUMBER")
+	// @Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	@Field(value =  "MANUFACTURING_BATCH_SIZE")
+	// @Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	@Field(value =  "CUSTOMER_PO_NUMBER")
+	// @Field(value =  "CUSTOMER_PO_NUMBER")
 	private String customerPoNumber;
 	
-	@Field(value =  "CUSTOMER_PO_DATE" )
+	// @Field(value =  "CUSTOMER_PO_DATE" )
 	private Date customerPoDate;
 	
-	@Field(value =  "CUSTOMER_PO_QUANTITY")
+	// @Field(value =  "CUSTOMER_PO_QUANTITY")
 	private Integer customerPoQuantity;
 	
-	@Field(value =  "USER_ID")
+	// @Field(value =  "USER_ID")
 	private String userID;
 	
-	@Field(value =  "CREATED_BY")
+	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value =  "CREATED_TIMESTAMP")
+	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value =  "UPDATED_BY")
+	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value =  "UPDATED_TIMESTAMP")
+	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value =  "IS_ACTIVE")
-	private char isActive;
+	// @Field(value =  "IS_ACTIVE")
+	private String isActive;
 	
-	@Field(value =  "REPORT_STATUS")
+	// @Field(value =  "REPORT_STATUS")
 	private String reportStatus;
 	
 	/**
@@ -277,28 +271,28 @@ public class LISInspectionReportMaster implements Serializable{
 	/**
 	 * @return the isActive
 	 */
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
 	/**
 	 * @param isActive the isActive to set
 	 */
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
 	/**
 	 * @return the inspRptMasterId
 	 */
-	public Integer getInspRptMasterId() {
+	public BigInteger getInspRptMasterId() {
 		return inspRptMasterId;
 	}
 
 	/**
 	 * @param inspRptMasterId the inspRptMasterId to set
 	 */
-	public void setInspRptMasterId(Integer inspRptMasterId) {
+	public void setInspRptMasterId(BigInteger inspRptMasterId) {
 		this.inspRptMasterId = inspRptMasterId;
 	}
 

@@ -3,6 +3,7 @@
  */
 package com.deloitte.inspection.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -66,9 +67,9 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 		subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
 		mongoTemplate.save(subMaster);
 		inspTypeMaster.setSubscriber(subMaster);
-		inspTypeMaster.setIsActive(StatusConstants.IS_ACTIVE);
+		inspTypeMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		mongoTemplate.save(inspTypeMaster);
-		if (inspTypeMaster.getId() != null)
+		if (inspTypeMaster.getInspTypeId() != null)
 			return inspTypeMasterDTO;
 		return null;
 	}
@@ -81,7 +82,7 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 		logger.info("Entered into getAllInspTypeMasterData");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionTypeMaster> list = mongoTemplate.aggregate(aggregation, "LIS_ITMCS", LISInspectionTypeMaster.class)
 				.getMappedResults();

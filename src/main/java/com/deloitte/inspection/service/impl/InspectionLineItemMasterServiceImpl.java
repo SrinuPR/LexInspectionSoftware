@@ -75,7 +75,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 			inspectionLineItemMaster.setSubscriberName(inspectionLineItemDTO.getSubscriberName());
 			inspectionLineItemMaster.setComponentProductDrawNumber(inspectionLineItemDTO.getComponentProductDrawNumber());
 			inspectionLineItemMaster.setMeasurmentName(inspectionLineItemDTO.getMeasurementName());
-			inspectionLineItemMaster.setIsActive(StatusConstants.IS_ACTIVE);
+			inspectionLineItemMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		}else{
 			inspectionLineItemMaster.setUpdatedBy(userName);
 			inspectionLineItemMaster.setUpdatedTimestamp(new Date());
@@ -138,7 +138,7 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 		logger.info("Entered into transformToDTO ");
 		inspectionLineItemDTO.setSubscriberId(lineItemMaster.getSubscriberId());
 		inspectionLineItemDTO.setComponentProductDrawNumber(lineItemMaster.getComponentProductDrawNumber());
-		inspectionLineItemDTO.setInspectionLineItemId(lineItemMaster.getInspectionLineItemId());
+		inspectionLineItemDTO.setInspectionLineItemId(lineItemMaster.getInspectionLineItemId().intValue());
 		inspectionLineItemDTO.setUserId(lineItemMaster.getUserID());
 		inspectionLineItemDTO.setBaseMeasure(lineItemMaster.getBaseMeasure());
 		inspectionLineItemDTO.setBaseMeasureUnits(lineItemMaster.getBaseMeasureUnits());

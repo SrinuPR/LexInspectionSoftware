@@ -77,6 +77,7 @@ public class UserTypeMasterDAOImpl implements UserTypeMasterDAO {
 			userTypeMasModel.setUserTypeName(userTypeMasDTO.getUserTypeName());
 			userTypeMasModel.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			LISSubscriberMaster subMaster = subscriberDAO.getSubscriberById(userTypeMasDTO.getSubscriberId());
+			System.out.println(subMaster.getSubscriberId());
 			userTypeMasModel.setSubscriber(subMaster);
 			mongoTemplate.save(userTypeMasModel);
 			return userTypeMasDTO;

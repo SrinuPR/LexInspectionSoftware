@@ -89,7 +89,7 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();
 					facilityMasterDTO.setFacilityNumber(facilityMaster.getFacilityNumber());
 					facilityMasterDTO.setFacilityName(facilityMaster.getFacilityName());
-					facilityMasterDTO.setSubscriberId(facilityMaster.getSubscriber().getSubscriberId());
+					facilityMasterDTO.setSubscriberId(facilityMaster.getSubscriber().getSubscriberId().intValue());
 					facilityMasterDTO.setSubscriberName(facilityMaster.getSubscriber().getSubscriberName());
 					facilityMasterList.add(facilityMasterDTO);
 				}

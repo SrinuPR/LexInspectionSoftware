@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -13,40 +14,37 @@ public class LISPurchaseOrderMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132280L;
 
 	@Id
-	private long id;
+	// @Field(value =  "CUSTOMER_PO_ID")
+	private BigInteger customerPoId;
 	
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Field(value =  "CUSTOMER_PO_ID")
-	private Integer customerPoId;
-	
-	@Field(value =  "CUSTOMERPO_NUMBER")
+	// @Field(value =  "CUSTOMERPO_NUMBER")
 	private String customerPONumber;
 	
-	@Field(value =  "CUSTOMERPO_DATE" )
+	// @Field(value =  "CUSTOMERPO_DATE" )
 	private Date customerPODate;
 	
-	@Field(value =  "CUSTOMERPO_QUANTITY")
+	// @Field(value =  "CUSTOMERPO_QUANTITY")
 	private Integer customerPOQuantity;
 	
-	@Field(value =  "NOTES_PO")
+	// @Field(value =  "NOTES_PO")
 	private String notesPO;
 	
-	@Field(value =  "CREATED_BY")
+	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value =  "CREATED_TIMESTAMP")
+	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value =  "UPDATED_BY")
+	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value =  "UPDATED_TIMESTAMP")
+	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value =  "IS_ACTIVE")
-	private char isActive;
+	// @Field(value =  "IS_ACTIVE")
+	private String isActive;
 	    
-    @Field(value =  "RECORD_IN_PROCESS")
+    // @Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
 	
 	private LISSubscriberMaster subscriber;
@@ -120,19 +118,19 @@ public class LISPurchaseOrderMaster implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public Integer getCustomerPoId() {
+	public BigInteger getCustomerPoId() {
 		return customerPoId;
 	}
 
-	public void setCustomerPoId(Integer customerPoId) {
+	public void setCustomerPoId(BigInteger customerPoId) {
 		this.customerPoId = customerPoId;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
@@ -167,4 +165,5 @@ public class LISPurchaseOrderMaster implements Serializable{
 	public void setComponent(LISMaintainMasterDataComponent component) {
 		this.component = component;
 	}
+
 }

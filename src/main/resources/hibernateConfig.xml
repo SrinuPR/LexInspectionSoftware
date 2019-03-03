@@ -8,9 +8,9 @@
       http://www.springframework.org/schema/context 
       http://www.springframework.org/schema/context/spring-context-4.1.xsd">
  
-   <context:property-placeholder location="classpath:local-persistence-mysql.properties" />
+   <!-- context:property-placeholder location="classpath:local-persistence-mysql.properties" / -->
  
-   <bean id="sessionFactory"
+   <!--bean id="sessionFactory"
     class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
       <property name="dataSource" ref="dataSource" />
       <property name="packagesToScan" value="com.nortech.quote.model" />
@@ -21,20 +21,20 @@
             <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
          </props>
       </property>
-   </bean>
+   </bean  -->
  
-   <bean id="dataSource"
+   <!-- bean id="dataSource"
     class="org.springframework.jdbc.datasource.DriverManagerDataSource">
       <property name="driverClassName" value="${spring.mysql.driverClassName}" />
       <property name="url" value="${spring.mysql.url}" />
       <property name="username" value="${spring.mysql.username}" />
       <property name="password" value="${spring.mysql.password}" />
-   </bean>
+   </bean -->
  
-   <bean id="transactionManager"
+   <!-- bean id="transactionManager"
     class="org.springframework.orm.hibernate4.HibernateTransactionManager">
       <property name="sessionFactory" ref="sessionFactory" />
-   </bean>
+   </bean -->
  
    <bean id="persistenceExceptionTranslationPostProcessor"
     class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>

@@ -4,6 +4,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -20,33 +21,31 @@ public class LISInspectionTypeMaster implements Serializable{
 	private static final long serialVersionUID = 382945870712132280L;
 	
 	@Id
-	private Long id;
-
-	@Field(value = "INSPECTION_TYPE_UNIQUE_ID")
-	private Integer inspTypeUniqueId;
+	// @Field(value = "INSPECTION_TYPE_UNIQUE_ID")
+	private BigInteger inspTypeUniqueId;
 	
-	@Field(value = "INSPECTION_TYPE_ID")
+	// @Field(value = "INSPECTION_TYPE_ID")
 	private Integer inspTypeId;
 	
-	@Field(value = "INSPECTION_TYPE_NAME")
+	// @Field(value = "INSPECTION_TYPE_NAME")
 	private String inspTypeName;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 	
-	@Field(value = "USER_ID")
+	// @Field(value = "USER_ID")
 	private String userId;
 	
 	private LISSubscriberMaster subscriber;
@@ -138,22 +137,22 @@ public class LISInspectionTypeMaster implements Serializable{
 	/**
 	 * @return the isActive
 	 */
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
 	/**
 	 * @param isActive the isActive to set
 	 */
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
-	public Integer getInspTypeUniqueId() {
+	public BigInteger getInspTypeUniqueId() {
 		return inspTypeUniqueId;
 	}
 
-	public void setInspTypeUniqueId(Integer inspTypeUniqueId) {
+	public void setInspTypeUniqueId(BigInteger inspTypeUniqueId) {
 		this.inspTypeUniqueId = inspTypeUniqueId;
 	}
 
@@ -163,10 +162,6 @@ public class LISInspectionTypeMaster implements Serializable{
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public LISSubscriberMaster getSubscriber() {

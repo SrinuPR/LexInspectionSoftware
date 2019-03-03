@@ -60,7 +60,7 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				}else{
 					LISAccessMaster accessMaster = new LISAccessMaster();
 					accessMaster.setCreatedBy(accessMasterDTO.getUserId());
-					accessMaster.setIsActive(StatusConstants.IS_ACTIVE);
+					accessMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 					accessMaster.setScreenNumber(accessMasterDTO.getScreenNumbers());
 					accessMaster.setSubscriber(subscriberMaster);
 					accessMaster.setUserType(userTypeMaster);
@@ -109,9 +109,9 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				for(LISUserTypeMaster usertype : userTypeMasters){
 					AccessMasterDTO accessMasterDTO = new AccessMasterDTO();
 					if(null != usertype.getAccess()){
-						accessMasterDTO.setAccessMasterId(usertype.getAccess().getAccessMasterId());
+						accessMasterDTO.setAccessMasterId(usertype.getAccess().getAccessMasterId().intValue());
 					}
-					accessMasterDTO.setSubscriberId(usertype.getSubscriber().getSubscriberId());
+					accessMasterDTO.setSubscriberId(usertype.getSubscriber().getSubscriberId().intValue());
 					accessMasterDTO.setUserTypeId(usertype.getUserTypeId());
 					accessMasterDTO.setUserTypeName(usertype.getUserTypeName());
 					if(null != usertype.getAccess() && null != usertype.getAccess().getScreenNumber()){

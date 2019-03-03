@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Set;
 
@@ -19,41 +20,33 @@ public class LISSubscriberMaster implements Serializable {
 	private static final long serialVersionUID = 5112717685665555841L;
 	
 	@Id
-    private long id;
-
-	@Field(value = "SUBSCRIBER_ID")
+	private String id;
+	
+	// @Field(value = "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Field(value = "SUBSCRIBER_NAME")
+	// @Field(value = "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	@Field(value = "SUBSCRIBER_ADDRESS")
+	// @Field(value = "SUBSCRIBER_ADDRESS")
 	private String subscriberAddress;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value = "IS_ACTIVE")
+	// @Field(value = "IS_ACTIVE")
 	private String isActive;
 	
 	private Set<LISUserMasterCreate> userMasterCreateList;
-			
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public Integer getSubscriberId() {
 		return subscriberId;
@@ -126,4 +119,13 @@ public class LISSubscriberMaster implements Serializable {
 	public void setUserMasterCreateList(Set<LISUserMasterCreate> userMasterCreateList) {
 		this.userMasterCreateList = userMasterCreateList;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

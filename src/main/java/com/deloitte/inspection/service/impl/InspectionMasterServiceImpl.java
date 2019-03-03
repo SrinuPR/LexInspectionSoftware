@@ -78,7 +78,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		master.setCreatedTimestamp(new Date());
 		master.setCreatedBy(masterDTO.getCreatedBy());
 		inspectionDAO.saveInspectionMaster(master);
-		masterDTO.setInspectionMasterId(master.getInspId());
+		masterDTO.setInspectionMasterId(master.getInspId().intValue());
 		responseDTO.setStatus(StatusConstants.SUCCESS);
 		responseDTO.setMessage(InspectionMasterConstants.INSPECTION_MASTER_SAVED);
 		List<InspectionMasterDTO> results = new ArrayList<InspectionMasterDTO>();
@@ -116,7 +116,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		master.setCompNotes(masterDTO.getComponentProductNotes());
 		master.setCompNum(masterDTO.getComponentProductNumber());
 		master.setFacilityName(masterDTO.getComponentProductName());
-		master.setIsActive(StatusConstants.IS_ACTIVE);
+		master.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		if(null != masterDTO.getSubscriberId()){
 			try {
 				LISSubscriberMaster subscriberMaster = subscriberMasterDAO.getSubscriberById(masterDTO.getSubscriberId());
@@ -160,10 +160,10 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		masterDTO.setComponentProductNotes(componentData.getComponentProductNotes());
 		masterDTO.setComponentProductNumber(componentData.getComponentProductNumber());
 		masterDTO.setCreatedBy(master.getCreatedBy());
-		masterDTO.setInspectionMasterId(master.getInspId());
+		masterDTO.setInspectionMasterId(master.getInspId().intValue());
 		masterDTO.setInspectionStage(master.getInspStageId());
 		masterDTO.setInspectionType(master.getInspTypeId());
-		masterDTO.setSubscriberId(master.getSubscriber().getSubscriberId());
+		masterDTO.setSubscriberId(master.getSubscriber().getSubscriberId().intValue());
 		masterDTO.setSubscriberName(master.getSubscriber().getSubscriberName());
 		return masterDTO;
 	}
@@ -223,7 +223,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 				List<ComponentMasterDataDTO> result= new ArrayList<ComponentMasterDataDTO>();
 				for(LISMaintainMasterDataComponent inspctionReport : inspectionMasters){
 					ComponentMasterDataDTO componentMasterDataDTO = new ComponentMasterDataDTO();
-					componentMasterDataDTO.setComponentId(inspctionReport.getCmdcsId());
+					componentMasterDataDTO.setComponentId(inspctionReport.getCmdcsId().intValue());
 					componentMasterDataDTO.setComponentProductDrawNumber(inspctionReport.getComponentProductDrawNumber());
 					componentMasterDataDTO.setComponentProductName(inspctionReport.getComponentProductName());
 					result.add(componentMasterDataDTO);

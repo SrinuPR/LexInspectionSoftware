@@ -13,54 +13,52 @@ public class LISWorkJobOrderMaster implements Serializable{
 	private static final long serialVersionUID = 917212548437079358L;
 	
 	@Id
-	private long id;
-	
-	@Field(value =  "WOMCS_ID")
+	// // @Field(value =  "WOMCS_ID")
 	private Integer wjOrderId;
 	
-	@Field(value =  "WORK_JOB_ORDER_NUMBER")
+	// // @Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	@Field(value =  "WORK_JOB_ORDER_DATE")
+	// // @Field(value =  "WORK_JOB_ORDER_DATE")
 	private Date workJobOrderDate;
 	
-	@Field(value =  "LOT_NUMBER")
+	// // @Field(value =  "LOT_NUMBER")
 	private String lotNumber;
 	
-	@Field(value =  "LOT_SIZE")
+	// // @Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	@Field(value =  "LOT_SIZE_UNITS")
+	// // @Field(value =  "LOT_SIZE_UNITS")
 	private String lotSizeUnits;
 	
-	@Field(value =  "MANUFACTURING_BATCH_NUMBER")
+	// // @Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	@Field(value =  "MANUFACTURING_BATCH_SIZE")
+	// @Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	@Field(value =  "MANUFACTURING_BATCH_UNITS")
+	// @Field(value =  "MANUFACTURING_BATCH_UNITS")
 	private String manufacturingBatchUnits;
 	
-	@Field(value =  "WORK_ORDER_JOB_NOTES")
+	// @Field(value =  "WORK_ORDER_JOB_NOTES")
 	private String workOrderJobNotes;
 	
-	@Field(value =  "CREATED_BY")
+	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value =  "CREATED_TIMESTAMP")
+	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value =  "UPDATED_BY")
+	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value =  "UPDATED_TIMESTAMP")
+	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value =  "IS_ACTIVE")
+	// @Field(value =  "IS_ACTIVE")
 	private String isActive;
 	
-	@Field(value =  "RECORD_IN_PROCESS")
+	// @Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
 
 	private LISSubscriberMaster subscriber;

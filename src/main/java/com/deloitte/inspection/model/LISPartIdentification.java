@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,47 +12,44 @@ public class LISPartIdentification implements Serializable{
 	
 	private static final long serialVersionUID = -4113989812466679809L;
 	
-	@Id
-	private long id;
+	@Id	
+	// @Field(value = "PIFIM_ID")
+	private BigInteger partVerifId;
 	
-	@Field(value = "PIFIM_ID")
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer partVerifId;
-	
-	@Field(value = "MEASUREMENT_NAME")
+	// @Field(value = "MEASUREMENT_NAME")
 	private String measurementName;
 	
-	@Field(value = "MEASURED_VALUE")
+	// @Field(value = "MEASURED_VALUE")
 	private Float measuredValue;
 	
-	@Field(value = "ACTUAL_BASE_MEASURE")
+	// @Field(value = "ACTUAL_BASE_MEASURE")
 	private String actualBaseMeasure;
 	
-	@Field(value = "ACTUAL_UPPER_LIMIT")
+	// @Field(value = "ACTUAL_UPPER_LIMIT")
 	private Float actualUpperLimit;
 	
-	@Field(value = "ACTUAL_LOWER_LIMIT")
+	// @Field(value = "ACTUAL_LOWER_LIMIT")
 	private Float actualLowerLimit;
 	
-	@Field(value = "DEVIATION")
+	// @Field(value = "DEVIATION")
 	private Float deviation;
 	
-	@Field(value = "STATUS")
+	// @Field(value = "STATUS")
 	private String status;
 	
-	@Field(value = "PART_IDENTIFICATION_NUMBER")
+	// @Field(value = "PART_IDENTIFICATION_NUMBER")
 	private String partIdentificationNumber;
 	
-	@Field(value = "IMDES_ID")
+	// @Field(value = "IMDES_ID")
 	private Integer inspectionMeasurementId;
 	
 	private LISInspectionMeasurements inspectionMeasurements;
 
-	public Integer getPartVerifId() {
+	public BigInteger getPartVerifId() {
 		return partVerifId;
 	}
 
-	public void setPartVerifId(Integer partVerifId) {
+	public void setPartVerifId(BigInteger partVerifId) {
 		this.partVerifId = partVerifId;
 	}
 
@@ -117,14 +115,6 @@ public class LISPartIdentification implements Serializable{
 
 	public void setPartIdentificationNumber(String partIdentificationNumber) {
 		this.partIdentificationNumber = partIdentificationNumber;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public Integer getInspectionMeasurementId() {

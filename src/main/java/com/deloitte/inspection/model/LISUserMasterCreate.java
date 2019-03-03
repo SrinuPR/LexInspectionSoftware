@@ -11,42 +11,42 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class LISUserMasterCreate implements Serializable {
 
 	private static final long serialVersionUID = 6533302101506254629L;
-	
-	@Id
-    private Long id;
 
-	@Field(value = "USER_ID")
+    @Id
+    private String id;
+    
+	// @Field(value = "USER_ID")
 	private String userId;
 	
-	@Field(value = "USER_NAME")
+	// @Field(value = "USER_NAME")
 	private String userName;
 	
-	@Field(value = "OLD_PASSWORD1")
+	// @Field(value = "OLD_PASSWORD1")
 	private String oldPassword1;
 	
-	@Field(value = "OLD_PASSWORD2")
+	// @Field(value = "OLD_PASSWORD2")
 	private String oldPassword2;
 	
-	@Field(value = "ACTIVE_PASSWORD")
+	// @Field(value = "ACTIVE_PASSWORD")
 	private String activePassword;
 	
-	@Field(value = "USER_TYPE_ID")
+	// @Field(value = "USER_TYPE_ID")
 	private Integer userTypeId;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 	
 	private LISSubscriberMaster subscriber;
 
@@ -130,11 +130,11 @@ public class LISUserMasterCreate implements Serializable {
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 
@@ -146,11 +146,11 @@ public class LISUserMasterCreate implements Serializable {
 		this.subscriber = subscriber;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	
-	public void setId(Long id) {
+
+	public void setId(String id) {
 		this.id = id;
 	}
 }

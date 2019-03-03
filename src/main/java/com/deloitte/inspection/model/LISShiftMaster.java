@@ -12,36 +12,34 @@ public class LISShiftMaster implements Serializable{
 		
 	private static final long serialVersionUID = 382945870712132210L;
 
-	@Id
-	private long id;
-	
-	@Field(value =  "SHIFT_ID")
+	@Id	
+	// @Field(value =  "SHIFT_ID")
 	private String shiftId;
 	
-	@Field(value =  "SHIFT_NAME")
+	// @Field(value =  "SHIFT_NAME")
 	private String shiftName;
 	
-	@Field(value =  "CREATED_BY")
+	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value =  "CREATED_TIMESTAMP")
+	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value =  "UPDATED_BY")
+	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value =  "UPDATED_TIMESTAMP")
+	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value =  "IS_ACTIVE")
+	// @Field(value =  "IS_ACTIVE")
 	private String isActive;
 	
-	@Field(value =  "RECORD_IN_PROCESS")
+	// @Field(value =  "RECORD_IN_PROCESS")
 	private char recordInProcess;
 	
 	private LISSubscriberMaster subscriber;
 	
-	@Field(value =  "USER_ID")
+	// @Field(value =  "USER_ID")
 	private String userId;	
 
 	public String getShiftId() {
@@ -114,10 +112,6 @@ public class LISShiftMaster implements Serializable{
 
 	public void setRecordInProcess(char recordInProcess) {
 		this.recordInProcess = recordInProcess;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public LISSubscriberMaster getSubscriber() {

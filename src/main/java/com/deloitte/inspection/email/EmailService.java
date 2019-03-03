@@ -25,7 +25,7 @@ public class EmailService {
 	@Autowired
 	private EmailProperties emailProperties;
 	
-	@Resource(mappedName="java:/jboss/mail/gmail")
+	//@Resource(mappedName="java:/jboss/mail/gmail")
     private Session session;
 	
 	public void sendEmail(String toEmail, String messageBody, String subject){

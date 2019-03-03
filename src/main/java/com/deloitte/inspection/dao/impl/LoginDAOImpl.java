@@ -5,19 +5,16 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.exception.LoginException;
-import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISUserMasterCreate;
 
@@ -32,7 +29,7 @@ public class LoginDAOImpl implements LoginDAO{
 
 	@Override
 	public LISLogin validateLoginCredentials(String userId) throws LoginException {
-		logger.info("Entered into validateLoginCredentials");	
+		logger.info("Entered into validateLoginCredentials" + userId);	
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId))));
 		List<LISLogin> loginList = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class)
@@ -50,7 +47,7 @@ public class LoginDAOImpl implements LoginDAO{
 		if (null != userMasterModel) {
 			mongoTemplate.save(userMasterModel);
 		}
-		if (userMasterModel.getId() != null) {
+		if (userMasterModel.getUserId() != null) {
 			status = StatusConstants.SUCCESS;
 		} else {
 			status = StatusConstants.FAILURE;
@@ -86,19 +83,21 @@ public class LoginDAOImpl implements LoginDAO{
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId)))
 				);
-		LISLogin lisLogin = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class).getUniqueMappedResult();
-		lisLogin.setIsActive(StatusConstants.IN_ACTIVE);
-		mongoTemplate.save(lisLogin);
+		List<LISLogin> list = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class).getMappedResults();
+		for (LISLogin lisLogin: list) {
+			lisLogin.setIsSessionActive(String.valueOf(StatusConstants.IN_ACTIVE));
+			mongoTemplate.save(lisLogin);
+		}
 	}
 
 	@Override
 	public void updateSessionActiveSwToN() throws LoginException {
 		logger.info("Inside LoginDAOImpl updateSessionActiveSwToN");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE));
+		query.addCriteria(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
 		List<LISLogin> lisLoginList = mongoTemplate.find(query, LISLogin.class,"LIS_LOGIN");
 		for(LISLogin lisLogin : lisLoginList){
-			lisLogin.setIsSessionActive(StatusConstants.IN_ACTIVE);
+			lisLogin.setIsSessionActive(String.valueOf(StatusConstants.IN_ACTIVE));
 			mongoTemplate.save(lisLogin);
 		}	
 	}

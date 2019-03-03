@@ -3,6 +3,7 @@
  */
 package com.deloitte.inspection.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -75,9 +76,9 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 			subMaster.setSubscriberId(facilityMasterDTO.getSubscriberId());
 			mongoTemplate.save(subMaster,"LIS_SUMAS");
 			facilityMaster.setSubscriber(subMaster);
-			facilityMaster.setIsActive(StatusConstants.IS_ACTIVE);
+			facilityMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			mongoTemplate.save(facilityMaster,"LIS_FMACS");
-			if (facilityMaster.getId() != null)
+			if (facilityMaster.getFacilityId() != null)
 				return facilityMasterDTO;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -95,7 +96,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 		logger.info("Entered into getFacilitiesMasterData");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISFacilityMaster> list = mongoTemplate
 				.aggregate(aggregation, "LIS_FMACS", LISFacilityMaster.class).getMappedResults();
@@ -108,7 +109,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 		logger.info("Entered into getFacilityDetailsBySubscriberID DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_FMACS", LISFacilityMaster.class).getMappedResults();
 	}

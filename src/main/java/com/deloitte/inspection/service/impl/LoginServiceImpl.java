@@ -47,8 +47,7 @@ public class LoginServiceImpl implements LoginService{
 	public LoginDTO validateLoginCredentials(LoginDTO loginDTO, HttpSession httpSession) throws LoginException {
 		LoginDTO responseDTO = new LoginDTO();
 		logger.info("User name and password "+loginDTO.getUserId()+" , "+loginDTO.getPassword());
-		if(null != loginDTO && null != loginDTO.getUserId() && null != loginDTO.getPassword()){
-			System.out.println(loginDTO.getUserId()+" , "+loginDTO.getPassword());
+		if(null != loginDTO && null != loginDTO.getUserId() && null != loginDTO.getPassword()) {
 			try{
 				LISLogin login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
 				if(null != login && null == login.getSubscriber() && null == login.getUser()){
@@ -56,13 +55,13 @@ public class LoginServiceImpl implements LoginService{
 				}else{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
 				}
-				if(null != login && login.getIsSessionActive() == 'Y' && null != responseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(responseDTO.getStatus())){
+				if(null != login && login.getIsSessionActive().equals(String.valueOf('Y')) && null != responseDTO && StatusConstants.SUCCESS.equalsIgnoreCase(responseDTO.getStatus())){
 					responseDTO.setStatus(StatusConstants.FAILURE);
 					responseDTO.setErrorMessage("You are already logged in from a different session. Please logout first or wait for sometime.");
 				}else if(null != responseDTO.getErrorMessage()){
 					responseDTO.setStatus(StatusConstants.FAILURE);
 				}else{
-					login.setIsSessionActive(StatusConstants.IS_ACTIVE);
+					login.setIsSessionActive(String.valueOf(StatusConstants.IS_ACTIVE));
 					loginDAO.updateLogin(login);
 					httpSession.setAttribute("user", responseDTO);
 				}
@@ -94,11 +93,11 @@ public class LoginServiceImpl implements LoginService{
 			}
 			if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
 				responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
-			}else if(null != login.getUser() && login.getUser().getIsActive() != 'Y' && !adminFlag){
+			}else if(null != login.getUser() && !login.getUser().getIsActive().equals(String.valueOf('Y')) && !adminFlag){
 				responseDTO.setErrorMessage(StatusConstants.IN_ACTIVE_LOGIN_USER);
 			}else{
 				if(null != login.getSubscriber()){
-					responseDTO.setSubscriberId(login.getSubscriber().getSubscriberId());
+					responseDTO.setSubscriberId(login.getSubscriber().getSubscriberId().intValue());
 					responseDTO.setSubscriberName(login.getSubscriber().getSubscriberName());
 				}
 				if(null != login.getUser()){

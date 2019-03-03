@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -13,65 +14,65 @@ public class LISInspectionLineItemMaster implements Serializable{
 	private static final long serialVersionUID = -236523268575818079L;
 	
 	@Id
-	@Field(value = "ILIMC_ID")
-	private Integer InspectionLineItemId;
+	// @Field(value = "ILIMC_ID")
+	private BigInteger InspectionLineItemId;
 	
-	@Field(value = "INSPECTION_ID")
+	// @Field(value = "INSPECTION_ID")
 	private Integer inspectionID;
 	
-	@Field(value = "INSPECTION_LINE_ID")
+	// @Field(value = "INSPECTION_LINE_ID")
 	private Integer inspectionLineID;
 	
-	@Field(value = "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
+	// @Field(value = "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
 	private String componentProductDrawNumber;
 	
-	@Field(value = "MEASUREMENT_NAME")
+	// @Field(value = "MEASUREMENT_NAME")
 	private String measurmentName;
 	
-	@Field(value = "COMP_PROD_DRAW_NUM")
+	// @Field(value = "COMP_PROD_DRAW_NUM")
 	private String CompProdDrawNum;
 			
-	@Field(value = "BASE_MEASURE")
+	// @Field(value = "BASE_MEASURE")
 	private String baseMeasure;
 	
-	@Field(value = "BASE_MEASURE_UNITS")
+	// @Field(value = "BASE_MEASURE_UNITS")
 	private String baseMeasureUnits;
 	
-	@Field(value = "UPPER_LIMIT")
+	// @Field(value = "UPPER_LIMIT")
 	private Float upperLimit;
 	
-	@Field(value = "LOWER_LIMIT")
+	// @Field(value = "LOWER_LIMIT")
 	private Float lowerLimit;
 	
-	@Field(value = "USER_ID")
+	// @Field(value = "USER_ID")
 	private String userID;
 	
-	@Field(value = "SUBSCRIBER_ID")
+	// @Field(value = "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	@Field(value = "SUBSCRIBER_NAME")
+	// @Field(value = "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 
-	public Integer getInspectionLineItemId() {
+	public BigInteger getInspectionLineItemId() {
 		return InspectionLineItemId;
 	}
 
-	public void setInspectionLineItemId(Integer inspectionLineItemId) {
+	public void setInspectionLineItemId(BigInteger inspectionLineItemId) {
 		InspectionLineItemId = inspectionLineItemId;
 	}
 
@@ -179,11 +180,11 @@ public class LISInspectionLineItemMaster implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 

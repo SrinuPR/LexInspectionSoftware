@@ -3,6 +3,7 @@
  */
 package com.deloitte.inspection.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -80,9 +81,9 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 		subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
 		mongoTemplate.save(subMaster, "LIS_SUMAS");
 		inspStageMaster.setSubscriber(subMaster);
-		inspStageMaster.setIsActive(StatusConstants.IS_ACTIVE);
+		inspStageMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		mongoTemplate.save(inspStageMaster, "LIS_ISMCS");
-		if (inspStageMaster.getId() != null)
+		if (inspStageMaster.getInspStageId() != null)
 			return inspTypeMasterDTO;
 		return null;
 	}
@@ -100,7 +101,7 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 		logger.info("Entered into getAllInspStageMasterData");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionStageMaster> list = mongoTemplate
 				.aggregate(aggregation, "LIS_ISMCS", LISInspectionStageMaster.class).getMappedResults();

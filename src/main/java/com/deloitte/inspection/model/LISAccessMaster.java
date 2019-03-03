@@ -1,6 +1,7 @@
 package com.deloitte.inspection.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -13,30 +14,30 @@ public class LISAccessMaster implements Serializable{
 	private static final long serialVersionUID = 5112717685665555840L;
 	
 	@Id
-	@Field(value = "ACMDS_ID")
-	private Integer accessMasterId;
+	// @Field(value = "ACMDS_ID")
+	private BigInteger accessMasterId;
 	
-	@Field(value = "SCREEN_NUMBER")
+	// @Field(value = "SCREEN_NUMBER")
 	private String screenNumber;
 	
-	@Field(value = "CREATED_TIMESTAMP")
+	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimeStamp;
 	
-	@Field(value = "CREATED_BY")
+	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	@Field(value = "UPDATED_TIMESTAMP")
+	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimeStamp;
 	
-	@Field(value = "UPDATED_BY")
+	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
 	private LISSubscriberMaster subscriber;
 	
 	private LISUserTypeMaster userType;
 	
-	@Field(value = "IS_ACTIVE")
-	private char isActive;
+	// @Field(value = "IS_ACTIVE")
+	private String isActive;
 	
 	public String getScreenNumber() {
 		return screenNumber;
@@ -82,19 +83,19 @@ public class LISAccessMaster implements Serializable{
 		this.createdBy = createdBy;
 	}
 
-	public Integer getAccessMasterId() {
+	public BigInteger getAccessMasterId() {
 		return accessMasterId;
 	}
 
-	public void setAccessMasterId(Integer accessMasterId) {
+	public void setAccessMasterId(BigInteger accessMasterId) {
 		this.accessMasterId = accessMasterId;
 	}
 
-	public char getIsActive() {
+	public String getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(char isActive) {
+	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
 

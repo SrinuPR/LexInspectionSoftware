@@ -91,7 +91,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			purchaseOrderMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
 			purchaseOrderMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
 			purchaseOrderMaster.setSubscriber(subscriberMaster);
-			purchaseOrderMaster.setIsActive(StatusConstants.IS_ACTIVE);
+			purchaseOrderMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			purchaseOrderDataDAO.savePurchaseOrderData(purchaseOrderMaster);
 			status = StatusConstants.SUCCESS;
 		}
@@ -111,15 +111,15 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 						PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
 						if(null != purchaseOrder.getComponent()){
 							purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponent().getComponentProductDrawNumber());
-							purchaseOrderDto.setComponentId(purchaseOrder.getComponent().getCmdcsId());
+							purchaseOrderDto.setComponentId(purchaseOrder.getComponent().getCmdcsId().intValue());
 						}
 						purchaseOrderDto.setCustomerPODate(InspectionUtils.convertDateToString(purchaseOrder.getCustomerPODate()));
 						purchaseOrderDto.setCustomerPONumber(purchaseOrder.getCustomerPONumber());
 						purchaseOrderDto.setCustomerPOQuantity(purchaseOrder.getCustomerPOQuantity());
 						purchaseOrderDto.setPoNotes(purchaseOrder.getNotesPO());
-						purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriber().getSubscriberId());
+						purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriber().getSubscriberId().intValue());
 						purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriber().getSubscriberName());
-						purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId());
+						purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId().intValue());
 						purchaseOrderDTOList.add(purchaseOrderDto);
 					}
 				}

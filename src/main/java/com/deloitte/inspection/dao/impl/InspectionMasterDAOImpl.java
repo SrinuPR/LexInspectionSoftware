@@ -40,7 +40,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 						.is(inspectionDTO.getComponentProductDrawNumber())),
 				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
 				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionMaster> list = mongoTemplate
 				.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class).getMappedResults();
@@ -61,7 +61,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		logger.info("Entered into getInspectionMasterList DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class)
 				.getMappedResults();
@@ -72,7 +72,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		logger.info("Inside getWorkJobOrderById DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
 		query.addCriteria(Criteria.where("inspId").in(inspectionMasterId)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionMaster> list = mongoTemplate.find(query, LISInspectionMaster.class,"LIS_INMDC");
 		if (list.size() > 0) {
 			return list.get(0);
@@ -88,7 +88,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 						.is(inspectionDTO.getComponentProductDrawNumber())),
 				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
 				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionMaster> list = mongoTemplate
 				.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class).getMappedResults();
@@ -116,7 +116,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		logger.info("Inside getInspectionTypesByCompProdDrawNum DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("component.componentProductDrawNumber").is(compProdDrawNum)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class)
 				.getMappedResults();
@@ -138,7 +138,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		Aggregation aggregation1 = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
 				Aggregation.match(Criteria.where("componentProductDrawNumber").in(drawNums)),
-				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		return mongoTemplate
 				.aggregate(aggregation1, "LIS_CMDCS", LISMaintainMasterDataComponent.class)

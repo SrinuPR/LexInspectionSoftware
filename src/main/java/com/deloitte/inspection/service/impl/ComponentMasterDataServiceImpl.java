@@ -59,7 +59,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 				masterDataComponent.setComponentProductNumber(componentMasterDataDTO.getComponentProductNumber().trim());
 				masterDataComponent.setCustomerNameAddress(componentMasterDataDTO.getCustomerNameAddress().trim());
 				masterDataComponent.setComponentProductManufacturerUnits(componentMasterDataDTO.getComponentProductManufacturerUnits().trim());
-				masterDataComponent.setIsActive(StatusConstants.IS_ACTIVE);
+				masterDataComponent.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 				masterDataComponent.setCreatedBy(userName);
 				masterDataComponent.setRecordInProcess(StatusConstants.RECORD_IN_PROCESS_COMPLETED);
 				masterDataComponent.setCreatedTimestamp(new Date());
@@ -150,7 +150,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 			if(null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0){
 				for(LISMaintainMasterDataComponent masterDataComponent : maintainMasterDataComponents){
 					ComponentMasterDataDTO componentMasterDataDTO = new ComponentMasterDataDTO();
-					componentMasterDataDTO.setComponentId(masterDataComponent.getCmdcsId());
+					componentMasterDataDTO.setComponentId(masterDataComponent.getCmdcsId().intValue());
 					componentMasterDataDTO.setComponentProductDrawNumber(masterDataComponent.getComponentProductDrawNumber());
 					componentMasterDataDTO.setComponentProductManufacturerUnits(masterDataComponent.getComponentProductManufacturerUnits());
 					componentMasterDataDTO.setComponentProductMeterial(masterDataComponent.getComponentProductMeterial());
@@ -159,7 +159,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 					componentMasterDataDTO.setComponentProductNumber(masterDataComponent.getComponentProductNumber());
 					componentMasterDataDTO.setCustomerNameAddress(masterDataComponent.getCustomerNameAddress());
 					if(null != masterDataComponent.getSubscriber()){
-						componentMasterDataDTO.setSubscriberId(masterDataComponent.getSubscriber().getSubscriberId());
+						componentMasterDataDTO.setSubscriberId(masterDataComponent.getSubscriber().getSubscriberId().intValue());
 						componentMasterDataDTO.setSubscriberName(masterDataComponent.getSubscriber().getSubscriberName());
 					}
 					componentMasterDataDTOs.add(componentMasterDataDTO);

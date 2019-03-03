@@ -47,31 +47,27 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 			Aggregation aggregation = Aggregation.newAggregation(
 					Aggregation
 							.match(Criteria.where("subscriber.subscriberId").is(createuserDTO.getSubscriberId())),
-					Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)));
+					Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))));
 			List<LISUserMasterCreate> userMasterList = mongoTemplate
 					.aggregate(aggregation, "LIS_UMACS", LISUserMasterCreate.class).getMappedResults();
 			if (null != userMasterList && userMasterList.size() >= applicationProperties.EACH_SUBSCRIBER_USER_COUNT) {
 				return StatusConstants.FAILURE;
 			}
-			LISSubscriberMaster subscriberMaster = null;
 			Query query = new Query();
 			query.addCriteria(Criteria.where("subscriberId").in(createuserDTO.getSubscriberId())
-					.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
-			List<LISSubscriberMaster> subscriberList = mongoTemplate.find(query, LISSubscriberMaster.class);
-			if (null != subscriberList && subscriberList.size() > 0) {
-				subscriberMaster = subscriberList.get(0);
-			}
+					.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
+			LISSubscriberMaster subscriberMaster = mongoTemplate.findOne(query, LISSubscriberMaster.class);
 			LISUserMasterCreate userMaster = new LISUserMasterCreate();
 			userMaster.setActivePassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
-			userMaster.setCreatedBy(createuserDTO.getUserName());
+			userMaster.setCreatedBy(createuserDTO.getCreatedBy());
 			userMaster.setCreatedTimestamp(new Date());
 			userMaster.setOldPassword1(null);
 			userMaster.setOldPassword2(null);
 			userMaster.setSubscriber(subscriberMaster);
 			userMaster.setUserId(createuserDTO.getUserId());
-			userMaster.setUserName(createuserDTO.getCreatedBy());
+			userMaster.setUserName(createuserDTO.getUserName());
 			userMaster.setUserTypeId(createuserDTO.getUserTypeId());
-			userMaster.setIsActive(StatusConstants.IS_ACTIVE);
+			userMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			mongoTemplate.save(userMaster,"LIS_UMACS");
 			LISLogin lisLogin = new LISLogin();
 			lisLogin.setCreatedBy(createuserDTO.getCreatedBy());
@@ -79,7 +75,8 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 			lisLogin.setPassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
 			lisLogin.setUser(userMaster);
 			lisLogin.setSubscriber(subscriberMaster);
-			lisLogin.setIsActive(StatusConstants.IS_ACTIVE);
+			lisLogin.setAdminId(createuserDTO.getAdminId());
+			lisLogin.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			mongoTemplate.save(lisLogin,"LIS_LOGIN");
 			mongoTemplate.save(userMaster,"LIS_UMACS");
 			return StatusConstants.SUCCESS;
@@ -92,7 +89,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	public LISUserMasterCreate validateUserId(String userId) throws CreateUserException {
 		logger.info("Entered into validateUserId");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("userId").in(userId.toLowerCase())
+		query.addCriteria(Criteria.where("userId").in(userId)
 				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
 		List<LISUserMasterCreate> userMaster = mongoTemplate.find(query, LISUserMasterCreate.class,"LIS_UMACS");
 		if (null != userMaster && userMaster.size() > 0) {
