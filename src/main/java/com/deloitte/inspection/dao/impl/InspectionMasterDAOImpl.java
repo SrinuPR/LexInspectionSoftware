@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
+import com.deloitte.inspection.mapper.LISInspectionMasterResult;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.mongodb.client.result.DeleteResult;
@@ -36,7 +38,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public LISInspectionMaster getInspectionStage(InspectionMasterDTO inspectionDTO) {
 		logger.info("Inside getInspectionStage DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("componentMasterData.componentProductDrawNumber")
+				Aggregation.match(Criteria.where("maintainMasterDataComponentId")
 						.is(inspectionDTO.getComponentProductDrawNumber())),
 				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
 				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
@@ -57,13 +59,16 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	}
 
 	@Override
-	public List<LISInspectionMaster> getInspectionMasterList(Integer subscriberId) {
+	public List<LISInspectionMasterResult> getInspectionMasterList(Integer subscriberId) {
 		logger.info("Entered into getInspectionMasterList DAO");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupOperation,
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
-		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class)
+		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMasterResult.class)
 				.getMappedResults();
 	}
 
@@ -84,7 +89,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public LISInspectionMaster getInspectionStageOtherThanCurrent(InspectionMasterDTO inspectionDTO) {
 		logger.info("Inside getInspectionStage DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("component.componentProductDrawNumber")
+				Aggregation.match(Criteria.where("maintainMasterDataComponentId")
 						.is(inspectionDTO.getComponentProductDrawNumber())),
 				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
 				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
@@ -115,7 +120,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public List<LISInspectionMaster> getInspectionTypesByCompProdDrawNum(String compProdDrawNum) {
 		logger.info("Inside getInspectionTypesByCompProdDrawNum DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("component.componentProductDrawNumber").is(compProdDrawNum)),
+				Aggregation.match(Criteria.where("maintainMasterDataComponentId").is(compProdDrawNum)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class)
@@ -126,8 +131,8 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public List<LISMaintainMasterDataComponent> getCompDrawNumsBySubscriberId(Integer subscriberId) {
 		logger.info("getCompDrawNumsBySubscriberId DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
-				Aggregation.project("component.componentProductDrawNumber"));
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
+				Aggregation.project("maintainMasterDataComponentId"));
 		AggregationResults<String> output = mongoTemplate.aggregate(aggregation, "LIS_INMDC", String.class);
 		Set<String> drawNums = new HashSet<String>();
 		if (output != null) {
@@ -136,7 +141,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 			}
 		}
 		Aggregation aggregation1 = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("componentProductDrawNumber").in(drawNums)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));

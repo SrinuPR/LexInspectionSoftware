@@ -1,13 +1,9 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
-import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * @author rnarne
@@ -15,44 +11,40 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 
 @Document(collection = "LIS_SUMAS")
-public class LISSubscriberMaster implements Serializable {
-	
-	private static final long serialVersionUID = 5112717685665555841L;
+public class LISSubscriberMaster {
 	
 	@Id
-	private String id;
+	private String _id;
 	
-	// @Field(value = "SUBSCRIBER_ID")
-	private Integer subscriberId;
+	private String subscriberId;
 	
-	// @Field(value = "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	// @Field(value = "SUBSCRIBER_ADDRESS")
 	private String subscriberAddress;
 	
-	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	// @Field(value = "IS_ACTIVE")
 	private String isActive;
-	
-	private Set<LISUserMasterCreate> userMasterCreateList;
 
-	public Integer getSubscriberId() {
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
+
+	public String getSubscriberId() {
 		return subscriberId;
 	}
 
-	public void setSubscriberId(Integer subscriberId) {
+	public void setSubscriberId(String subscriberId) {
 		this.subscriberId = subscriberId;
 	}
 
@@ -103,29 +95,13 @@ public class LISSubscriberMaster implements Serializable {
 	public void setUpdatedTimestamp(Date updatedTimestamp) {
 		this.updatedTimestamp = updatedTimestamp;
 	}
-	
+
 	public String getIsActive() {
 		return isActive;
 	}
 
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
-	}
-
-	public Set<LISUserMasterCreate> getUserMasterCreateList() {
-		return userMasterCreateList;
-	}
-
-	public void setUserMasterCreateList(Set<LISUserMasterCreate> userMasterCreateList) {
-		this.userMasterCreateList = userMasterCreateList;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 	
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionStageMasterDAO;
 import com.deloitte.inspection.dto.InspectionStageMasterDTO;
 import com.deloitte.inspection.exception.InspectionStageMasterException;
+import com.deloitte.inspection.mapper.LISInspectionStageMasterResult;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISInspectionStageMaster;
 import com.deloitte.inspection.model.LISPartIdentification;
@@ -78,9 +80,9 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 		inspStageMaster.setInspStageId(inspTypeMasterDTO.getInspStageId());
 		inspStageMaster.setInspStageName(inspTypeMasterDTO.getInspStageName());
 		LISSubscriberMaster subMaster = new LISSubscriberMaster();
-		subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
+		subMaster.setSubscriberId(String.valueOf(inspTypeMasterDTO.getSubscriberId()));
 		mongoTemplate.save(subMaster, "LIS_SUMAS");
-		inspStageMaster.setSubscriber(subMaster);
+		inspStageMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 		inspStageMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		mongoTemplate.save(inspStageMaster, "LIS_ISMCS");
 		if (inspStageMaster.getInspStageId() != null)
@@ -96,15 +98,17 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 	 * ()
 	 */
 	@Override
-	public List<LISInspectionStageMaster> getAllInspStageMasterData(Integer subscriberId)
+	public List<LISInspectionStageMasterResult> getAllInspStageMasterData(Integer subscriberId)
 			throws InspectionStageMasterException {
 		logger.info("Entered into getAllInspStageMasterData");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
-		List<LISInspectionStageMaster> list = mongoTemplate
-				.aggregate(aggregation, "LIS_ISMCS", LISInspectionStageMaster.class).getMappedResults();
+		List<LISInspectionStageMasterResult> list = mongoTemplate
+				.aggregate(aggregation, "LIS_ISMCS", LISInspectionStageMasterResult.class).getMappedResults();
 		return list;
 	}
 }

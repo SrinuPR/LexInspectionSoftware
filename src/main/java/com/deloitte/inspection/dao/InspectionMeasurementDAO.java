@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.deloitte.inspection.exception.InspectionMeasurementException;
+import com.deloitte.inspection.mapper.LISInspectionMeasurementsResult;
 import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISInspectionReportMaster;
 import com.deloitte.inspection.model.LISPartIdentification;
@@ -23,7 +24,7 @@ public interface InspectionMeasurementDAO {
 
 	public List<LISInspectionMeasurements> getAllMeasurementList(String userId) throws InspectionMeasurementException;
 
-	public List<LISInspectionMeasurements> validatePartIdentification(String partIdententificationId,Integer subscriberId) throws InspectionMeasurementException;
+	public List<LISInspectionMeasurementsResult> validatePartIdentification(String partIdententificationId,Integer subscriberId) throws InspectionMeasurementException;
 
 	public void saveMeasurementsToDataBase(LISInspectionMeasurements inspectionMeasurements) throws InspectionMeasurementException;
 
@@ -35,5 +36,4 @@ public interface InspectionMeasurementDAO {
 	public void saveMeasurementRecord(LISPartIdentification partIdentification) throws InspectionMeasurementException;
 
 	public LISInspectionMeasurements getRecordById(Integer inspectionMeasurementId)  throws InspectionMeasurementException;
-
 }

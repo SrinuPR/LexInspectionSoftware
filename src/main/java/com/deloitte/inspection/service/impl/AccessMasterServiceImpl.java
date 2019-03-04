@@ -17,6 +17,7 @@ import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dao.UserTypeMasterDAO;
 import com.deloitte.inspection.dao.impl.LoginDAOImpl;
 import com.deloitte.inspection.dto.AccessMasterDTO;
+import com.deloitte.inspection.mapper.LISUserTypeMasterResult;
 import com.deloitte.inspection.model.LISAccessMaster;
 import com.deloitte.inspection.model.LISMasterListOfScreensForSubscriber;
 import com.deloitte.inspection.model.LISSubscriberMaster;
@@ -52,8 +53,8 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				if(null != accessMasterDTO.getAccessMasterId()){
 					LISAccessMaster accessMaster = accessMasterDao.getAccessMaster(accessMasterDTO.getAccessMasterId());
 					accessMaster.setScreenNumber(accessMasterDTO.getScreenNumbers());
-					accessMaster.setSubscriber(subscriberMaster);
-					accessMaster.setUserType(userTypeMaster);
+					accessMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
+					accessMaster.setUserTypeMasterId(userTypeMaster.getUserTypeId());
 					accessMaster.setUpdatedBy(accessMasterDTO.getUserId());
 					accessMaster.setUpdatedTimeStamp(new Date());
 					accessMasterDao.saveAccessMaster(accessMaster);
@@ -62,9 +63,9 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 					accessMaster.setCreatedBy(accessMasterDTO.getUserId());
 					accessMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 					accessMaster.setScreenNumber(accessMasterDTO.getScreenNumbers());
-					accessMaster.setSubscriber(subscriberMaster);
-					accessMaster.setUserType(userTypeMaster);
-					accessMaster.setCreatedTimestamp(new Date());
+					accessMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
+					accessMaster.setUserTypeMasterId(userTypeMaster.getUserTypeId());
+					accessMaster.setCreatedTimeStamp(new Date());
 					accessMasterDao.saveAccessMaster(accessMaster);
 				}
 				responseDTO.setStatus(StatusConstants.SUCCESS);
@@ -103,19 +104,19 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 		logger.info("Inside getUserTypeListforSubscriber service");
 		AccessMasterResponseDTO accessMasterResponseDTO = new AccessMasterResponseDTO();
 		try{
-			List<LISUserTypeMaster> userTypeMasters = accessMasterDao.getUserTypeListforSubscriber(subscriberId);
+			List<LISUserTypeMasterResult> userTypeMasters = accessMasterDao.getUserTypeListforSubscriber(subscriberId);
 			if(null != userTypeMasters && userTypeMasters.size() > 0){
 				List<AccessMasterDTO> accessMasterDTOs = new ArrayList<AccessMasterDTO>();
-				for(LISUserTypeMaster usertype : userTypeMasters){
+				for(LISUserTypeMasterResult usertype : userTypeMasters){
 					AccessMasterDTO accessMasterDTO = new AccessMasterDTO();
-					if(null != usertype.getAccess()){
-						accessMasterDTO.setAccessMasterId(usertype.getAccess().getAccessMasterId().intValue());
+					if(null != usertype.getLisAccessMaster()){
+						accessMasterDTO.setAccessMasterId(Integer.valueOf(usertype.getLisAccessMaster().getAccessMasterId()));
 					}
-					accessMasterDTO.setSubscriberId(usertype.getSubscriber().getSubscriberId().intValue());
-					accessMasterDTO.setUserTypeId(usertype.getUserTypeId());
+					accessMasterDTO.setSubscriberId(Integer.valueOf(usertype.getSubscriberMaster().getSubscriberId()));
+					accessMasterDTO.setUserTypeId(Integer.valueOf(usertype.getUserTypeId()));
 					accessMasterDTO.setUserTypeName(usertype.getUserTypeName());
-					if(null != usertype.getAccess() && null != usertype.getAccess().getScreenNumber()){
-						accessMasterDTO.setScreenNumbers(usertype.getAccess().getScreenNumber());
+					if(null != usertype.getLisAccessMaster() && null != usertype.getLisAccessMaster().getScreenNumber()){
+						accessMasterDTO.setScreenNumbers(usertype.getLisAccessMaster().getScreenNumber());
 					}
 					accessMasterDTOs.add(accessMasterDTO);
 				}

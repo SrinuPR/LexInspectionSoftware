@@ -15,6 +15,7 @@ import com.deloitte.inspection.dao.ShiftMasterDAO;
 import com.deloitte.inspection.dto.CommonDTO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
 import com.deloitte.inspection.exception.ShiftMasterException;
+import com.deloitte.inspection.mapper.LISShiftMasterResult;
 import com.deloitte.inspection.model.LISShiftMaster;
 import com.deloitte.inspection.response.dto.ShiftMasterResponseDTO;
 import com.deloitte.inspection.service.ShiftMasterService;
@@ -76,12 +77,12 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 					resShiftMasterDTO.setMessage(ShiftMasterConstants.SHIFT_ID_REQUIRED);
 				}	
 				List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
-				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
-				for(LISShiftMaster tempMaster:shiftMasterList) {
+				List<LISShiftMasterResult> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
+				for(LISShiftMasterResult tempMaster:shiftMasterList) {
 					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 					masterDTO.setShiftId(tempMaster.getShiftId());
 					masterDTO.setShiftName(tempMaster.getShiftName());
-					masterDTO.setSubscriberId(tempMaster.getSubscriber().getSubscriberId().intValue());
+					masterDTO.setSubscriberId(Integer.valueOf(tempMaster.getSubscriberMaster().getSubscriberId()));
 					shiftMasterDTOList.add(masterDTO);
 				}
 				resShiftMasterDTO.setResult(shiftMasterDTOList);
@@ -99,13 +100,13 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 	public ShiftMasterResponseDTO getAllShifts(Integer subscriberId) throws ShiftMasterException {
 		ShiftMasterResponseDTO shiftMasterResponseDTO=new ShiftMasterResponseDTO();
 		List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
-		List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
+		List<LISShiftMasterResult> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
 		if(null!=shiftMasterList && shiftMasterList.size()>0) {
-			for(LISShiftMaster tempMaster:shiftMasterList) {
+			for(LISShiftMasterResult tempMaster:shiftMasterList) {
 				ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 				masterDTO.setShiftId(tempMaster.getShiftId());
 				masterDTO.setShiftName(tempMaster.getShiftName());
-				masterDTO.setSubscriberId(tempMaster.getSubscriber().getSubscriberId().intValue());
+				masterDTO.setSubscriberId(Integer.valueOf(tempMaster.getSubscriberMaster().getSubscriberId()));
 				shiftMasterDTOList.add(masterDTO);
 			}
 		}
@@ -151,12 +152,12 @@ public class ShiftMasterServiceImpl implements ShiftMasterService{
 					resShiftMasterDTO.setMessage(ShiftMasterConstants.SHIFT_ID_REQUIRED);
 				}
 				List<ShiftMasterDTO> shiftMasterDTOList=new ArrayList<ShiftMasterDTO>();
-				List<LISShiftMaster> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
-				for(LISShiftMaster tempMaster:shiftMasterList) {
+				List<LISShiftMasterResult> shiftMasterList=ShiftMasterDAO.findBySubscriberId(subscriberId);
+				for(LISShiftMasterResult tempMaster:shiftMasterList) {
 					ShiftMasterDTO masterDTO=new ShiftMasterDTO();
 					masterDTO.setShiftId(tempMaster.getShiftId());
 					masterDTO.setShiftName(tempMaster.getShiftName());
-					masterDTO.setSubscriberId(tempMaster.getSubscriber().getSubscriberId().intValue());
+					masterDTO.setSubscriberId(Integer.valueOf(tempMaster.getSubscriberMaster().getSubscriberId()));
 					shiftMasterDTOList.add(masterDTO);
 				}
 				resShiftMasterDTO.setResult(shiftMasterDTOList);

@@ -16,6 +16,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionLineItemMasterDAO;
 import com.deloitte.inspection.dto.InspectionLineItemDTO;
 import com.deloitte.inspection.exception.InspectionLineItemMasterException;
+import com.deloitte.inspection.mapper.LISInspectionMasterResult;
 import com.deloitte.inspection.model.LISInspectionLineItemMaster;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.response.dto.InspectionLineItemResponseDTO;
@@ -83,8 +84,8 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 		}
 		inspectionLineItemMaster.setBaseMeasure(inspectionLineItemDTO.getBaseMeasure());
 		inspectionLineItemMaster.setBaseMeasureUnits(inspectionLineItemDTO.getBaseMeasureUnits());
-		inspectionLineItemMaster.setLowerLimit(inspectionLineItemDTO.getLowerLimit());
-		inspectionLineItemMaster.setUpperLimit(inspectionLineItemDTO.getUpperLimit());
+		inspectionLineItemMaster.setLowerLimit(String.valueOf(inspectionLineItemDTO.getLowerLimit()));
+		inspectionLineItemMaster.setUpperLimit(String.valueOf(inspectionLineItemDTO.getUpperLimit()));
 		return inspectionLineItemMaster;
 	}
 
@@ -95,10 +96,10 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 		InspectionLineItemResponseDTO inspectionLineItemResponseDTO = new InspectionLineItemResponseDTO();
 		try{
 			Set<String> componentProductDrawNumList = new HashSet<String>();
-			List<LISInspectionMaster> mastersList = inspectionLineMasterDAO.getComponentProductDrawNumbers(subscriberId);
+			List<LISInspectionMasterResult> mastersList = inspectionLineMasterDAO.getComponentProductDrawNumbers(subscriberId);
 			if(null != mastersList && mastersList.size() > 0){
-				for(LISInspectionMaster lisInspectionMaster : mastersList){
-					componentProductDrawNumList.add(lisInspectionMaster.getComponent().getComponentProductDrawNumber());
+				for(LISInspectionMasterResult lisInspectionMaster : mastersList){
+					componentProductDrawNumList.add(lisInspectionMaster.getMaintainMasterDataComponent().getComponentProductDrawNumber());
 				}
 			}
 			List<String> ProductDrawNumList = new ArrayList<String>(componentProductDrawNumList);
@@ -138,13 +139,13 @@ public class InspectionLineItemMasterServiceImpl implements InspectionLineItemMa
 		logger.info("Entered into transformToDTO ");
 		inspectionLineItemDTO.setSubscriberId(lineItemMaster.getSubscriberId());
 		inspectionLineItemDTO.setComponentProductDrawNumber(lineItemMaster.getComponentProductDrawNumber());
-		inspectionLineItemDTO.setInspectionLineItemId(lineItemMaster.getInspectionLineItemId().intValue());
+		inspectionLineItemDTO.setInspectionLineItemId(Integer.valueOf(lineItemMaster.getInspectionLineItemId()));
 		inspectionLineItemDTO.setUserId(lineItemMaster.getUserID());
 		inspectionLineItemDTO.setBaseMeasure(lineItemMaster.getBaseMeasure());
 		inspectionLineItemDTO.setBaseMeasureUnits(lineItemMaster.getBaseMeasureUnits());
-		inspectionLineItemDTO.setLowerLimit(lineItemMaster.getLowerLimit());
+		inspectionLineItemDTO.setLowerLimit(Float.valueOf(lineItemMaster.getLowerLimit()));
 		inspectionLineItemDTO.setMeasurementName(lineItemMaster.getMeasurmentName());
-		inspectionLineItemDTO.setUpperLimit(lineItemMaster.getUpperLimit());
+		inspectionLineItemDTO.setUpperLimit(Float.valueOf(lineItemMaster.getUpperLimit()));
 		inspectionLineItemDTO.setSubscriberName(lineItemMaster.getSubscriberName());
 		return inspectionLineItemDTO;
 	}	

@@ -3,7 +3,6 @@
  */
 package com.deloitte.inspection.dao.impl;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -21,7 +21,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionTypeMasterDAO;
 import com.deloitte.inspection.dto.InspectionTypeMasterDTO;
 import com.deloitte.inspection.exception.InspectionTypeMasterException;
-import com.deloitte.inspection.model.LISInspectionMaster;
+import com.deloitte.inspection.mapper.LISInspectionTypeMasterResult;
 import com.deloitte.inspection.model.LISInspectionTypeMaster;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 
@@ -64,9 +64,9 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 		inspTypeMaster.setInspTypeId(inspTypeMasterDTO.getInspTypeId());
 		inspTypeMaster.setInspTypeName(inspTypeMasterDTO.getInspTypeName());
 		LISSubscriberMaster subMaster = new LISSubscriberMaster();
-		subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
+		subMaster.setSubscriberId(String.valueOf(inspTypeMasterDTO.getSubscriberId()));
 		mongoTemplate.save(subMaster);
-		inspTypeMaster.setSubscriber(subMaster);
+		inspTypeMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 		inspTypeMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		mongoTemplate.save(inspTypeMaster);
 		if (inspTypeMaster.getInspTypeId() != null)
@@ -78,13 +78,15 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 	 * @see com.deloitte.inspection.dao.InspectionTypeMasterDAO#getAllInspTypeMasterData()
 	 */
 	@Override
-	public List<LISInspectionTypeMaster> getAllInspTypeMasterData(Integer subscriberId) throws InspectionTypeMasterException {
+	public List<LISInspectionTypeMasterResult> getAllInspTypeMasterData(Integer subscriberId) throws InspectionTypeMasterException {
 		logger.info("Entered into getAllInspTypeMasterData");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
-		List<LISInspectionTypeMaster> list = mongoTemplate.aggregate(aggregation, "LIS_ITMCS", LISInspectionTypeMaster.class)
+		List<LISInspectionTypeMasterResult> list = mongoTemplate.aggregate(aggregation, "LIS_ITMCS", LISInspectionTypeMasterResult.class)
 				.getMappedResults();
 		return list;
 	}

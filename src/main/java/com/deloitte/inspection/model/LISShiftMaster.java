@@ -1,46 +1,33 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_SHMCS")
-public class LISShiftMaster implements Serializable{
-		
-	private static final long serialVersionUID = 382945870712132210L;
+public class LISShiftMaster {
 
 	@Id	
-	// @Field(value =  "SHIFT_ID")
 	private String shiftId;
 	
-	// @Field(value =  "SHIFT_NAME")
 	private String shiftName;
 	
-	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	// @Field(value =  "IS_ACTIVE")
 	private String isActive;
+
+	private String recordInProcess;
 	
-	// @Field(value =  "RECORD_IN_PROCESS")
-	private char recordInProcess;
+	private String subscriberMasterId;//foreign key
 	
-	private LISSubscriberMaster subscriber;
-	
-	// @Field(value =  "USER_ID")
-	private String userId;	
+	private String userId;
 
 	public String getShiftId() {
 		return shiftId;
@@ -98,28 +85,28 @@ public class LISShiftMaster implements Serializable{
 		this.isActive = isActive;
 	}
 
+	public String getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(String recordInProcess) {
+		this.recordInProcess = recordInProcess;
+	}
+
+	public String getSubscriberMasterId() {
+		return subscriberMasterId;
+	}
+
+	public void setSubscriberMasterId(String subscriberMasterId) {
+		this.subscriberMasterId = subscriberMasterId;
+	}
+
 	public String getUserId() {
 		return userId;
 	}
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public char getRecordInProcess() {
-		return recordInProcess;
-	}
-
-	public void setRecordInProcess(char recordInProcess) {
-		this.recordInProcess = recordInProcess;
-	}
-
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
-	}
+	}	
 	
 }

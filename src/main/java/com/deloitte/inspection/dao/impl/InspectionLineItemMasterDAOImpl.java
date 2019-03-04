@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionLineItemMasterDAO;
 import com.deloitte.inspection.dto.InspectionLineItemDTO;
 import com.deloitte.inspection.exception.InspectionLineItemMasterException;
+import com.deloitte.inspection.mapper.LISInspectionMasterResult;
 import com.deloitte.inspection.model.LISInspectionLineItemMaster;
 import com.deloitte.inspection.model.LISInspectionMaster;
 
@@ -40,16 +42,19 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 	}
 
 	@Override
-	public List<LISInspectionMaster> getComponentProductDrawNumbers(Integer subscriberId)
+	public List<LISInspectionMasterResult> getComponentProductDrawNumbers(Integer subscriberId)
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into getComponentProductDrawNumbers DAO");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriberMaster.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
-				Aggregation.sort(Direction.ASC, "componentMasterData.componentProductDrawNumber"));
+				lookupOperation,
+				Aggregation.sort(Direction.ASC, "maintainMasterDataComponentId"));
 
-		List<LISInspectionMaster> list = mongoTemplate
-				.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class).getMappedResults();
+		List<LISInspectionMasterResult> list = mongoTemplate
+				.aggregate(aggregation, "LIS_INMDC", LISInspectionMasterResult.class).getMappedResults();
 		return list;
 	}
 
@@ -58,7 +63,7 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 			throws InspectionLineItemMasterException {
 		logger.info("Entered into getAllInspectionLineItems DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriberMaster.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionLineItemMaster> list = mongoTemplate

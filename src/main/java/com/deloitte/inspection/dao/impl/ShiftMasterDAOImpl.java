@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ import com.deloitte.inspection.dao.ShiftMasterDAO;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.ShiftMasterDTO;
 import com.deloitte.inspection.exception.ShiftMasterException;
+import com.deloitte.inspection.mapper.LISShiftMasterResult;
 import com.deloitte.inspection.model.LISShiftMaster;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 
@@ -44,7 +46,7 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 			shiftMaster.setUserId(userId);
 			shiftMaster.setShiftName(shiftMasterDTO.getShiftName());
 			LISSubscriberMaster subMaster = subcriberDAO.getSubscriberById(shiftMasterDTO.getSubscriberId());
-			shiftMaster.setSubscriber(subMaster);
+			shiftMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 			shiftMaster.setCreatedBy(shiftMasterDTO.getCreatedBy());
 			shiftMaster.setCreatedTimestamp(shiftMasterDTO.getCreatedTimestamp());			
 			mongoTemplate.save(shiftMaster);
@@ -65,13 +67,16 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 	}
 
 	@Override
-	public List<LISShiftMaster> findBySubscriberId(Integer subscriberId) throws ShiftMasterException {
-		logger.info("Entered into getAllShifts");	
+	public List<LISShiftMasterResult> findBySubscriberId(Integer subscriberId) throws ShiftMasterException {
+		logger.info("Entered into getAllShifts");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupOperation,
 						Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
-		return mongoTemplate.aggregate(aggregation, "LIS_SHMCS", LISShiftMaster.class).getMappedResults();
+		return mongoTemplate.aggregate(aggregation, "LIS_SHMCS", LISShiftMasterResult.class).getMappedResults();
 	}
 
 	@Override
@@ -96,7 +101,7 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 			shiftMaster.setShiftId(createShiftMasterDTO.getShiftId());
 			shiftMaster.setShiftName(createShiftMasterDTO.getShiftName());
 			LISSubscriberMaster subMaster = subcriberDAO.getSubscriberById(createShiftMasterDTO.getSubscriberId());
-			shiftMaster.setSubscriber(subMaster);
+			shiftMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 			shiftMaster.setUpdatedBy(createShiftMasterDTO.getUpdatedBy());
 			shiftMaster.setUpdatedTimestamp(createShiftMasterDTO.getUpdatedTimestamp());
 			
@@ -115,7 +120,7 @@ private static final Logger logger = LogManager.getLogger(ShiftMasterDAOImpl.cla
 	}
 
 	@Override
-	public List<LISShiftMaster> getAllShiftsBySubscriberId(Integer subscriberId) throws ShiftMasterException {
+	public List<LISShiftMasterResult> getAllShiftsBySubscriberId(Integer subscriberId) throws ShiftMasterException {
 		logger.info("Entered into getAllShifts");	
 		return findBySubscriberId(subscriberId);
 	}

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.deloitte.inspection.dto.PasswordMaintenanceDTO;
 import com.deloitte.inspection.email.EmailService;
 import com.deloitte.inspection.exception.CryptoException;
 import com.deloitte.inspection.exception.LoginException;
+import com.deloitte.inspection.mapper.LISLoginResult;
 import com.deloitte.inspection.model.LISAccessMaster;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISUserMasterCreate;
@@ -49,8 +51,8 @@ public class LoginServiceImpl implements LoginService{
 		logger.info("User name and password "+loginDTO.getUserId()+" , "+loginDTO.getPassword());
 		if(null != loginDTO && null != loginDTO.getUserId() && null != loginDTO.getPassword()) {
 			try{
-				LISLogin login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
-				if(null != login && null == login.getSubscriber() && null == login.getUser()){
+				LISLoginResult login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
+				if(null != login && null == login.getSubscriberMaster() && null == login.getUserMasterCreate()){
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.ADMIN_ROLE,responseDTO,loginDTO);
 				}else{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
@@ -62,7 +64,9 @@ public class LoginServiceImpl implements LoginService{
 					responseDTO.setStatus(StatusConstants.FAILURE);
 				}else{
 					login.setIsSessionActive(String.valueOf(StatusConstants.IS_ACTIVE));
-					loginDAO.updateLogin(login);
+					LISLogin loginInfo = new LISLogin();
+					BeanUtils.copyProperties(login, loginInfo, "subscriberMaster", "userMasterCreate");
+					loginDAO.updateLogin(loginInfo);
 					httpSession.setAttribute("user", responseDTO);
 				}
 				/*LoggedInUsers loggedInUsers = new LoggedInUsers();
@@ -85,7 +89,7 @@ public class LoginServiceImpl implements LoginService{
 		return responseDTO;
 	}
 
-	private LoginDTO checkLoggedinUserRole(LISLogin login, String otherRole, LoginDTO responseDTO, LoginDTO loginDTO) throws Exception {
+	private LoginDTO checkLoggedinUserRole(LISLoginResult login, String otherRole, LoginDTO responseDTO, LoginDTO loginDTO) throws Exception {
 		try{
 			boolean adminFlag = false;
 			if(null != otherRole && StatusConstants.ADMIN_ROLE.equalsIgnoreCase(otherRole)){
@@ -93,23 +97,23 @@ public class LoginServiceImpl implements LoginService{
 			}
 			if(null == login || !cryptoComponent.decrypt(login.getPassword()).equals(loginDTO.getPassword())){
 				responseDTO.setErrorMessage(StatusConstants.INCORRECT_CREDENTIALS);
-			}else if(null != login.getUser() && !login.getUser().getIsActive().equals(String.valueOf('Y')) && !adminFlag){
+			}else if(null != login.getUserMasterCreate() && !login.getUserMasterCreate().getIsActive().equals(String.valueOf('Y')) && !adminFlag){
 				responseDTO.setErrorMessage(StatusConstants.IN_ACTIVE_LOGIN_USER);
 			}else{
-				if(null != login.getSubscriber()){
-					responseDTO.setSubscriberId(login.getSubscriber().getSubscriberId().intValue());
-					responseDTO.setSubscriberName(login.getSubscriber().getSubscriberName());
+				if(null != login.getSubscriberMaster()){
+					responseDTO.setSubscriberId(Integer.valueOf(login.getSubscriberMaster().getSubscriberId()));
+					responseDTO.setSubscriberName(login.getSubscriberMaster().getSubscriberName());
 				}
-				if(null != login.getUser()){
-					logger.info("login credentails "+login.getUser().getUserId()+" , "+login.getPassword());
-					responseDTO.setUserId(login.getUser().getUserId());
-					responseDTO.setUserName(login.getUser().getUserName());
+				if(null != login.getUserMasterCreate()){
+					logger.info("login credentails "+login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
+					responseDTO.setUserId(login.getUserMasterCreate().getUserId());
+					responseDTO.setUserName(login.getUserMasterCreate().getUserName());
 					responseDTO.setIsAdmin('N');
-					if(null == login.getUser().getOldPassword1() && null == login.getUser().getOldPassword2() 
-							&& null != login.getUser().getActivePassword()){
+					if(null == login.getUserMasterCreate().getOldPassword1() && null == login.getUserMasterCreate().getOldPassword2() 
+							&& null != login.getUserMasterCreate().getActivePassword()){
 						responseDTO.setFirstTimeLogin(true);
 					}
-					Integer userTypeId = login.getUser().getUserTypeId();
+					Integer userTypeId = login.getUserMasterCreate().getUserTypeId();
 					LISAccessMaster lisAccessMaster = accessMasterDAO.getAccessMasterByUserTypeId(userTypeId);
 					if(null != lisAccessMaster)
 						responseDTO.setScreenList(lisAccessMaster.getScreenNumber());
@@ -137,8 +141,8 @@ public class LoginServiceImpl implements LoginService{
 			userMasterModel = loginDAO.validateUser(passwordMaintenanceDTO.getUserId());
 		}
 		if (null == userMasterModel) {
-			LISLogin login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
-			if(null != login && null == login.getSubscriber() && null != login.getAdminId()){
+			LISLoginResult login = loginDAO.validateLoginCredentials(passwordMaintenanceDTO.getUserId());
+			if(null != login && null == login.getSubscriberMaster() && null != login.getAdminId()){
 				response = passwordReset(null,passwordMaintenanceDTO,login,StatusConstants.ADMIN_ROLE);
 			}else{
 				response = StatusConstants.INVALID_USER;
@@ -150,7 +154,7 @@ public class LoginServiceImpl implements LoginService{
 		return response;
 	}
 	
-	private String passwordReset(LISUserMasterCreate userMasterModel,PasswordMaintenanceDTO passwordMaintenanceDTO,LISLogin login,String role) throws LoginException{
+	private String passwordReset(LISUserMasterCreate userMasterModel,PasswordMaintenanceDTO passwordMaintenanceDTO,LISLoginResult login,String role) throws LoginException{
 		String response = new String();
 		Boolean emailSent = false;
 		RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
@@ -198,7 +202,7 @@ public class LoginServiceImpl implements LoginService{
 	@Override
 	public String changePassword(PasswordMaintenanceDTO passwordMaintenanceDTO) throws LoginException {
 		logger.info("Inside changePassword of ChangePasswordServiceImpl for ");
-		LISLogin login = null;
+		LISLoginResult login = null;
 		String response = new String();
 		boolean correctPass = false;
 		LISUserMasterCreate userMasterModel = new LISUserMasterCreate();
@@ -234,7 +238,7 @@ public class LoginServiceImpl implements LoginService{
 		}
 	}
 	
-	private String updatePassword(PasswordMaintenanceDTO passwordMaintenanceDTO, LISUserMasterCreate userMasterModel, LISLogin login)
+	private String updatePassword(PasswordMaintenanceDTO passwordMaintenanceDTO, LISUserMasterCreate userMasterModel, LISLoginResult login)
 			throws LoginException {
 
 		String response = new String();

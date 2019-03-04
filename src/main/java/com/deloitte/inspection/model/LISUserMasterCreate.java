@@ -1,54 +1,47 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_UMACS")
-public class LISUserMasterCreate implements Serializable {
-
-	private static final long serialVersionUID = 6533302101506254629L;
+public class LISUserMasterCreate {
 
     @Id
-    private String id;
+    private String _id;
     
-	// @Field(value = "USER_ID")
 	private String userId;
 	
-	// @Field(value = "USER_NAME")
 	private String userName;
 	
-	// @Field(value = "OLD_PASSWORD1")
 	private String oldPassword1;
 	
-	// @Field(value = "OLD_PASSWORD2")
 	private String oldPassword2;
 	
-	// @Field(value = "ACTIVE_PASSWORD")
 	private String activePassword;
 	
-	// @Field(value = "USER_TYPE_ID")
 	private Integer userTypeId;
 	
-	// @Field(value = "CREATED_BY")
 	private String createdBy;
-	
-	// @Field(value = "CREATED_TIMESTAMP")
+
 	private Date createdTimestamp;
 	
-	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 
-	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	// @Field(value = "IS_ACTIVE")
 	private String isActive;
 	
-	private LISSubscriberMaster subscriber;
+	private String subscriberMasterId;//foreign key
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getUserId() {
 		return userId;
@@ -90,20 +83,20 @@ public class LISUserMasterCreate implements Serializable {
 		this.activePassword = activePassword;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public Integer getUserTypeId() {
 		return userTypeId;
 	}
 
 	public void setUserTypeId(Integer userTypeId) {
 		this.userTypeId = userTypeId;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Date getCreatedTimestamp() {
@@ -138,19 +131,12 @@ public class LISUserMasterCreate implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
+	public String getSubscriberMasterId() {
+		return subscriberMasterId;
 	}
 
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
+	public void setSubscriberMasterId(String subscriberMasterId) {
+		this.subscriberMasterId = subscriberMasterId;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 }

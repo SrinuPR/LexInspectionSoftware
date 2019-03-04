@@ -3,12 +3,10 @@
  */
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * @author 
@@ -16,26 +14,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 
 @Document(collection = "LIS_DATATABLE_USERTYPEID")
-public class LISStaticUserType implements Serializable {
-
-	
-	private static final long serialVersionUID = 5112717685665555841L;
+public class LISStaticUserType {
 
 	@Id	
-	// @Field(value = "USER_TYPE_ID")
 	private String userTypeId;
 	
-	// @Field(value = "USER_TYPE_NAME")
 	private String userTypeName;
 	
-	// @Field(value = "ACTIVE_SW")
 	private String activeSw;
 	
-	// @Field(value = "EFF_START_DT")
-	private Timestamp effStartDt;
+	private Date effStartDt;
 	
-	// @Field(value = "EFF_END_DT")
-	private Timestamp effEndDt;
+	private Date effEndDt;
 
 	public String getUserTypeId() {
 		return userTypeId;
@@ -61,19 +51,19 @@ public class LISStaticUserType implements Serializable {
 		this.activeSw = activeSw;
 	}
 
-	public Timestamp getEffStartDt() {
+	public Date getEffStartDt() {
 		return effStartDt;
 	}
 
-	public void setEffStartDt(Timestamp effStartDt) {
+	public void setEffStartDt(Date effStartDt) {
 		this.effStartDt = effStartDt;
 	}
 
-	public Timestamp getEffEndDt() {
+	public Date getEffEndDt() {
 		return effEndDt;
 	}
 
-	public void setEffEndDt(Timestamp effEndDt) {
+	public void setEffEndDt(Date effEndDt) {
 		this.effEndDt = effEndDt;
 	}	
 }

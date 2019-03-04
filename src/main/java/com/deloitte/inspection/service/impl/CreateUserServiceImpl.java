@@ -87,7 +87,7 @@ public class CreateUserServiceImpl implements CreateUserService {
 			if(null != userTypeMasters && userTypeMasters.size() > 0){
 				for(LISUserTypeMaster lisUserTypeMaster : userTypeMasters){
 					UserTypeMasterDTO userTypeMasterDTO = new UserTypeMasterDTO();
-					userTypeMasterDTO.setUserTypeId(lisUserTypeMaster.getUserTypeId());
+					userTypeMasterDTO.setUserTypeId(Integer.valueOf(lisUserTypeMaster.getUserTypeId()));
 					userTypeMasterDTO.setUserTypeName(lisUserTypeMaster.getUserTypeName());
 					userTypeMasterDTOs.add(userTypeMasterDTO);
 				}

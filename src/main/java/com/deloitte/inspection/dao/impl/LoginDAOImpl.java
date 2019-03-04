@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.LoginDAO;
 import com.deloitte.inspection.exception.LoginException;
+import com.deloitte.inspection.mapper.LISLoginResult;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISUserMasterCreate;
 
@@ -28,11 +30,17 @@ public class LoginDAOImpl implements LoginDAO{
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public LISLogin validateLoginCredentials(String userId) throws LoginException {
+	public LISLoginResult validateLoginCredentials(String userId) throws LoginException {
 		logger.info("Entered into validateLoginCredentials" + userId);	
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
+		LookupOperation lookupOperation1 = LookupOperation.newLookup().from("LIS_UMACS").localField("userMasterCreateId")
+				.foreignField("userId").as("userMasterCreate");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId))));
-		List<LISLogin> loginList = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class)
+				Aggregation.match(new Criteria().orOperator(Criteria.where("userMasterCreateId").is(userId),Criteria.where("adminId").is(userId))),
+				lookupOperation,
+				lookupOperation1);
+		List<LISLoginResult> loginList = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLoginResult.class)
 				.getMappedResults();
 		if(null != loginList && loginList.size() > 0){
 			return loginList.get(0);

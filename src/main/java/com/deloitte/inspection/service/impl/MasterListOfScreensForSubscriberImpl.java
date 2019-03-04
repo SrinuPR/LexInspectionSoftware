@@ -70,7 +70,7 @@ public class MasterListOfScreensForSubscriberImpl implements MasterListOfScreens
 		row.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 		row.setScreenName(masterDTO.getScreenName());
 		row.setScreenNumber(masterDTO.getScreenNumber());
-		row.setSubscriberId(BigInteger.valueOf(masterDTO.getSubscriberId()));
+		row.setSubscriberId(masterDTO.getSubscriberId());
 		return row;
 	}
 
@@ -85,7 +85,7 @@ public class MasterListOfScreensForSubscriberImpl implements MasterListOfScreens
 				List<MasterListOfScreensForSubscriberDTO> results = new ArrayList<MasterListOfScreensForSubscriberDTO>();
 				for(LISMasterListOfScreensForSubscriber screenRow:masterList){
 					MasterListOfScreensForSubscriberDTO screenData = new MasterListOfScreensForSubscriberDTO();
-					screenData.setMasterListId(screenRow.getMasterListId().intValue());
+					screenData.setMasterListId(Integer.valueOf(screenRow.getMasterListId()));
 					screenData.setScreenName(screenRow.getScreenName());
 					screenData.setScreenNumber(screenRow.getScreenNumber());
 					screenData.setSubscriberId(screenRow.getSubscriberId().intValue());

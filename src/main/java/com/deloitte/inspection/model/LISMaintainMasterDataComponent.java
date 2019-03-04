@@ -1,70 +1,51 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_CMDCS")
-public class LISMaintainMasterDataComponent implements Serializable{
-	
-	private static final long serialVersionUID = 382945870712132280L;
+public class LISMaintainMasterDataComponent {
 	
 	@Id
-	// @Field(value = "CMDCS_ID")
-	private BigInteger cmdcsId;
+	private String cmdcsId;
 	
-	// @Field(value = "COMP_PROD_DRAW_NUM")
 	private String componentProductDrawNumber;
 	
-	// @Field(value = "CUST_NAME_ADDR")
 	private String customerNameAddress;
 	
-	// @Field(value = "COMP_PROD_NAME")
 	private String componentProductName;
 	
-	// @Field(value = "COMP_PROD_NUM")
 	private String componentProductNumber;
 	
-	// @Field(value = "COMP_PROD_MATERIAL")
 	private String componentProductMeterial;
 	
-	// @Field(value = "COMP_PROD_MANUFAC_UNITS")
 	private String componentProductManufacturerUnits;
 	
-	// @Field(value = "COMP_PROD_NOTES")
 	private String componentProductNotes;
 	
-	// @Field(value = "CREATED_BY")
 	private String createdBy;
 	
-	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
 	
-	// @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	private LISSubscriberMaster subscriber;
+	private String subscriberMasterId;//foreign key
 	
-	private LISUserMasterCreate user;
+	private String userMasterCreateId;//foreign key
 	
-	// @Field(value = "IS_ACTIVE")
 	private String isActive;
 	
-	// @Field(value = "RECORD_IN_PROCESS")
-	private char recordInProcess;
-	
-	public BigInteger getCmdcsId() {
+	private String recordInProcess;
+
+	public String getCmdcsId() {
 		return cmdcsId;
 	}
 
-	public void setCmdcsId(BigInteger cmdcsId) {
+	public void setCmdcsId(String cmdcsId) {
 		this.cmdcsId = cmdcsId;
 	}
 
@@ -156,6 +137,22 @@ public class LISMaintainMasterDataComponent implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
+	public String getSubscriberMasterId() {
+		return subscriberMasterId;
+	}
+
+	public void setSubscriberMasterId(String subscriberMasterId) {
+		this.subscriberMasterId = subscriberMasterId;
+	}
+
+	public String getUserMasterCreateId() {
+		return userMasterCreateId;
+	}
+
+	public void setUserMasterCreateId(String userMasterCreateId) {
+		this.userMasterCreateId = userMasterCreateId;
+	}
+
 	public String getIsActive() {
 		return isActive;
 	}
@@ -164,27 +161,12 @@ public class LISMaintainMasterDataComponent implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public char getRecordInProcess() {
+	public String getRecordInProcess() {
 		return recordInProcess;
 	}
 
-	public void setRecordInProcess(char recordInProcess) {
+	public void setRecordInProcess(String recordInProcess) {
 		this.recordInProcess = recordInProcess;
 	}
-
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public LISUserMasterCreate getUser() {
-		return user;
-	}
-
-	public void setUser(LISUserMasterCreate user) {
-		this.user = user;
-	}	
+		
 }

@@ -73,12 +73,12 @@ public class UserTypeMasterDAOImpl implements UserTypeMasterDAO {
 			LISUserTypeMaster userTypeMasModel = new LISUserTypeMaster();
 			userTypeMasModel.setCreatedBy(userTypeMasDTO.getCreatedBy());
 			userTypeMasModel.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
-			userTypeMasModel.setUserTypeId(userTypeMasDTO.getUserTypeId());
+			userTypeMasModel.setUserTypeId(String.valueOf(userTypeMasDTO.getUserTypeId()));
 			userTypeMasModel.setUserTypeName(userTypeMasDTO.getUserTypeName());
 			userTypeMasModel.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			LISSubscriberMaster subMaster = subscriberDAO.getSubscriberById(userTypeMasDTO.getSubscriberId());
 			System.out.println(subMaster.getSubscriberId());
-			userTypeMasModel.setSubscriber(subMaster);
+			userTypeMasModel.setSubscriberMasterId(subMaster.getSubscriberId());
 			mongoTemplate.save(userTypeMasModel);
 			return userTypeMasDTO;
 		} catch (Exception ex) {

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.deloitte.inspection.dto.FacilityMasterDTO;
 import com.deloitte.inspection.exception.FacilityMasterException;
+import com.deloitte.inspection.mapper.LISFacilityMasterResult;
 import com.deloitte.inspection.model.LISFacilityMaster;
 
 /**
@@ -19,7 +20,7 @@ public interface FacilitiesMasterDAO {
 	
 	public FacilityMasterDTO createFacility(FacilityMasterDTO inspTypeMasterDTO, String userName) throws FacilityMasterException;
 	
-	public List<LISFacilityMaster> getFacilitiesMasterData(Integer subscriberId) throws FacilityMasterException;
+	public List<LISFacilityMasterResult> getFacilitiesMasterData(Integer subscriberId) throws FacilityMasterException;
 
 	public List<LISFacilityMaster> getFacilityDetailsBySubscriberID(Integer subscriberId) throws FacilityMasterException;
 }

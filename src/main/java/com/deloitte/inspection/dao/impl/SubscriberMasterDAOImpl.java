@@ -3,7 +3,6 @@
  */
 package com.deloitte.inspection.dao.impl;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.exception.SubscriberMasterException;
+import com.deloitte.inspection.mapper.LISSubscriberMasterResult;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 
 /**
@@ -55,7 +58,7 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 			LISSubscriberMaster subMasterModel = new LISSubscriberMaster();
 			subMasterModel.setCreatedBy(subMasterDTO.getCreatedBy());
 			subMasterModel.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
-			subMasterModel.setSubscriberId(subMasterDTO.getSubscriberId());
+			subMasterModel.setSubscriberId(String.valueOf(subMasterDTO.getSubscriberId()));
 			subMasterModel.setSubscriberName(subMasterDTO.getSubscriberName());
 			subMasterModel.setSubscriberAddress(subMasterDTO.getSubscriberAddress());
 			subMasterModel.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
@@ -83,11 +86,15 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 	 * @see com.deloitte.inspection.dao.SubscriberMasterDAO#getAllSubscriberMasterData()
 	 */
 	@Override
-	public List<LISSubscriberMaster> getAllSubscriberMasterData() throws SubscriberMasterException {
+	public List<LISSubscriberMasterResult> getAllSubscriberMasterData() throws SubscriberMasterException {
 		logger.info("Entered into getAllSubscriberMasterData");
-		Query query = new Query();
-		query.with(new Sort(Sort.Direction.ASC, "subscriberId"));
-		return mongoTemplate.find(query, LISSubscriberMaster.class);
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_UMACS").localField("subscriberId")
+				.foreignField("subscriberMasterId").as("userMasterCreateList");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.sort(Direction.ASC, "subscriberId"),
+				lookupOperation
+				);
+		return mongoTemplate.aggregate(aggregation, "LIS_SUMAS", LISSubscriberMasterResult.class).getMappedResults();
 	}
 	
 	@Override

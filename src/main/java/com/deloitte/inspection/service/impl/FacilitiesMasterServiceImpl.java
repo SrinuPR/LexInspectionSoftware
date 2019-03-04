@@ -14,6 +14,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.FacilitiesMasterDAO;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
 import com.deloitte.inspection.exception.FacilityMasterException;
+import com.deloitte.inspection.mapper.LISFacilityMasterResult;
 import com.deloitte.inspection.model.LISFacilityMaster;
 import com.deloitte.inspection.response.dto.FacilityMasterResponseDataDTO;
 import com.deloitte.inspection.service.FacilitiesMasterService;
@@ -83,14 +84,14 @@ public class FacilitiesMasterServiceImpl implements FacilitiesMasterService {
 	public List<FacilityMasterDTO> getFacilitiesMasterData(Integer subscriberId) throws FacilityMasterException {
 		try{
 			List<FacilityMasterDTO> facilityMasterList = new ArrayList<FacilityMasterDTO>();
-			List<LISFacilityMaster> facilityMasterModelList = facilityMasterDAO.getFacilitiesMasterData(subscriberId);
+			List<LISFacilityMasterResult> facilityMasterModelList = facilityMasterDAO.getFacilitiesMasterData(subscriberId);
 			if(null != facilityMasterModelList && facilityMasterModelList.size() > 0){
-				for(LISFacilityMaster facilityMaster : facilityMasterModelList){
+				for(LISFacilityMasterResult facilityMaster : facilityMasterModelList){
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();
 					facilityMasterDTO.setFacilityNumber(facilityMaster.getFacilityNumber());
 					facilityMasterDTO.setFacilityName(facilityMaster.getFacilityName());
-					facilityMasterDTO.setSubscriberId(facilityMaster.getSubscriber().getSubscriberId().intValue());
-					facilityMasterDTO.setSubscriberName(facilityMaster.getSubscriber().getSubscriberName());
+					facilityMasterDTO.setSubscriberId(Integer.valueOf(facilityMaster.getSubscriberMaster().getSubscriberId()));
+					facilityMasterDTO.setSubscriberName(facilityMaster.getSubscriberMaster().getSubscriberName());
 					facilityMasterList.add(facilityMasterDTO);
 				}
 			}

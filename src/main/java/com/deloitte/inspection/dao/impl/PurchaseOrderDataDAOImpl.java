@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
+import com.deloitte.inspection.mapper.LISPurchaseOrderMasterResult;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 
 @Repository
@@ -40,7 +42,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllByUserId");	
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("user.userId").is(userId)),
+				Aggregation.match(Criteria.where("userMasterCreateId").is(userId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 						Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMaster.class).getMappedResults();
@@ -75,17 +77,20 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	}
 	
 	@Override
-	public List<LISPurchaseOrderMaster> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException {
-		logger.info("Entered into getCustomerPOData DAO");	
+	public List<LISPurchaseOrderMasterResult> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException {
+		logger.info("Entered into getCustomerPOData DAO");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
-						Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
-		return mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMaster.class).getMappedResults();
+				lookupOperation,
+				Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMasterResult.class).getMappedResults();
 	}
 
 	@Override
-	public List<LISPurchaseOrderMaster> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException {
+	public List<LISPurchaseOrderMasterResult> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException {
 		logger.info("Entered into getAllBySubscriberId");	
 		return getCustomerPOData(subscriberId);
 	}

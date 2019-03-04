@@ -14,6 +14,7 @@ import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionStageMasterDAO;
 import com.deloitte.inspection.dto.InspectionStageMasterDTO;
 import com.deloitte.inspection.exception.InspectionStageMasterException;
+import com.deloitte.inspection.mapper.LISInspectionStageMasterResult;
 import com.deloitte.inspection.model.LISInspectionStageMaster;
 import com.deloitte.inspection.service.InspectionStageMasterService;
 
@@ -83,14 +84,14 @@ public class InspectionStageMasterServiceImpl implements InspectionStageMasterSe
 	public List<InspectionStageMasterDTO> getAllInspStageMasterData(Integer subscriberId) throws InspectionStageMasterException {
 		try{
 			List<InspectionStageMasterDTO> inspTypeMasterList = new ArrayList<InspectionStageMasterDTO>();
-			List<LISInspectionStageMaster> lisInspTypeMasterList = inspStageMasterDAO.getAllInspStageMasterData(subscriberId);
+			List<LISInspectionStageMasterResult> lisInspTypeMasterList = inspStageMasterDAO.getAllInspStageMasterData(subscriberId);
 			if(null != lisInspTypeMasterList && lisInspTypeMasterList.size() > 0){
-				for(LISInspectionStageMaster lisInspTypeMaster : lisInspTypeMasterList){
+				for(LISInspectionStageMasterResult lisInspTypeMaster : lisInspTypeMasterList){
 					InspectionStageMasterDTO inspTypeMasterDTO = new InspectionStageMasterDTO();
 					inspTypeMasterDTO.setInspStageId(lisInspTypeMaster.getInspStageId());
 					inspTypeMasterDTO.setInspStageName(lisInspTypeMaster.getInspStageName());
-					inspTypeMasterDTO.setSubscriberId(lisInspTypeMaster.getSubscriber().getSubscriberId().intValue());
-					inspTypeMasterDTO.setSubscriberName(lisInspTypeMaster.getSubscriber().getSubscriberName());
+					inspTypeMasterDTO.setSubscriberId(Integer.valueOf(lisInspTypeMaster.getSubscriberMaster().getSubscriberId()));
+					inspTypeMasterDTO.setSubscriberName(lisInspTypeMaster.getSubscriberMaster().getSubscriberName());
 					inspTypeMasterList.add(inspTypeMasterDTO);
 				}
 			}

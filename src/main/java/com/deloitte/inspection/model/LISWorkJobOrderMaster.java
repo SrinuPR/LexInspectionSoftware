@@ -1,79 +1,59 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_WOMCS")
-public class LISWorkJobOrderMaster implements Serializable{
-
-	private static final long serialVersionUID = 917212548437079358L;
+public class LISWorkJobOrderMaster {
 	
 	@Id
-	// // @Field(value =  "WOMCS_ID")
-	private Integer wjOrderId;
+	private String wjOrderId;
 	
-	// // @Field(value =  "WORK_JOB_ORDER_NUMBER")
 	private String workJobOrderNumber;
 	
-	// // @Field(value =  "WORK_JOB_ORDER_DATE")
 	private Date workJobOrderDate;
 	
-	// // @Field(value =  "LOT_NUMBER")
 	private String lotNumber;
-	
-	// // @Field(value =  "LOT_SIZE")
+
 	private Integer lotSize;
-	
-	// // @Field(value =  "LOT_SIZE_UNITS")
+
 	private String lotSizeUnits;
 	
-	// // @Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
 	
-	// @Field(value =  "MANUFACTURING_BATCH_SIZE")
 	private Integer manufacturingBatchSize;
 	
-	// @Field(value =  "MANUFACTURING_BATCH_UNITS")
 	private String manufacturingBatchUnits;
 	
-	// @Field(value =  "WORK_ORDER_JOB_NOTES")
 	private String workOrderJobNotes;
 	
-	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	// @Field(value =  "IS_ACTIVE")
 	private String isActive;
 	
-	// @Field(value =  "RECORD_IN_PROCESS")
-	private char recordInProcess;
+	private String recordInProcess;
 
-	private LISSubscriberMaster subscriber;
+	private String subscriberMasterId;//foreign key
 	
-	private LISUserMasterCreate user;
+	private String userMasterCreateId;//foreign key
 	
-	private LISMaintainMasterDataComponent componentData;
+	private String maintainMasterDataComponentId;//foreign key
 	
-	private LISPurchaseOrderMaster purchaseOrder;
+	private String purchaseOrderMasterId;//foreign key
 
-	public Integer getWjOrderId() {
+	public String getWjOrderId() {
 		return wjOrderId;
 	}
 
-	public void setWjOrderId(Integer wjOrderId) {
+	public void setWjOrderId(String wjOrderId) {
 		this.wjOrderId = wjOrderId;
 	}
 
@@ -189,43 +169,43 @@ public class LISWorkJobOrderMaster implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public char getRecordInProcess() {
+	public String getRecordInProcess() {
 		return recordInProcess;
 	}
 
-	public void setRecordInProcess(char recordInProcess) {
+	public void setRecordInProcess(String recordInProcess) {
 		this.recordInProcess = recordInProcess;
 	}
 
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
+	public String getSubscriberMasterId() {
+		return subscriberMasterId;
 	}
 
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
+	public void setSubscriberMasterId(String subscriberMasterId) {
+		this.subscriberMasterId = subscriberMasterId;
 	}
 
-	public LISUserMasterCreate getUser() {
-		return user;
+	public String getUserMasterCreateId() {
+		return userMasterCreateId;
 	}
 
-	public void setUser(LISUserMasterCreate user) {
-		this.user = user;
+	public void setUserMasterCreateId(String userMasterCreateId) {
+		this.userMasterCreateId = userMasterCreateId;
 	}
 
-	public LISMaintainMasterDataComponent getComponentData() {
-		return componentData;
+	public String getMaintainMasterDataComponentId() {
+		return maintainMasterDataComponentId;
 	}
 
-	public void setComponentData(LISMaintainMasterDataComponent componentData) {
-		this.componentData = componentData;
+	public void setMaintainMasterDataComponentId(String maintainMasterDataComponentId) {
+		this.maintainMasterDataComponentId = maintainMasterDataComponentId;
 	}
 
-	public LISPurchaseOrderMaster getPurchaseOrder() {
-		return purchaseOrder;
+	public String getPurchaseOrderMasterId() {
+		return purchaseOrderMasterId;
 	}
 
-	public void setPurchaseOrder(LISPurchaseOrderMaster purchaseOrder) {
-		this.purchaseOrder = purchaseOrder;
+	public void setPurchaseOrderMasterId(String purchaseOrderMasterId) {
+		this.purchaseOrderMasterId = purchaseOrderMasterId;
 	}
 }

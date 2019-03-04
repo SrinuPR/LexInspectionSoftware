@@ -1,144 +1,107 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_IMDES")
-public class LISInspectionMeasurements implements Serializable{
+public class LISInspectionMeasurements{
 
-	private static final long serialVersionUID = -7719637509662433018L;
 	
 	@Id
-	// @Field(value =  "IMDES_ID")
-	private BigInteger inspectionMeasurementId;
+	private String _id;
 	
-	// @Field(value =  "SUBSCRIBER_ID")
-	private Integer subscriberId;
+	private String inspectionMeasurementId;
 	
-	// @Field(value =  "RECORD_IN_PROCESS")
-	private char recordInProcess;
+	private String subscriberId;
 	
-	// @Field(value =  "SUBSCRIBER_NAME")
+	private String recordInProcess;
+	
 	private String subscriberName;
 	
-	// @Field(value =  "USER_ID")
 	private String userId;
-	
-	// @Field(value =  "IRMCS_COMP_PRD_DRAW_NUM")
+
 	private String irmcsCompProductDrawNum;
-	
-	// @Field(value =  "COMP_PROD_DRAW_NUM")
+
 	private String compProductDrawNum;
-	
-	// @Field(value =  "INSPECTION_REPORT_NUMBER")
+
 	private String inspectionReportNumber;
-	
-	// @Field(value =  "WORK_JOB_ORDER_NUMBER")
+
 	private String workJobOrderNumber;
-	
-	// @Field(value =  "LOT_NUMBER")
+
 	private String lotNumber;
 	
-	// @Field(value =  "LOT_SIZE")
 	private Integer lotSize;
 	
-	// @Field(value =  "MANUFACTURING_BATCH_NUMBER")
 	private String manufacturingBatchNumber;
-	
-	// @Field(value =  "MANUFACTURING_BATCH_SIZE")
+
 	private Integer manufacturingBatchSize;
 	
-	// @Field(value =  "COMP_PROD_NAME")
 	private String componentProductName;
 	
-	// @Field(value =  "INSPECTION_TYPE")
 	private String inspectionType;
 	
-	// @Field(value =  "INSPECTION_STAGE")
 	private Integer InspectionStage;
 	
-	// @Field(value =  "FACILITY_MACHINE_NUMBER")
 	private Integer facilityMachineNumber;
-	
-	// @Field(value =  "FACILITY_MACHINE_NAME")
+
 	private String facilityMachineName;
 	
-	// @Field(value =  "USER_NAME")
 	private String userName;
 	
-	// @Field(value =  "INSPECTION_DATE")
 	private Date inspectionDate;
 	
-	// @Field(value =  "SHIFT_ID")
 	private String shiftID;
 	
-	// @Field(value =  "SHIFT_NAME")
 	private String shiftName;
 	
-	// @Field(value =  "CUSTOMER_PO_NUMBER")
 	private String customerPONumber;
 	
-	// @Field(value =  "CUSTOMER_PO_DATE")
 	private Date customerPODate;
 	
-	// @Field(value =  "CUSTOMER_PO_QUANTITY")
 	private Integer customerPOQuantity;
 	
-	// @Field(value =  "CUSTOMER_NAME_ADDRESS")
 	private String customerNameAddress;
-	
-	// @Field(value =  "PART_IDENTIFICATION_NUMBER")
+
 	private String partIdentificationNumber;
 	
-	// @Field(value =  "MEASUREMENT_RECORD_STATUS")
 	private String measurementRecordstatus;
 	
-	// @Field(value =  "CREATED_BY")
 	private String createdBy;
 	
-	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	// @Field(value =  "UPDATED_BY")
-	private String updatedBy;
-	
-	// @Field(value =  "UPDATED_TIMESTAMP")
-	private Date updatedTimestamp;
-	
-	// @Field(value =  "IS_ACTIVE")
-	private String isActive;
-	
-	// @Field(value =  "PART_STATUS")
-	private String partStatus;
+	public String get_id() {
+		return _id;
+	}
 
-	// @Field(value =  "INSPECTED_QUANTITY")
-	private Integer inspectedQuantity;
-	
-	// @Field(value =  "PRODUCED_QUANTITY")
-	private Integer producedQuantity;
-	
-	private List<LISPartIdentification> partIdentifications;
-	
-	public BigInteger getInspectionMeasurementId() {
+	public void set_id(String _id) {
+		this._id = _id;
+	}
+
+	public String getInspectionMeasurementId() {
 		return inspectionMeasurementId;
 	}
 
-	public void setInspectionMeasurementId(BigInteger inspectionMeasurementId) {
+	public void setInspectionMeasurementId(String inspectionMeasurementId) {
 		this.inspectionMeasurementId = inspectionMeasurementId;
 	}
 
-	public Integer getSubscriberId() {
+	public String getSubscriberId() {
 		return subscriberId;
 	}
 
-	public void setSubscriberId(Integer subscriberId) {
+	public void setSubscriberId(String subscriberId) {
 		this.subscriberId = subscriberId;
+	}
+
+	public String getRecordInProcess() {
+		return recordInProcess;
+	}
+
+	public void setRecordInProcess(String recordInProcess) {
+		this.recordInProcess = recordInProcess;
 	}
 
 	public String getSubscriberName() {
@@ -155,6 +118,14 @@ public class LISInspectionMeasurements implements Serializable{
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getIrmcsCompProductDrawNum() {
+		return irmcsCompProductDrawNum;
+	}
+
+	public void setIrmcsCompProductDrawNum(String irmcsCompProductDrawNum) {
+		this.irmcsCompProductDrawNum = irmcsCompProductDrawNum;
 	}
 
 	public String getCompProductDrawNum() {
@@ -269,6 +240,14 @@ public class LISInspectionMeasurements implements Serializable{
 		this.inspectionDate = inspectionDate;
 	}
 
+	public String getShiftID() {
+		return shiftID;
+	}
+
+	public void setShiftID(String shiftID) {
+		this.shiftID = shiftID;
+	}
+
 	public String getShiftName() {
 		return shiftName;
 	}
@@ -317,6 +296,14 @@ public class LISInspectionMeasurements implements Serializable{
 		this.partIdentificationNumber = partIdentificationNumber;
 	}
 
+	public String getMeasurementRecordstatus() {
+		return measurementRecordstatus;
+	}
+
+	public void setMeasurementRecordstatus(String measurementRecordstatus) {
+		this.measurementRecordstatus = measurementRecordstatus;
+	}
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -357,30 +344,6 @@ public class LISInspectionMeasurements implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public String getShiftID() {
-		return shiftID;
-	}
-
-	public void setShiftID(String shiftID) {
-		this.shiftID = shiftID;
-	}
-
-	public char getRecordInProcess() {
-		return recordInProcess;
-	}
-
-	public void setRecordInProcess(char recordInProcess) {
-		this.recordInProcess = recordInProcess;
-	}
-
-	public String getMeasurementRecordstatus() {
-		return measurementRecordstatus;
-	}
-
-	public void setMeasurementRecordstatus(String measurementRecordstatus) {
-		this.measurementRecordstatus = measurementRecordstatus;
-	}
-
 	public String getPartStatus() {
 		return partStatus;
 	}
@@ -405,20 +368,16 @@ public class LISInspectionMeasurements implements Serializable{
 		this.producedQuantity = producedQuantity;
 	}
 
-	public String getIrmcsCompProductDrawNum() {
-		return irmcsCompProductDrawNum;
-	}
+	private String updatedBy;
+	
+	private Date updatedTimestamp;
+	
+	private String isActive;
+	
+	private String partStatus;
 
-	public void setIrmcsCompProductDrawNum(String irmcsCompProductDrawNum) {
-		this.irmcsCompProductDrawNum = irmcsCompProductDrawNum;
-	}
-
-	public List<LISPartIdentification> getPartIdentifications() {
-		return partIdentifications;
-	}
-
-	public void setPartIdentifications(List<LISPartIdentification> partIdentifications) {
-		this.partIdentifications = partIdentifications;
-	}
+	private Integer inspectedQuantity;
+	
+	private Integer producedQuantity;
 	
 }

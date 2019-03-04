@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
+import com.deloitte.inspection.mapper.LISPurchaseOrderMasterResult;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 
 public interface PurchaseOrderDataDAO {
@@ -18,8 +19,8 @@ public interface PurchaseOrderDataDAO {
 	
 	public LISPurchaseOrderMaster getByCustomerPONumber(String customerPoId) throws PurchaseOrderMasterException;
 
-	public List<LISPurchaseOrderMaster> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException;
+	public List<LISPurchaseOrderMasterResult> getCustomerPOData(Integer subscriberId) throws PurchaseOrderMasterException;
 
-	public List<LISPurchaseOrderMaster> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException;
+	public List<LISPurchaseOrderMasterResult> getAllBySubscriberId(Integer subscriberId) throws PurchaseOrderMasterException;
 
 }

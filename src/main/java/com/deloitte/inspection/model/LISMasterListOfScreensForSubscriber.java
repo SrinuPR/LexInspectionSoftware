@@ -1,62 +1,41 @@
 package com.deloitte.inspection.model;
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_MLOSS")
-public class LISMasterListOfScreensForSubscriber implements Serializable {
-
-	private static final long serialVersionUID = 8730811844910414462L;
+public class LISMasterListOfScreensForSubscriber {
 
 	@Id
-	// @Field(value = "MLOSS_ID")
-	private BigInteger masterListId;
+	private String masterListId;
 	
-	private BigInteger subscriberId;
+	private Integer subscriberId;
 
-	private LISSubscriberMaster subscriber;
-
-	// @Field(value = "IS_ACTIVE")
 	private String isActive;
 
-	// @Field(value = "CREATED_BY")
 	private String createdBy;
 
-	// @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 
-	// @Field(value = "SCREEN_NAME")
 	private String screenName;
 
-	// @Field(value = "SCREEN_NUMBER")
 	private String screenNumber;
 
-	public BigInteger getMasterListId() {
+	public String getMasterListId() {
 		return masterListId;
 	}
 
-	public BigInteger getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(BigInteger subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public void setMasterListId(BigInteger masterListId) {
+	public void setMasterListId(String masterListId) {
 		this.masterListId = masterListId;
 	}
 
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
+	public Integer getSubscriberId() {
+		return subscriberId;
 	}
 
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
+	public void setSubscriberId(Integer subscriberId) {
+		this.subscriberId = subscriberId;
 	}
 
 	public String getIsActive() {

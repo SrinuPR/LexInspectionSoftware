@@ -1,73 +1,51 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_LOGIN")
-public class LISLogin implements Serializable {
-
-	private static final long serialVersionUID = 5112717685665555840L;
+public class LISLogin {
 
 	@Id
-	private String id;
+	private String _id;
 	
-	// // @Field(value = "LOGIN_ID")
-	private BigInteger loginId;
+	private String loginId;
 
-	// // @Field(value = "PASSWORD")
 	private String password;
 
-	// // @Field(value = "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 
-	// // @Field(value = "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 
-	// // @Field(value = "CREATED_BY")
 	private String createdBy;
 
-	// // @Field(value = "UPDATED_BY")
 	private String updatedBy;
 
-	private LISSubscriberMaster subscriber;
+	private String subscriberMasterId;//foreign Key
 
 	private String adminId;
 
-	// // @Field(value = "IS_ACTIVE")
 	private String isActive;
 
-	// // @Field(value = "IS_SESSION_ACTIVE")
 	private String isSessionActive;
 	
-	// // @Field(value = "user")
-	private LISUserMasterCreate user;
+	private String userMasterCreateId;//foreign Key
 
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
+	public String getId() {
+		return _id;
 	}
 
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
+	public void setId(String id) {
+		this._id = id;
 	}
 
-	public LISUserMasterCreate getUser() {
-		return user;
-	}
-
-	public void setUser(LISUserMasterCreate user) {
-		this.user = user;
-	}
-
-	public BigInteger getLoginId() {
+	public String getLoginId() {
 		return loginId;
 	}
 
-	public void setLoginId(BigInteger loginId) {
+	public void setLoginId(String loginId) {
 		this.loginId = loginId;
 	}
 
@@ -111,12 +89,12 @@ public class LISLogin implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
-	public String getIsActive() {
-		return isActive;
+	public String getSubscriberMasterId() {
+		return subscriberMasterId;
 	}
 
-	public void setIsActive(String isActive) {
-		this.isActive = isActive;
+	public void setSubscriberMasterId(String subscriberMasterId) {
+		this.subscriberMasterId = subscriberMasterId;
 	}
 
 	public String getAdminId() {
@@ -127,6 +105,14 @@ public class LISLogin implements Serializable {
 		this.adminId = adminId;
 	}
 
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+
 	public String getIsSessionActive() {
 		return isSessionActive;
 	}
@@ -135,11 +121,13 @@ public class LISLogin implements Serializable {
 		this.isSessionActive = isSessionActive;
 	}
 
-	public String getId() {
-		return id;
+	public String getUserMasterCreateId() {
+		return userMasterCreateId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUserMasterCreateId(String userMasterCreateId) {
+		this.userMasterCreateId = userMasterCreateId;
 	}
+
+
 }

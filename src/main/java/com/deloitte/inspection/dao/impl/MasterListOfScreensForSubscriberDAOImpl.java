@@ -29,7 +29,7 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 	public void deleteScreenForSubscriber(Integer subscriberId, String screenId) throws MasterListOfScreensForSubscriberException {
 		logger.info("Inside deleteScreenForSubscriber DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.match(Criteria.where("screenNumber").is(screenId.toLowerCase())));
 		List<LISMasterListOfScreensForSubscriber> list = mongoTemplate.aggregate(aggregation, "LIS_MLOSS", LISMasterListOfScreensForSubscriber.class).getMappedResults();
@@ -52,7 +52,7 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 			throws MasterListOfScreensForSubscriberException {
 		logger.info("Inside getScreensforSubscriber DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.aggregate(aggregation, "LIS_MLOSS", LISMasterListOfScreensForSubscriber.class).getMappedResults();
 	}

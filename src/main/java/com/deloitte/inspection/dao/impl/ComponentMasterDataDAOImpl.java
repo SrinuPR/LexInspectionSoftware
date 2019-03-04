@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
+import com.deloitte.inspection.mapper.LISMaintainMasterDataComponentResult;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.mongodb.client.result.DeleteResult;
 
@@ -51,15 +53,18 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 	}
 
 	@Override
-	public List<LISMaintainMasterDataComponent> getAllComponentMasterData(Integer subscriberId)
+	public List<LISMaintainMasterDataComponentResult> getAllComponentMasterData(Integer subscriberId)
 			throws ComponentMasterDataException {
 		logger.info("Entered into validateLoginCredentials");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
-				Aggregation.sort(Direction.ASC, "componentProductDrawNumber"));
-		List<LISMaintainMasterDataComponent> list = mongoTemplate
-				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
+				Aggregation.sort(Direction.ASC, "componentProductDrawNumber"),
+				lookupOperation);
+		List<LISMaintainMasterDataComponentResult> list = mongoTemplate
+				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponentResult.class)
 				.getMappedResults();
 		return list;
 	}
@@ -95,7 +100,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into getAllBySubscriberId");
 		Aggregation aggregation = Aggregation
-				.newAggregation(Aggregation.match(Criteria.where("subscriber.subscriberId").in(subscriberId)));
+				.newAggregation(Aggregation.match(Criteria.where("subscriberMasterId").in(subscriberId)));
 		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = mongoTemplate
 				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
 				.getMappedResults();
@@ -133,7 +138,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into getComponentData DAO");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.ASC, "componentProductDrawNumber"));
 		List<LISMaintainMasterDataComponent> list = mongoTemplate

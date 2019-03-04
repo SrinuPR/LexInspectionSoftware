@@ -3,6 +3,7 @@ package com.deloitte.inspection.dao;
 import java.util.List;
 
 import com.deloitte.inspection.exception.WorkJobOrderException;
+import com.deloitte.inspection.mapper.LISWorkJobOrderMasterResult;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 import com.deloitte.inspection.model.LISWorkJobOrderMaster;
 
@@ -14,7 +15,7 @@ public interface WorkJobOrderDAO {
 
 	public void saveWorkJobOrderData(LISWorkJobOrderMaster workJobOrderMaster) throws WorkJobOrderException;
 
-	public List<LISWorkJobOrderMaster> WorkJobOrderList(Integer subscriberId) throws WorkJobOrderException;
+	public List<LISWorkJobOrderMasterResult> WorkJobOrderList(Integer subscriberId) throws WorkJobOrderException;
 
 	public LISWorkJobOrderMaster validateWorkJobOrderNumber(String workJobOrderNumber, String customerPONumber) throws WorkJobOrderException;
 
@@ -35,9 +36,9 @@ public interface WorkJobOrderDAO {
 
 	public LISWorkJobOrderMaster getWorkOrderByBatchNumber(String manufacturingBatchNumber) throws WorkJobOrderException;
 	
-	public List<LISWorkJobOrderMaster> getComponentDataFromWJOBySubscriberId(Integer subscriberId) throws WorkJobOrderException;
+	public List<LISWorkJobOrderMasterResult> getComponentDataFromWJOBySubscriberId(Integer subscriberId) throws WorkJobOrderException;
 
-	public List<LISWorkJobOrderMaster> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException;
+	public List<LISWorkJobOrderMasterResult> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException;
 
 	public List<LISWorkJobOrderMaster> WorkJobOrderListByUserId(String userId) throws WorkJobOrderException;
 	

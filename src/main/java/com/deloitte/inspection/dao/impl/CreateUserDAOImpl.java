@@ -46,7 +46,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 		try {
 			Aggregation aggregation = Aggregation.newAggregation(
 					Aggregation
-							.match(Criteria.where("subscriber.subscriberId").is(createuserDTO.getSubscriberId())),
+							.match(Criteria.where("subscriberMasterId").is(createuserDTO.getSubscriberId())),
 					Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))));
 			List<LISUserMasterCreate> userMasterList = mongoTemplate
 					.aggregate(aggregation, "LIS_UMACS", LISUserMasterCreate.class).getMappedResults();
@@ -63,7 +63,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 			userMaster.setCreatedTimestamp(new Date());
 			userMaster.setOldPassword1(null);
 			userMaster.setOldPassword2(null);
-			userMaster.setSubscriber(subscriberMaster);
+			userMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
 			userMaster.setUserId(createuserDTO.getUserId());
 			userMaster.setUserName(createuserDTO.getUserName());
 			userMaster.setUserTypeId(createuserDTO.getUserTypeId());
@@ -73,12 +73,11 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 			lisLogin.setCreatedBy(createuserDTO.getCreatedBy());
 			lisLogin.setCreatedTimestamp(new Date());
 			lisLogin.setPassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
-			lisLogin.setUser(userMaster);
-			lisLogin.setSubscriber(subscriberMaster);
+			lisLogin.setUserMasterCreateId(userMaster.getUserId());
+			lisLogin.setSubscriberMasterId(subscriberMaster.getSubscriberId());
 			lisLogin.setAdminId(createuserDTO.getAdminId());
 			lisLogin.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			mongoTemplate.save(lisLogin,"LIS_LOGIN");
-			mongoTemplate.save(userMaster,"LIS_UMACS");
 			return StatusConstants.SUCCESS;
 		} catch (CryptoException ex) {
 			ex.printStackTrace();
@@ -102,7 +101,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	public List<LISUserTypeMaster> getUserTypeBySubscriberId(Integer subscriberId) throws CreateUserException {
 		logger.info("Entered into getUserTypeBySubscriberId ");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriber.subscriberId").in(subscriberId)),
+				Aggregation.match(Criteria.where("subscriberMasterId").in(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
 				Aggregation.sort(Direction.ASC, "userTypeName"));
 		return mongoTemplate.aggregate(aggregation, "LIS_UTMCS", LISUserTypeMaster.class).getMappedResults();
@@ -123,7 +122,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	@Override
 	public boolean deleteAdmin(String adminId) throws CreateUserException {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("ADMIN_ID").in(adminId.toLowerCase()));
+		query.addCriteria(Criteria.where("adminId").in(adminId.toLowerCase()));
 		DeleteResult result = mongoTemplate.remove(query, LISLogin.class,"LIS_LOGIN");
 		if (result.wasAcknowledged())
 			return true;

@@ -26,6 +26,7 @@ import com.deloitte.inspection.exception.ComponentMasterDataException;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
 import com.deloitte.inspection.exception.SubscriberMasterException;
+import com.deloitte.inspection.mapper.LISPurchaseOrderMasterResult;
 import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
@@ -69,17 +70,17 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			LISSubscriberMaster subscriberMaster=null;
 			if(null != purchaseOrderDataDTO.getSubscriberId()){
 				subscriberMaster = subscriberMasterDAO.getSubscriberById(purchaseOrderDataDTO.getSubscriberId());
-				purchaseOrderMaster.setSubscriber(subscriberMaster);
+				purchaseOrderMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
 			}
 			try {
 				LISMaintainMasterDataComponent masterDataComponent = componentMasterDataDAO.getComponentDataById(purchaseOrderDataDTO.getComponentId());
-				purchaseOrderMaster.setComponent(masterDataComponent);
+				purchaseOrderMaster.setMaintainMasterDataComponentId(masterDataComponent.getComponentProductDrawNumber());
 			} catch (ComponentMasterDataException e) {
 				e.printStackTrace();
 				logger.error("Error while getting the component");
 			}
 			userMaster = createUserDAO.validateUserId(userId);
-			purchaseOrderMaster.setUser(userMaster);
+			purchaseOrderMaster.setUserMasterCreateId(userMaster.getUserId());
 			purchaseOrderMaster.setCreatedBy(userName);
 			purchaseOrderMaster.setCreatedTimestamp(new Date());
 			try {
@@ -90,7 +91,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 			purchaseOrderMaster.setCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber());
 			purchaseOrderMaster.setCustomerPOQuantity(purchaseOrderDataDTO.getCustomerPOQuantity());
 			purchaseOrderMaster.setNotesPO(purchaseOrderDataDTO.getPoNotes());
-			purchaseOrderMaster.setSubscriber(subscriberMaster);
+			purchaseOrderMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
 			purchaseOrderMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			purchaseOrderDataDAO.savePurchaseOrderData(purchaseOrderMaster);
 			status = StatusConstants.SUCCESS;
@@ -102,24 +103,24 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 	public List<PurchaseOrderDataDTO> getAllPurchaseOrders(Integer subscriberId) throws PurchaseOrderMasterException, CreateUserException {
 		logger.info("getAllPurchaseOrders "+ subscriberId);
 		List<PurchaseOrderDataDTO> purchaseOrderDTOList =  new ArrayList<PurchaseOrderDataDTO>();
-		List<LISPurchaseOrderMaster> purchaseOrderList = null;
+		List<LISPurchaseOrderMasterResult> purchaseOrderList = null;
 		if( null!= subscriberId)
 			try {			
 				purchaseOrderList = purchaseOrderDataDAO.getAllBySubscriberId(subscriberId);
 				if(null != purchaseOrderList && purchaseOrderList.size() > 0){
-					for(LISPurchaseOrderMaster purchaseOrder:purchaseOrderList) {
+					for(LISPurchaseOrderMasterResult purchaseOrder:purchaseOrderList) {
 						PurchaseOrderDataDTO purchaseOrderDto=new PurchaseOrderDataDTO();
-						if(null != purchaseOrder.getComponent()){
-							purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getComponent().getComponentProductDrawNumber());
-							purchaseOrderDto.setComponentId(purchaseOrder.getComponent().getCmdcsId().intValue());
+						if(null != purchaseOrder.getMaintainMasterDataComponent()){
+							purchaseOrderDto.setComponentProductDrawNum(purchaseOrder.getMaintainMasterDataComponent().getComponentProductDrawNumber());
+							purchaseOrderDto.setComponentId(Integer.valueOf(purchaseOrder.getMaintainMasterDataComponent().getCmdcsId()));
 						}
 						purchaseOrderDto.setCustomerPODate(InspectionUtils.convertDateToString(purchaseOrder.getCustomerPODate()));
 						purchaseOrderDto.setCustomerPONumber(purchaseOrder.getCustomerPONumber());
 						purchaseOrderDto.setCustomerPOQuantity(purchaseOrder.getCustomerPOQuantity());
 						purchaseOrderDto.setPoNotes(purchaseOrder.getNotesPO());
-						purchaseOrderDto.setSubscriberId(purchaseOrder.getSubscriber().getSubscriberId().intValue());
-						purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriber().getSubscriberName());
-						purchaseOrderDto.setCustomerPoId(purchaseOrder.getCustomerPoId().intValue());
+						purchaseOrderDto.setSubscriberId(Integer.valueOf(purchaseOrder.getSubscriberMaster().getSubscriberId()));
+						purchaseOrderDto.setSubscriberName(purchaseOrder.getSubscriberMaster().getSubscriberName());
+						purchaseOrderDto.setCustomerPoId(Integer.valueOf(purchaseOrder.getCustomerPoId()));
 						purchaseOrderDTOList.add(purchaseOrderDto);
 					}
 				}

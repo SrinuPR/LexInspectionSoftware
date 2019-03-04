@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.WorkJobOrderDAO;
 import com.deloitte.inspection.exception.WorkJobOrderException;
+import com.deloitte.inspection.mapper.LISWorkJobOrderMasterResult;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
 import com.deloitte.inspection.model.LISWorkJobOrderMaster;
 import com.mongodb.client.result.DeleteResult;
@@ -63,14 +65,25 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	}
 
 	@Override
-	public List<LISWorkJobOrderMaster> WorkJobOrderList(Integer subscriberId) throws WorkJobOrderException {
+	public List<LISWorkJobOrderMasterResult> WorkJobOrderList(Integer subscriberId) throws WorkJobOrderException {
 		logger.info("Entered into WorkJobOrderList DAO");
-		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(
-					Criteria.where("subscriberMaster.subscriberId").is(subscriberId)
-					.and("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))
-					),
+		LookupOperation lookupSubscriber = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
+		LookupOperation lookupUserMaster = LookupOperation.newLookup().from("LIS_UMACS").localField("userMasterCreateId")
+				.foreignField("userId").as("userMasterCreate");
+		LookupOperation lookupComponent = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
+				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
+		LookupOperation lookupPurchaseOrder = LookupOperation.newLookup().from("LIS_SUMAS").localField("purchaseOrderMasterId")
+				.foreignField("customerPONumber").as("purchaseOrderMaster");
+		Aggregation aggregation = Aggregation.newAggregation(
+					Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
+					Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+					lookupSubscriber,
+					lookupUserMaster,
+					lookupComponent,
+					lookupPurchaseOrder,
 					Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
-		List<LISWorkJobOrderMaster> list = mongoTemplate.aggregate(aggregation, "LIS_WOMCS", LISWorkJobOrderMaster.class).getMappedResults();
+		List<LISWorkJobOrderMasterResult> list = mongoTemplate.aggregate(aggregation, "LIS_WOMCS", LISWorkJobOrderMasterResult.class).getMappedResults();
 		return list;
 	}
 
@@ -78,7 +91,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	public LISWorkJobOrderMaster validateWorkJobOrderNumber(String workJobOrderNumber, String customerPONumber)	throws WorkJobOrderException {
 		logger.info("Inside validateWorkJobOrderNumber DAO");
 		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(
-				Criteria.where("purchaseOrder.customerPONumber").is(customerPONumber)
+				Criteria.where("purchaseOrderMasterId").is(customerPONumber)
 				.and("workJobOrderNumber").is(workJobOrderNumber)
 				.and("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))
 				),
@@ -125,7 +138,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 			throws WorkJobOrderException {
 		logger.info("Inside getCustomerPOQuantity DAO");
 		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(
-				Criteria.where("component.componentProductDrawNumber").is(componentProdDrawNum)
+				Criteria.where("maintainMasterDataComponentId").is(componentProdDrawNum)
 				.and("customerPONumber").is(customerPONumber)
 				.and("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))
 				),
@@ -154,8 +167,8 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 			String lotNumber, String workJobOrderNumber) throws WorkJobOrderException {
 		logger.info("Inside getWorkJobOrderBy4 DAO");
 		Criteria criteria = new Criteria();
-        criteria.andOperator(Criteria.where("component.componentProductDrawNumber").is(componentProductDrawNumber),
-        					 Criteria.where("purchaseOrder.customerPONumber").is(customerPONumber),
+        criteria.andOperator(Criteria.where("maintainMasterDataComponentId").is(componentProductDrawNumber),
+        					 Criteria.where("purchaseOrderMasterId").is(customerPONumber),
         					 Criteria.where("lotNumber").is(lotNumber),
         					 Criteria.where("workJobOrderNumber").is(workJobOrderNumber),
         					 Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
@@ -204,26 +217,39 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	}
 	
 	@Override
-	public List<LISWorkJobOrderMaster> getComponentDataFromWJOBySubscriberId(Integer subscriberId) throws WorkJobOrderException {
+	public List<LISWorkJobOrderMasterResult> getComponentDataFromWJOBySubscriberId(Integer subscriberId) throws WorkJobOrderException {
 		logger.info("Retrieving ComponentData from WorkJobOrder bt SubscriberId");
-		Criteria criteria = new Criteria();
-        criteria.andOperator(Criteria.where("subscriber.subscriberId").is(subscriberId),
-        					 Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
-        Query query = new Query(criteria);
-        query.with(new Sort(Sort.Direction.DESC, "createdTimestamp"));
-        List<LISWorkJobOrderMaster> list = mongoTemplate.find(query, LISWorkJobOrderMaster.class, "LIS_WOMCS");
+		LookupOperation lookupComponent = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
+				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupComponent,
+				Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
+        List<LISWorkJobOrderMasterResult> list = mongoTemplate.aggregate(aggregation, "LIS_WOMCS", LISWorkJobOrderMasterResult.class).getMappedResults();
 		return list;
 	}
 
 	@Override
-	public List<LISWorkJobOrderMaster> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException {
+	public List<LISWorkJobOrderMasterResult> getWorkJobOrderByCompDrawNum(String compProdDrawNum) throws WorkJobOrderException {
 		logger.info("Retrieving getWorkJobOrderByCompDrawNum ");
-		Criteria criteria = new Criteria();
-        criteria.andOperator(Criteria.where("component.componentProductDrawNumber").is(compProdDrawNum),
-        					 Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
-        Query query = new Query(criteria);
-        query.with(new Sort(Sort.Direction.ASC, "workJobOrderNumber"));
-        List<LISWorkJobOrderMaster> list = mongoTemplate.find(query, LISWorkJobOrderMaster.class, "LIS_WOMCS");
+		LookupOperation lookupSubscriber = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
+				.foreignField("subscriberId").as("subscriberMaster");
+		LookupOperation lookupUserMaster = LookupOperation.newLookup().from("LIS_UMACS").localField("userMasterCreateId")
+				.foreignField("userId").as("userMasterCreate");
+		LookupOperation lookupComponent = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
+				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
+		LookupOperation lookupPurchaseOrder = LookupOperation.newLookup().from("LIS_SUMAS").localField("purchaseOrderMasterId")
+				.foreignField("customerPONumber").as("purchaseOrderMaster");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("maintainMasterDataComponentId").is(compProdDrawNum)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupSubscriber,
+				lookupUserMaster,
+				lookupComponent,
+				lookupPurchaseOrder,
+				Aggregation.sort(Sort.Direction.ASC, "workJobOrderNumber"));
+        List<LISWorkJobOrderMasterResult> list = mongoTemplate.aggregate(aggregation, "LIS_WOMCS", LISWorkJobOrderMasterResult.class).getMappedResults();
 		return list;
 	}
 
@@ -231,7 +257,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	public List<LISWorkJobOrderMaster> WorkJobOrderListByUserId(String userId) throws WorkJobOrderException {
 		logger.info("Entered into WorkJobOrderList DAO");	
 		Criteria criteria = new Criteria();
-        criteria.andOperator(Criteria.where("user.userId").is(userId),
+        criteria.andOperator(Criteria.where("userMasterCreateId").is(userId),
         					 Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
         Query query = new Query(criteria);
         query.with(new Sort(Sort.Direction.DESC, "createdTimestamp"));
@@ -244,8 +270,8 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 			throws WorkJobOrderException {
 		logger.info("Entered into getWJOListByPONumAndSubId DAO");	
 		Criteria criteria = new Criteria();
-        criteria.andOperator(Criteria.where("purchaseOrder.customerPONumber").is(customerPONumber),
-        					 Criteria.where("subscriber.subscriberId").is(subscriberId),
+        criteria.andOperator(Criteria.where("purchaseOrderMasterId").is(customerPONumber),
+        					 Criteria.where("subscriberMasterId").is(subscriberId),
         					 Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
         Query query = new Query(criteria);
         query.with(new Sort(Sort.Direction.DESC, "createdTimestamp"));

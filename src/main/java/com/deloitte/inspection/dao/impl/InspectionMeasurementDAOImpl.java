@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -17,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.InspectionMeasurementDAO;
 import com.deloitte.inspection.exception.InspectionMeasurementException;
+import com.deloitte.inspection.mapper.LISInspectionMeasurementsResult;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISInspectionMeasurements;
 import com.deloitte.inspection.model.LISInspectionReportMaster;
+import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISPartIdentification;
 
 @Repository
@@ -95,16 +99,19 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<LISInspectionMeasurements> validatePartIdentification(String partIdententificationId,Integer subscriberId)
+	public List<LISInspectionMeasurementsResult> validatePartIdentification(String partIdententificationId,Integer subscriberId)
 			throws InspectionMeasurementException {
 		logger.info("Entered into validatePartIdentification");
-		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("subscriberId").in(subscriberId)
-				.andOperator(Criteria.where("partIdentificationNumber").in(partIdententificationId.toLowerCase()))
-				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
-		return mongoTemplate.find(query, LISInspectionMeasurements.class,"LIS_IMDES");
+		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_PIFIM").localField("inspectionMeasurementId")
+				.foreignField("inspectionMeasurementsId").as("partIdentifications");
+		Aggregation aggregation = Aggregation.newAggregation(
+				Aggregation.match(Criteria.where("subscriberId").is(subscriberId)),
+				Aggregation.match(Criteria.where("partIdentificationNumber").is(partIdententificationId.toLowerCase())),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupOperation,
+				Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
+		return mongoTemplate.aggregate(aggregation, "LIS_IMDES", LISInspectionMeasurementsResult.class).getMappedResults();
 	}
 
 	@Override
@@ -149,5 +156,4 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 		LISInspectionMeasurements lisInspectionMeasurements =  mongoTemplate.findOne(query, LISInspectionMeasurements.class,"LIS_IMDES");
 		return lisInspectionMeasurements;
 	}
-
 }

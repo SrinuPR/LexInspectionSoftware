@@ -1,57 +1,50 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_CPMCS")
-public class LISPurchaseOrderMaster implements Serializable{
-	
-	private static final long serialVersionUID = 382945870712132280L;
+public class LISPurchaseOrderMaster {
 
 	@Id
-	// @Field(value =  "CUSTOMER_PO_ID")
-	private BigInteger customerPoId;
-	
-	// @Field(value =  "CUSTOMERPO_NUMBER")
+	private String customerPoId;
+
 	private String customerPONumber;
-	
-	// @Field(value =  "CUSTOMERPO_DATE" )
+
 	private Date customerPODate;
 	
-	// @Field(value =  "CUSTOMERPO_QUANTITY")
 	private Integer customerPOQuantity;
 	
-	// @Field(value =  "NOTES_PO")
 	private String notesPO;
-	
-	// @Field(value =  "CREATED_BY")
+
 	private String createdBy;
 	
-	// @Field(value =  "CREATED_TIMESTAMP")
 	private Date createdTimestamp;
 	
-	// @Field(value =  "UPDATED_BY")
 	private String updatedBy;
 	
-	// @Field(value =  "UPDATED_TIMESTAMP")
 	private Date updatedTimestamp;
 	
-	// @Field(value =  "IS_ACTIVE")
 	private String isActive;
 	    
-    // @Field(value =  "RECORD_IN_PROCESS")
-	private char recordInProcess;
+	private String recordInProcess;
 	
-	private LISSubscriberMaster subscriber;
+	private String subscriberMasterId;//foreign key
 
-    private LISUserMasterCreate user;
+    private String userMasterCreateId;//foreign key
     
-    private LISMaintainMasterDataComponent component;
+    private String maintainMasterDataComponentId;//foreign key
+    
+
+	public String getCustomerPoId() {
+		return customerPoId;
+	}
+
+	public void setCustomerPoId(String customerPoId) {
+		this.customerPoId = customerPoId;
+	}
 
 	public String getCustomerPONumber() {
 		return customerPONumber;
@@ -68,7 +61,6 @@ public class LISPurchaseOrderMaster implements Serializable{
 	public void setCustomerPODate(Date customerPODate) {
 		this.customerPODate = customerPODate;
 	}
-
 
 	public Integer getCustomerPOQuantity() {
 		return customerPOQuantity;
@@ -118,14 +110,6 @@ public class LISPurchaseOrderMaster implements Serializable{
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public BigInteger getCustomerPoId() {
-		return customerPoId;
-	}
-
-	public void setCustomerPoId(BigInteger customerPoId) {
-		this.customerPoId = customerPoId;
-	}
-
 	public String getIsActive() {
 		return isActive;
 	}
@@ -134,36 +118,37 @@ public class LISPurchaseOrderMaster implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public char getRecordInProcess() {
+	public String getRecordInProcess() {
 		return recordInProcess;
 	}
 
-	public void setRecordInProcess(char recordInProcess) {
+	public void setRecordInProcess(String recordInProcess) {
 		this.recordInProcess = recordInProcess;
 	}
 
-	public LISSubscriberMaster getSubscriber() {
-		return subscriber;
+	public String getSubscriberMasterId() {
+		return subscriberMasterId;
 	}
 
-	public void setSubscriber(LISSubscriberMaster subscriber) {
-		this.subscriber = subscriber;
+	public void setSubscriberMasterId(String subscriberMasterId) {
+		this.subscriberMasterId = subscriberMasterId;
 	}
 
-	public LISUserMasterCreate getUser() {
-		return user;
+	public String getUserMasterCreateId() {
+		return userMasterCreateId;
 	}
 
-	public void setUser(LISUserMasterCreate user) {
-		this.user = user;
+	public void setUserMasterCreateId(String userMasterCreateId) {
+		this.userMasterCreateId = userMasterCreateId;
 	}
 
-	public LISMaintainMasterDataComponent getComponent() {
-		return component;
+	public String getMaintainMasterDataComponentId() {
+		return maintainMasterDataComponentId;
 	}
 
-	public void setComponent(LISMaintainMasterDataComponent component) {
-		this.component = component;
+	public void setMaintainMasterDataComponentId(String maintainMasterDataComponentId) {
+		this.maintainMasterDataComponentId = maintainMasterDataComponentId;
 	}
+
 
 }

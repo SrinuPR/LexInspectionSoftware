@@ -1,79 +1,72 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_ILIMC")
-public class LISInspectionLineItemMaster implements Serializable{
-
-	private static final long serialVersionUID = -236523268575818079L;
+public class LISInspectionLineItemMaster {
 	
 	@Id
-	// @Field(value = "ILIMC_ID")
-	private BigInteger InspectionLineItemId;
+	private String InspectionLineItemId;
 	
-	// @Field(value = "INSPECTION_ID")
-	private Integer inspectionID;
+	private String inspectionID;
 	
-	// @Field(value = "INSPECTION_LINE_ID")
-	private Integer inspectionLineID;
+	private String inspectionLineID;
 	
-	// @Field(value = "INMDC_COMPONENT_PRODUCT_DRAW_NUM")
 	private String componentProductDrawNumber;
 	
-	// @Field(value = "MEASUREMENT_NAME")
 	private String measurmentName;
-	
-	// @Field(value = "COMP_PROD_DRAW_NUM")
+
 	private String CompProdDrawNum;
 			
-	// @Field(value = "BASE_MEASURE")
 	private String baseMeasure;
 	
-	// @Field(value = "BASE_MEASURE_UNITS")
 	private String baseMeasureUnits;
 	
-	// @Field(value = "UPPER_LIMIT")
-	private Float upperLimit;
+	private String upperLimit;
 	
-	// @Field(value = "LOWER_LIMIT")
-	private Float lowerLimit;
+	private String lowerLimit;
 	
-	// @Field(value = "USER_ID")
 	private String userID;
 	
-	// @Field(value = "SUBSCRIBER_ID")
 	private Integer subscriberId;
 	
-	// @Field(value = "SUBSCRIBER_NAME")
 	private String subscriberName;
 	
-	// @Field(value = "CREATED_BY")
 	private String createdBy;
-	
-	// @Field(value = "CREATED_TIMESTAMP")
+
 	private Date createdTimestamp;
 	
-	// @Field(value = "UPDATED_BY")
 	private String updatedBy;
-	
-	// @Field(value = "UPDATED_TIMESTAMP")
+
 	private Date updatedTimestamp;
 	
-	// @Field(value = "IS_ACTIVE")
 	private String isActive;
 
-	public BigInteger getInspectionLineItemId() {
+	public String getInspectionLineItemId() {
 		return InspectionLineItemId;
 	}
 
-	public void setInspectionLineItemId(BigInteger inspectionLineItemId) {
+	public void setInspectionLineItemId(String inspectionLineItemId) {
 		InspectionLineItemId = inspectionLineItemId;
+	}
+
+	public String getInspectionID() {
+		return inspectionID;
+	}
+
+	public void setInspectionID(String inspectionID) {
+		this.inspectionID = inspectionID;
+	}
+
+	public String getInspectionLineID() {
+		return inspectionLineID;
+	}
+
+	public void setInspectionLineID(String inspectionLineID) {
+		this.inspectionLineID = inspectionLineID;
 	}
 
 	public String getComponentProductDrawNumber() {
@@ -92,6 +85,14 @@ public class LISInspectionLineItemMaster implements Serializable{
 		this.measurmentName = measurmentName;
 	}
 
+	public String getCompProdDrawNum() {
+		return CompProdDrawNum;
+	}
+
+	public void setCompProdDrawNum(String compProdDrawNum) {
+		CompProdDrawNum = compProdDrawNum;
+	}
+
 	public String getBaseMeasure() {
 		return baseMeasure;
 	}
@@ -108,19 +109,19 @@ public class LISInspectionLineItemMaster implements Serializable{
 		this.baseMeasureUnits = baseMeasureUnits;
 	}
 
-	public Float getUpperLimit() {
+	public String getUpperLimit() {
 		return upperLimit;
 	}
 
-	public void setUpperLimit(Float upperLimit) {
+	public void setUpperLimit(String upperLimit) {
 		this.upperLimit = upperLimit;
 	}
 
-	public Float getLowerLimit() {
+	public String getLowerLimit() {
 		return lowerLimit;
 	}
 
-	public void setLowerLimit(Float lowerLimit) {
+	public void setLowerLimit(String lowerLimit) {
 		this.lowerLimit = lowerLimit;
 	}
 
@@ -188,28 +189,4 @@ public class LISInspectionLineItemMaster implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public Integer getInspectionID() {
-		return inspectionID;
-	}
-
-	public void setInspectionID(Integer inspectionID) {
-		this.inspectionID = inspectionID;
-	}
-
-	public Integer getInspectionLineID() {
-		return inspectionLineID;
-	}
-
-	public void setInspectionLineID(Integer inspectionLineID) {
-		this.inspectionLineID = inspectionLineID;
-	}
-
-	public String getCompProdDrawNum() {
-		return CompProdDrawNum;
-	}
-
-	public void setCompProdDrawNum(String compProdDrawNum) {
-		CompProdDrawNum = compProdDrawNum;
-	}
-	
 }

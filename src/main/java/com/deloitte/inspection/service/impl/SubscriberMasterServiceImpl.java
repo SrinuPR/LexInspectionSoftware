@@ -16,6 +16,7 @@ import com.deloitte.inspection.constant.SubscriberConstants;
 import com.deloitte.inspection.dao.SubscriberMasterDAO;
 import com.deloitte.inspection.dto.SubscriberMasterDTO;
 import com.deloitte.inspection.exception.SubscriberMasterException;
+import com.deloitte.inspection.mapper.LISSubscriberMasterResult;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.service.SubscriberMasterService;
@@ -92,11 +93,11 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 	public List<SubscriberMasterDTO> getAllSubscriberMasterData() throws SubscriberMasterException {
 		try{
 			List<SubscriberMasterDTO> subscriberMasterDTOList = new ArrayList<SubscriberMasterDTO>();
-			List<LISSubscriberMaster> lisSubscriberMasterList = subMasterDAO.getAllSubscriberMasterData();
+			List<LISSubscriberMasterResult> lisSubscriberMasterList = subMasterDAO.getAllSubscriberMasterData();
 			if(null != lisSubscriberMasterList && lisSubscriberMasterList.size() > 0){
-				for(LISSubscriberMaster lisSubscriberMaster : lisSubscriberMasterList){
+				for(LISSubscriberMasterResult lisSubscriberMaster : lisSubscriberMasterList){
 					SubscriberMasterDTO subscriberMasterDTO = new SubscriberMasterDTO();
-					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId().intValue());
+					subscriberMasterDTO.setSubscriberId(Integer.valueOf(lisSubscriberMaster.getSubscriberId()));
 					subscriberMasterDTO.setSubscriberName(lisSubscriberMaster.getSubscriberName());
 					if(null != lisSubscriberMaster.getUserMasterCreateList() && lisSubscriberMaster.getUserMasterCreateList().size() > 0){
 						subscriberMasterDTO.setUserCount(lisSubscriberMaster.getUserMasterCreateList().size());
@@ -129,7 +130,7 @@ public class SubscriberMasterServiceImpl implements SubscriberMasterService{
 			if(null != lisSubscriberMasterList && lisSubscriberMasterList.size() > 0){
 				for(LISSubscriberMaster lisSubscriberMaster : lisSubscriberMasterList){
 					SubscriberMasterDTO subscriberMasterDTO = new SubscriberMasterDTO();
-					subscriberMasterDTO.setSubscriberId(lisSubscriberMaster.getSubscriberId().intValue());
+					subscriberMasterDTO.setSubscriberId(Integer.valueOf(lisSubscriberMaster.getSubscriberId()));
 					subscriberMasterDTO.setSubscriberName(lisSubscriberMaster.getSubscriberName());
 					subscriberMasterDTOList.add(subscriberMasterDTO);
 				}

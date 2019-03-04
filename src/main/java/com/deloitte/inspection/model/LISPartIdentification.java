@@ -1,55 +1,37 @@
 package com.deloitte.inspection.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "LIS_PIFIM")
-public class LISPartIdentification implements Serializable{
-	
-	private static final long serialVersionUID = -4113989812466679809L;
+public class LISPartIdentification {
 	
 	@Id	
-	// @Field(value = "PIFIM_ID")
-	private BigInteger partVerifId;
+	private String partVerifId;
 	
-	// @Field(value = "MEASUREMENT_NAME")
 	private String measurementName;
-	
-	// @Field(value = "MEASURED_VALUE")
-	private Float measuredValue;
-	
-	// @Field(value = "ACTUAL_BASE_MEASURE")
+
+	private String measuredValue;
+
 	private String actualBaseMeasure;
 	
-	// @Field(value = "ACTUAL_UPPER_LIMIT")
-	private Float actualUpperLimit;
+	private String actualUpperLimit;
 	
-	// @Field(value = "ACTUAL_LOWER_LIMIT")
-	private Float actualLowerLimit;
+	private String actualLowerLimit;
 	
-	// @Field(value = "DEVIATION")
-	private Float deviation;
+	private String deviation;
 	
-	// @Field(value = "STATUS")
 	private String status;
 	
-	// @Field(value = "PART_IDENTIFICATION_NUMBER")
 	private String partIdentificationNumber;
 	
-	// @Field(value = "IMDES_ID")
-	private Integer inspectionMeasurementId;
-	
-	private LISInspectionMeasurements inspectionMeasurements;
+	private String inspectionMeasurementsId;//foreign key
 
-	public BigInteger getPartVerifId() {
+	public String getPartVerifId() {
 		return partVerifId;
 	}
 
-	public void setPartVerifId(BigInteger partVerifId) {
+	public void setPartVerifId(String partVerifId) {
 		this.partVerifId = partVerifId;
 	}
 
@@ -61,11 +43,11 @@ public class LISPartIdentification implements Serializable{
 		this.measurementName = measurementName;
 	}
 
-	public Float getMeasuredValue() {
+	public String getMeasuredValue() {
 		return measuredValue;
 	}
 
-	public void setMeasuredValue(Float measuredValue) {
+	public void setMeasuredValue(String measuredValue) {
 		this.measuredValue = measuredValue;
 	}
 
@@ -77,27 +59,27 @@ public class LISPartIdentification implements Serializable{
 		this.actualBaseMeasure = actualBaseMeasure;
 	}
 
-	public Float getActualUpperLimit() {
+	public String getActualUpperLimit() {
 		return actualUpperLimit;
 	}
 
-	public void setActualUpperLimit(Float actualUpperLimit) {
+	public void setActualUpperLimit(String actualUpperLimit) {
 		this.actualUpperLimit = actualUpperLimit;
 	}
 
-	public Float getActualLowerLimit() {
+	public String getActualLowerLimit() {
 		return actualLowerLimit;
 	}
 
-	public void setActualLowerLimit(Float actualLowerLimit) {
+	public void setActualLowerLimit(String actualLowerLimit) {
 		this.actualLowerLimit = actualLowerLimit;
 	}
 
-	public Float getDeviation() {
+	public String getDeviation() {
 		return deviation;
 	}
 
-	public void setDeviation(Float deviation) {
+	public void setDeviation(String deviation) {
 		this.deviation = deviation;
 	}
 
@@ -117,19 +99,12 @@ public class LISPartIdentification implements Serializable{
 		this.partIdentificationNumber = partIdentificationNumber;
 	}
 
-	public Integer getInspectionMeasurementId() {
-		return inspectionMeasurementId;
+	public String getInspectionMeasurementsId() {
+		return inspectionMeasurementsId;
 	}
 
-	public void setInspectionMeasurementId(Integer inspectionMeasurementId) {
-		this.inspectionMeasurementId = inspectionMeasurementId;
+	public void setInspectionMeasurementsId(String inspectionMeasurementsId) {
+		this.inspectionMeasurementsId = inspectionMeasurementsId;
 	}
 
-	public LISInspectionMeasurements getInspectionMeasurements() {
-		return inspectionMeasurements;
-	}
-
-	public void setInspectionMeasurements(LISInspectionMeasurements inspectionMeasurements) {
-		this.inspectionMeasurements = inspectionMeasurements;
-	}
 }
