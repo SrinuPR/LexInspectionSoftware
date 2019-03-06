@@ -19,7 +19,7 @@ public class LISUserTypeMaster {
 	@Id
 	private String id;
 	
-	private String userTypeId;
+	private Integer userTypeId;
 	
 	private String userTypeName;
 	
@@ -33,7 +33,7 @@ public class LISUserTypeMaster {
 	
 	private String isActive;
 	
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 
 	public String getId() {
 		return id;
@@ -43,11 +43,11 @@ public class LISUserTypeMaster {
 		this.id = id;
 	}
 
-	public String getUserTypeId() {
+	public Integer getUserTypeId() {
 		return userTypeId;
 	}
 
-	public void setUserTypeId(String userTypeId) {
+	public void setUserTypeId(Integer userTypeId) {
 		this.userTypeId = userTypeId;
 	}
 
@@ -99,11 +99,11 @@ public class LISUserTypeMaster {
 		this.isActive = isActive;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 	

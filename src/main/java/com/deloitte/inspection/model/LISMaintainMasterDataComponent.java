@@ -33,7 +33,7 @@ public class LISMaintainMasterDataComponent {
 	
 	private Date updatedTimestamp;
 	
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 	
 	private String userMasterCreateId;//foreign key
 	
@@ -137,11 +137,11 @@ public class LISMaintainMasterDataComponent {
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

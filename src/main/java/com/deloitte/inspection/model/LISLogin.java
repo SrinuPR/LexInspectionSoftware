@@ -23,7 +23,7 @@ public class LISLogin {
 
 	private String updatedBy;
 
-	private String subscriberMasterId;//foreign Key
+	private Integer subscriberMasterId;//foreign Key
 
 	private String adminId;
 
@@ -89,11 +89,11 @@ public class LISLogin {
 		this.updatedBy = updatedBy;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

@@ -32,7 +32,7 @@ public class LISInspectionStageMaster {
 	
 	private String isActive;
 	
-    private String subscriberMasterId;//foreign key
+    private Integer subscriberMasterId;//foreign key
 	
 	private String userId;
 
@@ -100,11 +100,11 @@ public class LISInspectionStageMaster {
 		this.isActive = isActive;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

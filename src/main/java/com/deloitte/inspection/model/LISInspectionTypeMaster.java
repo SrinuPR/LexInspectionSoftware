@@ -34,7 +34,7 @@ public class LISInspectionTypeMaster {
 	
 	private String userId;
 	
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 
 	public String getInspTypeUniqueId() {
 		return inspTypeUniqueId;
@@ -108,11 +108,11 @@ public class LISInspectionTypeMaster {
 		this.userId = userId;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

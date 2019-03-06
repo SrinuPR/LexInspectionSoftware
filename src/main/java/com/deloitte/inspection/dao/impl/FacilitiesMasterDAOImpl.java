@@ -72,7 +72,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 			facilityMaster.setFacilityName(facilityMasterDTO.getFacilityName());
 			facilityMaster.setUserId(userName);
 			LISSubscriberMaster subMaster = new LISSubscriberMaster();
-			subMaster.setSubscriberId(String.valueOf(facilityMasterDTO.getSubscriberId()));
+			subMaster.setSubscriberId(facilityMasterDTO.getSubscriberId());
 			mongoTemplate.save(subMaster,"LIS_SUMAS");
 			facilityMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 			facilityMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));

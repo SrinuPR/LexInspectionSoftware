@@ -34,12 +34,12 @@ public class LoginDAOImpl implements LoginDAO{
 		logger.info("Entered into validateLoginCredentials" + userId);	
 		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
 				.foreignField("subscriberId").as("subscriberMaster");
-		LookupOperation lookupOperation1 = LookupOperation.newLookup().from("LIS_UMACS").localField("userMasterCreateId")
+		LookupOperation userLookup = LookupOperation.newLookup().from("LIS_UMACS").localField("userMasterCreateId")
 				.foreignField("userId").as("userMasterCreate");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(new Criteria().orOperator(Criteria.where("userMasterCreateId").is(userId),Criteria.where("adminId").is(userId))),
 				lookupOperation,
-				lookupOperation1);
+				userLookup);
 		List<LISLoginResult> loginList = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLoginResult.class)
 				.getMappedResults();
 		if(null != loginList && loginList.size() > 0){
@@ -78,7 +78,7 @@ public class LoginDAOImpl implements LoginDAO{
 	@Override
 	public void updateLoginPassword(String userId, String password) throws LoginException {
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId)))
+				Aggregation.match(new Criteria().orOperator(Criteria.where("userMasterCreateId").is(userId),Criteria.where("adminId").is(userId)))
 				);
 		LISLogin lisLogin = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class).getUniqueMappedResult();
 		lisLogin.setPassword(password);
@@ -89,7 +89,7 @@ public class LoginDAOImpl implements LoginDAO{
 	public void logout(String userId) throws LoginException {
 		logger.info("Inside LoginDAOImpl logout");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(new Criteria().orOperator(Criteria.where("user.userId").is(userId),Criteria.where("adminId").is(userId)))
+				Aggregation.match(new Criteria().orOperator(Criteria.where("userMasterCreateId").is(userId),Criteria.where("adminId").is(userId)))
 				);
 		List<LISLogin> list = mongoTemplate.aggregate(aggregation, "LIS_LOGIN", LISLogin.class).getMappedResults();
 		for (LISLogin lisLogin: list) {

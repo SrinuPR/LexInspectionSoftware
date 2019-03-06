@@ -58,7 +58,7 @@ public class SubscriberMasterDAOImpl implements SubscriberMasterDAO{
 			LISSubscriberMaster subMasterModel = new LISSubscriberMaster();
 			subMasterModel.setCreatedBy(subMasterDTO.getCreatedBy());
 			subMasterModel.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
-			subMasterModel.setSubscriberId(String.valueOf(subMasterDTO.getSubscriberId()));
+			subMasterModel.setSubscriberId(subMasterDTO.getSubscriberId());
 			subMasterModel.setSubscriberName(subMasterDTO.getSubscriberName());
 			subMasterModel.setSubscriberAddress(subMasterDTO.getSubscriberAddress());
 			subMasterModel.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));

@@ -64,7 +64,7 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 		inspTypeMaster.setInspTypeId(inspTypeMasterDTO.getInspTypeId());
 		inspTypeMaster.setInspTypeName(inspTypeMasterDTO.getInspTypeName());
 		LISSubscriberMaster subMaster = new LISSubscriberMaster();
-		subMaster.setSubscriberId(String.valueOf(inspTypeMasterDTO.getSubscriberId()));
+		subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
 		mongoTemplate.save(subMaster);
 		inspTypeMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 		inspTypeMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));

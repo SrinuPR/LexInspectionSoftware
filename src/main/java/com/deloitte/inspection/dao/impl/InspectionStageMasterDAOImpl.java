@@ -80,7 +80,7 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 		inspStageMaster.setInspStageId(inspTypeMasterDTO.getInspStageId());
 		inspStageMaster.setInspStageName(inspTypeMasterDTO.getInspStageName());
 		LISSubscriberMaster subMaster = new LISSubscriberMaster();
-		subMaster.setSubscriberId(String.valueOf(inspTypeMasterDTO.getSubscriberId()));
+		subMaster.setSubscriberId(inspTypeMasterDTO.getSubscriberId());
 		mongoTemplate.save(subMaster, "LIS_SUMAS");
 		inspStageMaster.setSubscriberMasterId(subMaster.getSubscriberId());
 		inspStageMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));

@@ -71,6 +71,7 @@ public class AccessMasterServiceImpl implements AccessMasterService{
 				responseDTO.setStatus(StatusConstants.SUCCESS);
 				responseDTO.setMessage(StatusConstants.ACCESS_RECORD_SAVED);
 			}catch(Exception exception) {
+				exception.printStackTrace();
 				responseDTO.setStatus(StatusConstants.FAILURE);
 				responseDTO.setMessage(StatusConstants.ACCESS_RECORD_NOT_SAVED);
 				logger.error("Exception While validating credentials "+exception.getMessage());

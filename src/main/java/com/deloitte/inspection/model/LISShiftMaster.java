@@ -25,7 +25,7 @@ public class LISShiftMaster {
 
 	private String recordInProcess;
 	
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 	
 	private String userId;
 
@@ -93,11 +93,11 @@ public class LISShiftMaster {
 		this.recordInProcess = recordInProcess;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

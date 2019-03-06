@@ -41,7 +41,7 @@ public class LISInspectionMaster {
 	
 	private String isActive;
 
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 	
 	private String maintainMasterDataComponentId;//foreign key
 	
@@ -143,11 +143,11 @@ public class LISInspectionMaster {
 		this.isActive = isActive;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

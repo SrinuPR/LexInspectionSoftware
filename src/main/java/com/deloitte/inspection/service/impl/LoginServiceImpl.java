@@ -52,7 +52,7 @@ public class LoginServiceImpl implements LoginService{
 		if(null != loginDTO && null != loginDTO.getUserId() && null != loginDTO.getPassword()) {
 			try{
 				LISLoginResult login = loginDAO.validateLoginCredentials(loginDTO.getUserId());
-				if(null != login && null == login.getSubscriberMaster() && null == login.getUserMasterCreate()){
+				if(null != login && login.getAdminId() != null){
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.ADMIN_ROLE,responseDTO,loginDTO);
 				}else{
 					responseDTO = checkLoggedinUserRole(login,StatusConstants.OTHER_ROLE,responseDTO,loginDTO);
@@ -103,8 +103,14 @@ public class LoginServiceImpl implements LoginService{
 				if(null != login.getSubscriberMaster()){
 					responseDTO.setSubscriberId(Integer.valueOf(login.getSubscriberMaster().getSubscriberId()));
 					responseDTO.setSubscriberName(login.getSubscriberMaster().getSubscriberName());
-				}
-				if(null != login.getUserMasterCreate()){
+				} 
+				if(adminFlag){
+					logger.info("admin credentails "+login.getAdminId()+" , "+login.getPassword());
+					responseDTO.setUserId(login.getAdminId());
+					responseDTO.setUserName(login.getAdminId());
+					responseDTO.setIsAdmin('Y');
+					responseDTO.setFirstTimeLogin(false);
+				} else if(null != login.getUserMasterCreate()){
 					logger.info("login credentails "+login.getUserMasterCreate().getUserId()+" , "+login.getPassword());
 					responseDTO.setUserId(login.getUserMasterCreate().getUserId());
 					responseDTO.setUserName(login.getUserMasterCreate().getUserName());
@@ -117,12 +123,6 @@ public class LoginServiceImpl implements LoginService{
 					LISAccessMaster lisAccessMaster = accessMasterDAO.getAccessMasterByUserTypeId(userTypeId);
 					if(null != lisAccessMaster)
 						responseDTO.setScreenList(lisAccessMaster.getScreenNumber());
-				}else if(adminFlag){
-					logger.info("admin credentails "+login.getAdminId()+" , "+login.getPassword());
-					responseDTO.setUserId(login.getAdminId());
-					responseDTO.setUserName(login.getAdminId());
-					responseDTO.setIsAdmin('Y');
-					responseDTO.setFirstTimeLogin(false);
 				}
 				responseDTO.setStatus(StatusConstants.LOGIN_SUCCESS);
 			}

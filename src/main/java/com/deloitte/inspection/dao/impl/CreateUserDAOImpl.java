@@ -63,18 +63,21 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 			userMaster.setCreatedTimestamp(new Date());
 			userMaster.setOldPassword1(null);
 			userMaster.setOldPassword2(null);
-			userMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
+			LISLogin lisLogin = new LISLogin();
+			if (subscriberMaster != null) {
+				userMaster.setSubscriberMasterId(subscriberMaster.getSubscriberId());
+				lisLogin.setSubscriberMasterId(subscriberMaster.getSubscriberId());
+			}
 			userMaster.setUserId(createuserDTO.getUserId());
 			userMaster.setUserName(createuserDTO.getUserName());
 			userMaster.setUserTypeId(createuserDTO.getUserTypeId());
 			userMaster.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			mongoTemplate.save(userMaster,"LIS_UMACS");
-			LISLogin lisLogin = new LISLogin();
+			
 			lisLogin.setCreatedBy(createuserDTO.getCreatedBy());
 			lisLogin.setCreatedTimestamp(new Date());
 			lisLogin.setPassword(cryptoComponent.encrypt(createuserDTO.getPassword()));
 			lisLogin.setUserMasterCreateId(userMaster.getUserId());
-			lisLogin.setSubscriberMasterId(subscriberMaster.getSubscriberId());
 			lisLogin.setAdminId(createuserDTO.getAdminId());
 			lisLogin.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			mongoTemplate.save(lisLogin,"LIS_LOGIN");
@@ -89,7 +92,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 		logger.info("Entered into validateUserId");
 		Query query = new Query();
 		query.addCriteria(Criteria.where("userId").in(userId)
-				.andOperator(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)));
+				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISUserMasterCreate> userMaster = mongoTemplate.find(query, LISUserMasterCreate.class,"LIS_UMACS");
 		if (null != userMaster && userMaster.size() > 0) {
 			return userMaster.get(0);

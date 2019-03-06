@@ -41,7 +41,7 @@ public class LISWorkJobOrderMaster {
 	
 	private String recordInProcess;
 
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 	
 	private String userMasterCreateId;//foreign key
 	
@@ -177,11 +177,11 @@ public class LISWorkJobOrderMaster {
 		this.recordInProcess = recordInProcess;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

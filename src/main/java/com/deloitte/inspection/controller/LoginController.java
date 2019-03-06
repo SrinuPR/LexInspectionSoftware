@@ -38,9 +38,11 @@ public class LoginController {
 		try{
 			/*httpSession.setMaxInactiveInterval(StatusConstants.MAX_INACTIVE_INTERVAL);*/
 			responseDTO = loginService.validateLoginCredentials(loginDTO,httpSession);
-			if(null != responseDTO && responseDTO.getErrorMessage() == null)
+			if(null != responseDTO && responseDTO.getErrorMessage() == null) {
+				LoginDTO dto = (LoginDTO)httpSession.getAttribute("user"); 
+				logger.info("logged in user " + dto.getUserId());
 				return new ResponseEntity(responseDTO, HttpStatus.OK);
-			else
+			} else
 				return new ResponseEntity(responseDTO, HttpStatus.EXPECTATION_FAILED);
 		}catch(Exception exception){
 			exception.printStackTrace();

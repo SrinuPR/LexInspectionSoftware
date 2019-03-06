@@ -50,8 +50,8 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 					masterDataComponent.setSubscriberMasterId(subscriberMaster.getSubscriberId());
 				}
 				if(null != componentMasterDataDTO.getSubscriberId()){
-					LISUserMasterCreate userMasterCreate = createUserDAO.validateUserId(userId);
-					masterDataComponent.setUserMasterCreateId(String.valueOf(userMasterCreate.getUserTypeId()));
+					// LISUserMasterCreate userMasterCreate = createUserDAO.validateUserId(userId);
+					masterDataComponent.setUserMasterCreateId(userId);
 				}
 				masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber().trim());
 				masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial().trim());

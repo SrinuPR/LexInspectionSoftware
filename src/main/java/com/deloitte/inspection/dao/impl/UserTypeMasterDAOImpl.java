@@ -73,7 +73,7 @@ public class UserTypeMasterDAOImpl implements UserTypeMasterDAO {
 			LISUserTypeMaster userTypeMasModel = new LISUserTypeMaster();
 			userTypeMasModel.setCreatedBy(userTypeMasDTO.getCreatedBy());
 			userTypeMasModel.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
-			userTypeMasModel.setUserTypeId(String.valueOf(userTypeMasDTO.getUserTypeId()));
+			userTypeMasModel.setUserTypeId(userTypeMasDTO.getUserTypeId());
 			userTypeMasModel.setUserTypeName(userTypeMasDTO.getUserTypeName());
 			userTypeMasModel.setIsActive(String.valueOf(StatusConstants.IS_ACTIVE));
 			LISSubscriberMaster subMaster = subscriberDAO.getSubscriberById(userTypeMasDTO.getSubscriberId());

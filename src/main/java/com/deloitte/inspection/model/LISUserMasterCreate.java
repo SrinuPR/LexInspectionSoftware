@@ -33,7 +33,7 @@ public class LISUserMasterCreate {
 	
 	private String isActive;
 	
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 
 	public String get_id() {
 		return _id;
@@ -131,11 +131,11 @@ public class LISUserMasterCreate {
 		this.isActive = isActive;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 

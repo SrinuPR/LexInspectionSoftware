@@ -16,7 +16,7 @@ public class LISSubscriberMaster {
 	@Id
 	private String _id;
 	
-	private String subscriberId;
+	private Integer subscriberId;
 	
 	private String subscriberName;
 	
@@ -40,11 +40,11 @@ public class LISSubscriberMaster {
 		this._id = _id;
 	}
 
-	public String getSubscriberId() {
+	public Integer getSubscriberId() {
 		return subscriberId;
 	}
 
-	public void setSubscriberId(String subscriberId) {
+	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
 

@@ -34,10 +34,10 @@ public class LoginFilter implements Filter{
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
         String loginURI = httpServletRequest.getContextPath() + "/login";
-
+        
         boolean loggedIn = session != null && session.getAttribute("user") != null;
         boolean loginRequest = AuthorizeConstants.noAuthUrls.contains(httpServletRequest.getRequestURI());
-
+        
         if (loggedIn || loginRequest) {
             chain.doFilter(httpServletRequest, httpServletResponse);
         } else {

@@ -21,9 +21,9 @@ public class LISAccessMaster{
 	
 	private String updatedBy;
 	
-	private String subscriberMasterId;//foreign key
+	private Integer subscriberMasterId;//foreign key
 	
-	private String userTypeMasterId;//foreign key
+	private Integer userTypeMasterId;//foreign key
 	
 	private String isActive;
 
@@ -75,19 +75,19 @@ public class LISAccessMaster{
 		this.updatedBy = updatedBy;
 	}
 
-	public String getSubscriberMasterId() {
+	public Integer getSubscriberMasterId() {
 		return subscriberMasterId;
 	}
 
-	public void setSubscriberMasterId(String subscriberMasterId) {
+	public void setSubscriberMasterId(Integer subscriberMasterId) {
 		this.subscriberMasterId = subscriberMasterId;
 	}
 
-	public String getUserTypeMasterId() {
+	public Integer getUserTypeMasterId() {
 		return userTypeMasterId;
 	}
 
-	public void setUserTypeMasterId(String userTypeMasterId) {
+	public void setUserTypeMasterId(Integer userTypeMasterId) {
 		this.userTypeMasterId = userTypeMasterId;
 	}
 
