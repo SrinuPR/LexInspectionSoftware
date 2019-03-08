@@ -18,9 +18,11 @@ import com.deloitte.inspection.component.ApplicationProperties;
 import com.deloitte.inspection.component.CryptoComponent;
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.CreateUserDAO;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dto.CreateUserDTO;
 import com.deloitte.inspection.exception.CreateUserException;
 import com.deloitte.inspection.exception.CryptoException;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.model.LISLogin;
 import com.deloitte.inspection.model.LISSubscriberMaster;
 import com.deloitte.inspection.model.LISUserMasterCreate;
@@ -34,6 +36,9 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Autowired
 	CryptoComponent cryptoComponent;
@@ -134,6 +139,11 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 
 	@Override
 	public void saveAdmin(LISLogin login) throws CreateUserException {
+		try {
+			login.setLoginId(String.valueOf(databaseSequence.getNextSequenceId("LIS_LOGIN")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
 		mongoTemplate.save(login,"LIS_LOGIN");
 
 	}

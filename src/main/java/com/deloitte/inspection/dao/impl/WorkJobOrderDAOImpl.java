@@ -15,7 +15,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.WorkJobOrderDAO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.exception.WorkJobOrderException;
 import com.deloitte.inspection.mapper.LISWorkJobOrderMasterResult;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
@@ -30,6 +32,9 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public String deleteWorkJobOrder(Integer workJobOrderId) throws WorkJobOrderException {
@@ -60,8 +65,13 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 
 	@Override
 	public void saveWorkJobOrderData(LISWorkJobOrderMaster workJobOrderMaster) throws WorkJobOrderException {
-		logger.info("Entered into saveWorkJobOrderData DAO");	
-		mongoTemplate.save(workJobOrderMaster);			
+		logger.info("Entered into saveWorkJobOrderData DAO");
+		try {
+			workJobOrderMaster.setWjOrderId(String.valueOf(databaseSequence.getNextSequenceId("LIS_WOMCS")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
+		mongoTemplate.save(workJobOrderMaster,"LIS_WOMCS");			
 	}
 
 	@Override

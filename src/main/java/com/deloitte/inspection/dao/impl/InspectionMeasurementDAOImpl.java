@@ -17,7 +17,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.InspectionMeasurementDAO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.exception.InspectionMeasurementException;
 import com.deloitte.inspection.mapper.LISInspectionMeasurementsResult;
 import com.deloitte.inspection.model.LISInspectionMaster;
@@ -33,7 +35,10 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	private static final Logger logger = LogManager.getLogger(InspectionMeasurementDAOImpl.class);
 	
 	@Autowired
-	MongoTemplate mongoTemplate;	
+	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public List<LISInspectionReportMaster> getCompDrawNumList(Integer subscriberId)
@@ -118,6 +123,11 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	public void saveMeasurementsToDataBase(LISInspectionMeasurements inspectionMeasurements)
 			throws InspectionMeasurementException {
 		logger.info("Entered into saveMeasurementsToDataBase ");
+		try {
+			inspectionMeasurements.setInspectionMeasurementId(String.valueOf(databaseSequence.getNextSequenceId("LIS_IMDES")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
 		mongoTemplate.save(inspectionMeasurements,"LIS_IMDES");
 	}
 
@@ -144,6 +154,11 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	@Override
 	public void saveMeasurementRecord(LISPartIdentification partIdentification) throws InspectionMeasurementException {
 		logger.info("Entered into saveMeasurementRecord DAO");
+		try {
+			partIdentification.setPartVerifId(String.valueOf(databaseSequence.getNextSequenceId("LIS_PIFIM")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
 		mongoTemplate.save(partIdentification,"LIS_PIFIM");
 	}
 

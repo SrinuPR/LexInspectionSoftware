@@ -16,10 +16,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.InspectionLineItemMasterDAO;
 import com.deloitte.inspection.dto.InspectionLineItemDTO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.exception.InspectionLineItemMasterException;
 import com.deloitte.inspection.mapper.LISInspectionMasterResult;
+import com.deloitte.inspection.model.DatabaseSequence;
 import com.deloitte.inspection.model.LISInspectionLineItemMaster;
 import com.deloitte.inspection.model.LISInspectionMaster;
 
@@ -31,12 +34,20 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public void saveInspectionLineItem(List<LISInspectionLineItemMaster> lineItemsList)
 			throws InspectionLineItemMasterException {
 		logger.info("Inside saveInspectionLineItem DAO");
 		for (LISInspectionLineItemMaster list : lineItemsList) {
+			try {
+				list.setInspectionLineItemId(String.valueOf(databaseSequence.getNextSequenceId("LIS_ILIMC")));
+			} catch (DatabaseSequenceException e) {
+				e.printStackTrace();
+			}
 			mongoTemplate.save(list,"LIS_ILIMC");
 		}
 	}

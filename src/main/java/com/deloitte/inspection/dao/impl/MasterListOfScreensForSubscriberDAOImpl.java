@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.MasterListOfScreensForSubscriberDAO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.exception.MasterListOfScreensForSubscriberException;
 import com.deloitte.inspection.model.LISMasterListOfScreensForSubscriber;
 
@@ -24,6 +26,9 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 	
 	@Autowired
     private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public void deleteScreenForSubscriber(Integer subscriberId, String screenId) throws MasterListOfScreensForSubscriberException {
@@ -43,7 +48,12 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 			throws MasterListOfScreensForSubscriberException {
 		logger.info("Inside insertScreensForSubscribers DAO");
 		for(LISMasterListOfScreensForSubscriber masterScreen : insertList){
-			mongoTemplate.save(masterScreen);
+			try {
+				masterScreen.setMasterListId(String.valueOf(databaseSequence.getNextSequenceId("LIS_MLOSS")));
+			} catch (DatabaseSequenceException e) {
+				e.printStackTrace();
+			}
+			mongoTemplate.save(masterScreen,"LIS_MLOSS");
 		}
 	}
 

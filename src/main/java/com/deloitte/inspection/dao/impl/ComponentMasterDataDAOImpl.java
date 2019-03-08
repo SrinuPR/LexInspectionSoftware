@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.ComponentMasterDataDAO;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.exception.ComponentMasterDataException;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.mapper.LISMaintainMasterDataComponentResult;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
 import com.mongodb.client.result.DeleteResult;
@@ -30,11 +32,19 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public void saveComponentMasterData(LISMaintainMasterDataComponent masterDataComponent)
 			throws ComponentMasterDataException {
 		logger.info("Entered into saveComponentMasterData DAO");
+		try {
+			masterDataComponent.setCmdcsId(String.valueOf(databaseSequence.getNextSequenceId("LIS_CMDCS")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
 		mongoTemplate.save(masterDataComponent,"LIS_CMDCS");
 	}
 

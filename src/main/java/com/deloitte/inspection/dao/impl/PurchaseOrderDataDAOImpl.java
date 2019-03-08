@@ -15,8 +15,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.PurchaseOrderDataDAO;
 import com.deloitte.inspection.dto.PurchaseOrderDataDTO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.exception.PurchaseOrderMasterException;
 import com.deloitte.inspection.mapper.LISPurchaseOrderMasterResult;
 import com.deloitte.inspection.model.LISPurchaseOrderMaster;
@@ -29,12 +31,20 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	
 	@Autowired
     private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public void savePurchaseOrderData(LISPurchaseOrderMaster purchaseOrderMaster)
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into savePurchaseOrderData DAO");	
-		mongoTemplate.save(purchaseOrderMaster);		
+		try {
+			purchaseOrderMaster.setCustomerPoId(String.valueOf(databaseSequence.getNextSequenceId("LIS_CPMCS")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
+		mongoTemplate.save(purchaseOrderMaster,"LIS_CPMCS");		
 	}
 
 	@Override

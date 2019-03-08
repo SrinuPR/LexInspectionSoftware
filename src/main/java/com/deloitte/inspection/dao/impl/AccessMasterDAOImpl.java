@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
 import com.deloitte.inspection.dao.AccessMasterDAO;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.mapper.LISUserTypeMasterResult;
 import com.deloitte.inspection.model.LISAccessMaster;
 import com.deloitte.inspection.model.LISUserTypeMaster;
@@ -28,9 +29,13 @@ public class AccessMasterDAOImpl implements AccessMasterDAO {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public void saveAccessMaster(LISAccessMaster lisAccessMaster) throws Exception {
+		lisAccessMaster.setAccessMasterId(String.valueOf(databaseSequence.getNextSequenceId("LIS_ACMDS")));
 		mongoTemplate.save(lisAccessMaster,"LIS_ACMDS");
 	}
 

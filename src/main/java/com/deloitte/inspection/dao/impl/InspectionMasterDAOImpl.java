@@ -19,8 +19,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.InspectionMasterDAO;
 import com.deloitte.inspection.dto.InspectionMasterDTO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.mapper.LISInspectionMasterResult;
 import com.deloitte.inspection.model.LISInspectionMaster;
 import com.deloitte.inspection.model.LISMaintainMasterDataComponent;
@@ -33,6 +35,9 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public LISInspectionMaster getInspectionStage(InspectionMasterDTO inspectionDTO) {
@@ -55,6 +60,11 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	@Override
 	public void saveInspectionMaster(LISInspectionMaster inspectionMaster) {
 		logger.info("InspectionMasterDAOImpl - Saving Inspection Master");
+		try {
+			inspectionMaster.setInspId(String.valueOf(databaseSequence.getNextSequenceId("LIS_INMDC")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
 		mongoTemplate.save(inspectionMaster,"LIS_INMDC");
 	}
 

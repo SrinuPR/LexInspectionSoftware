@@ -14,8 +14,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.InspectionReportMasterDAO;
+import com.deloitte.inspection.exception.DatabaseSequenceException;
 import com.deloitte.inspection.exception.InspectionReportMasterException;
+import com.deloitte.inspection.model.DatabaseSequence;
 import com.deloitte.inspection.model.LISInspectionReportMaster;
 
 @Repository
@@ -26,9 +29,17 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	@Override
 	public void saveReport(LISInspectionReportMaster inspRptMatser) throws InspectionReportMasterException {
+		try {
+			inspRptMatser.setInspRptMasterId(String.valueOf(databaseSequence.getNextSequenceId("LIS_IRMCS")));
+		} catch (DatabaseSequenceException e) {
+			e.printStackTrace();
+		}
 		mongoTemplate.save(inspRptMatser, "LIS_IRMCS");
 	}
 
