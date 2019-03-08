@@ -70,7 +70,7 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 	@Override
 	public String deletePurchaseOrder(Integer customerPoId) throws PurchaseOrderMasterException {
 		String status = StatusConstants.FAILURE;
-		Query query = new Query(new Criteria("customerPoId").is(customerPoId));
+		Query query = new Query(new Criteria("customerPoId").is(String.valueOf(customerPoId)));
 		LISPurchaseOrderMaster master = mongoTemplate.findAndRemove(query, LISPurchaseOrderMaster.class);
 		if(master != null){
 			status = StatusConstants.SUCCESS;
