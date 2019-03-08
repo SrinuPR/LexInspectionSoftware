@@ -198,7 +198,7 @@ public class PurchaseOrderMasterServiceImpl implements PurchaseOrderMasterServic
 		LISPurchaseOrderMaster purchaseMaster=new LISPurchaseOrderMaster();
 	
 		if(null!=purchaseOrderDataDTO && null!=purchaseOrderDataDTO.getCustomerPONumber()) {
-			purchaseMaster = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber().trim().toLowerCase());
+			purchaseMaster = purchaseOrderDataDAO.getByCustomerPONumber(purchaseOrderDataDTO.getCustomerPONumber().trim());
 			if(null != purchaseMaster){
 				try {
 					purchaseMaster.setCustomerPODate(InspectionUtils.convertStringToDate(purchaseOrderDataDTO.getCustomerPODate()));

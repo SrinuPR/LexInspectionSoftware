@@ -35,7 +35,8 @@ public class AccessMasterDAOImpl implements AccessMasterDAO {
 
 	@Override
 	public void saveAccessMaster(LISAccessMaster lisAccessMaster) throws Exception {
-		lisAccessMaster.setAccessMasterId(String.valueOf(databaseSequence.getNextSequenceId("LIS_ACMDS")));
+		if (lisAccessMaster.getAccessMasterId() == null)
+			lisAccessMaster.setAccessMasterId(String.valueOf(databaseSequence.getNextSequenceId("LIS_ACMDS")));
 		mongoTemplate.save(lisAccessMaster,"LIS_ACMDS");
 	}
 

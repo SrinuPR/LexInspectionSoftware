@@ -124,7 +124,8 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 			throws InspectionMeasurementException {
 		logger.info("Entered into saveMeasurementsToDataBase ");
 		try {
-			inspectionMeasurements.setInspectionMeasurementId(String.valueOf(databaseSequence.getNextSequenceId("LIS_IMDES")));
+			if (inspectionMeasurements.getInspectionMeasurementId() == null)
+				inspectionMeasurements.setInspectionMeasurementId(String.valueOf(databaseSequence.getNextSequenceId("LIS_IMDES")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();
 		}
@@ -155,6 +156,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	public void saveMeasurementRecord(LISPartIdentification partIdentification) throws InspectionMeasurementException {
 		logger.info("Entered into saveMeasurementRecord DAO");
 		try {
+			if (partIdentification.getPartVerifId() == null)
 			partIdentification.setPartVerifId(String.valueOf(databaseSequence.getNextSequenceId("LIS_PIFIM")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();

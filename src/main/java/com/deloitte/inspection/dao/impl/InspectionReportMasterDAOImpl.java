@@ -36,7 +36,8 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 	@Override
 	public void saveReport(LISInspectionReportMaster inspRptMatser) throws InspectionReportMasterException {
 		try {
-			inspRptMatser.setInspRptMasterId(String.valueOf(databaseSequence.getNextSequenceId("LIS_IRMCS")));
+			if (inspRptMatser.getInspRptMasterId() == null)
+				inspRptMatser.setInspRptMasterId(String.valueOf(databaseSequence.getNextSequenceId("LIS_IRMCS")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();
 		}

@@ -40,7 +40,9 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 			throws PurchaseOrderMasterException {
 		logger.info("Entered into savePurchaseOrderData DAO");	
 		try {
-			purchaseOrderMaster.setCustomerPoId(String.valueOf(databaseSequence.getNextSequenceId("LIS_CPMCS")));
+			if (purchaseOrderMaster.getCustomerPoId() == null) {
+				purchaseOrderMaster.setCustomerPoId(String.valueOf(databaseSequence.getNextSequenceId("LIS_CPMCS")));
+			} 
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();
 		}
@@ -91,10 +93,13 @@ public class PurchaseOrderDataDAOImpl implements PurchaseOrderDataDAO{
 		logger.info("Entered into getCustomerPOData DAO");
 		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
 				.foreignField("subscriberId").as("subscriberMaster");
+		LookupOperation componentLookup = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
+				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				lookupOperation,
+				componentLookup,
 				Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMasterResult.class).getMappedResults();
 	}

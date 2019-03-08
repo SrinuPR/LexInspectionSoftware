@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_PIFIM")
 public class LISPartIdentification {
 	
-	@Id	
 	private String partVerifId;
 	
 	private String measurementName;

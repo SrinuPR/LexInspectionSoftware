@@ -140,7 +140,8 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	@Override
 	public void saveAdmin(LISLogin login) throws CreateUserException {
 		try {
-			login.setLoginId(String.valueOf(databaseSequence.getNextSequenceId("LIS_LOGIN")));
+			if (login.getLoginId() == null)
+				login.setLoginId(String.valueOf(databaseSequence.getNextSequenceId("LIS_LOGIN")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();
 		}

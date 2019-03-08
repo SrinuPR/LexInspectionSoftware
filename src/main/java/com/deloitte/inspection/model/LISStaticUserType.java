@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_DATATABLE_USERTYPEID")
 public class LISStaticUserType {
 
-	@Id	
+		
 	private String userTypeId;
 	
 	private String userTypeName;

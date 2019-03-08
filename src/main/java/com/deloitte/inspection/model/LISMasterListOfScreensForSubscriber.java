@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_MLOSS")
 public class LISMasterListOfScreensForSubscriber {
 
-	@Id
 	private String masterListId;
 	
 	private Integer subscriberId;

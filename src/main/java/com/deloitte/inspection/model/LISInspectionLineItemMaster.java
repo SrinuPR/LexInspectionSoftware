@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_ILIMC")
 public class LISInspectionLineItemMaster {
 	
-	@Id
 	private String InspectionLineItemId;
 	
 	private String inspectionID;

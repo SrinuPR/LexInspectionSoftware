@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_IRMCS")
 public class LISInspectionReportMaster {
 	
-	@Id
+	
 	private String inspRptMasterId;
 	
 	private Integer inspReportNumber;

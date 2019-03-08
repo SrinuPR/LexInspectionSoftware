@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_ACMDS")
 public class LISAccessMaster{
 	
-	@Id
 	private String accessMasterId;
 	
 	private String screenNumber;

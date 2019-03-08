@@ -42,13 +42,14 @@ public class InspectionLineItemMasterDAOImpl implements InspectionLineItemMaster
 	public void saveInspectionLineItem(List<LISInspectionLineItemMaster> lineItemsList)
 			throws InspectionLineItemMasterException {
 		logger.info("Inside saveInspectionLineItem DAO");
-		for (LISInspectionLineItemMaster list : lineItemsList) {
+		for (LISInspectionLineItemMaster master : lineItemsList) {
 			try {
-				list.setInspectionLineItemId(String.valueOf(databaseSequence.getNextSequenceId("LIS_ILIMC")));
+				if (master.getInspectionLineItemId() == null)
+					master.setInspectionLineItemId(String.valueOf(databaseSequence.getNextSequenceId("LIS_ILIMC")));
 			} catch (DatabaseSequenceException e) {
 				e.printStackTrace();
 			}
-			mongoTemplate.save(list,"LIS_ILIMC");
+			mongoTemplate.save(master,"LIS_ILIMC");
 		}
 	}
 

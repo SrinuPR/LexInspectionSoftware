@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_CMDCS")
 public class LISMaintainMasterDataComponent {
 	
-	@Id
 	private String cmdcsId;
 	
 	private String componentProductDrawNumber;

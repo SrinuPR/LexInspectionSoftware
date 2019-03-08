@@ -61,6 +61,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public void saveInspectionMaster(LISInspectionMaster inspectionMaster) {
 		logger.info("InspectionMasterDAOImpl - Saving Inspection Master");
 		try {
+			if (inspectionMaster.getInspId() == null)
 			inspectionMaster.setInspId(String.valueOf(databaseSequence.getNextSequenceId("LIS_INMDC")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();

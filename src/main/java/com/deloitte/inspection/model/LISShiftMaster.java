@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_SHMCS")
 public class LISShiftMaster {
 
-	@Id	
+	
 	private String shiftId;
 	
 	private String shiftName;

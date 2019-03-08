@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_CPMCS")
 public class LISPurchaseOrderMaster {
 
-	@Id
+	
 	private String customerPoId;
 
 	private String customerPONumber;

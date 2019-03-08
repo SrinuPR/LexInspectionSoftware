@@ -67,7 +67,8 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 	public void saveWorkJobOrderData(LISWorkJobOrderMaster workJobOrderMaster) throws WorkJobOrderException {
 		logger.info("Entered into saveWorkJobOrderData DAO");
 		try {
-			workJobOrderMaster.setWjOrderId(String.valueOf(databaseSequence.getNextSequenceId("LIS_WOMCS")));
+			if (workJobOrderMaster.getWjOrderId() == null)
+				workJobOrderMaster.setWjOrderId(String.valueOf(databaseSequence.getNextSequenceId("LIS_WOMCS")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();
 		}

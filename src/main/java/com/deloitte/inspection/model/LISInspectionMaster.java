@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class LISInspectionMaster {
 		
 	
-	@Id
 	private String inspId;
 	
 	private String facilityName;

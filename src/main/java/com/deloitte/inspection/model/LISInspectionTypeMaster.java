@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_ITMCS")
 public class LISInspectionTypeMaster {
 	
-	@Id
+	
 	private String inspTypeUniqueId;
 	
 	private Integer inspTypeId;

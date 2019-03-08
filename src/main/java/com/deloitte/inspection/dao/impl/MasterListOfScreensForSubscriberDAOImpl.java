@@ -49,7 +49,8 @@ public class MasterListOfScreensForSubscriberDAOImpl implements MasterListOfScre
 		logger.info("Inside insertScreensForSubscribers DAO");
 		for(LISMasterListOfScreensForSubscriber masterScreen : insertList){
 			try {
-				masterScreen.setMasterListId(String.valueOf(databaseSequence.getNextSequenceId("LIS_MLOSS")));
+				if (masterScreen.getMasterListId() == null)
+					masterScreen.setMasterListId(String.valueOf(databaseSequence.getNextSequenceId("LIS_MLOSS")));
 			} catch (DatabaseSequenceException e) {
 				e.printStackTrace();
 			}

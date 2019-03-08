@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_FMACS")
 public class LISFacilityMaster {
 	
-	@Id
 	private String facilityId;
 
 	private String facilityNumber;

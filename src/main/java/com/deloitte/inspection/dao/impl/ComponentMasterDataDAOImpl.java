@@ -41,7 +41,8 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into saveComponentMasterData DAO");
 		try {
-			masterDataComponent.setCmdcsId(String.valueOf(databaseSequence.getNextSequenceId("LIS_CMDCS")));
+			if (masterDataComponent.getCmdcsId() == null)
+				masterDataComponent.setCmdcsId(String.valueOf(databaseSequence.getNextSequenceId("LIS_CMDCS")));
 		} catch (DatabaseSequenceException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +54,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into validateLoginCredentials");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("cmdcsId").in(componentId));
+		query.addCriteria(Criteria.where("cmdcsId").in(String.valueOf(componentId)));
 		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = mongoTemplate.find(query,
 				LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		if (null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0) {
@@ -97,7 +98,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
 		String status = StatusConstants.FAILURE;
 		Query query = new Query();
-		query.addCriteria(Criteria.where("cmdcsId").in(componentId));
+		query.addCriteria(Criteria.where("cmdcsId").in(String.valueOf(componentId)));
 		DeleteResult result = mongoTemplate.remove(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		if (result.wasAcknowledged()) {
 			status = StatusConstants.SUCCESS;

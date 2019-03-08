@@ -118,7 +118,7 @@ public class ComponentMasterDataServiceImpl implements ComponentMasterDataServic
 		try{
 			if(null != componentMasterDataDTO){
 				LISMaintainMasterDataComponent masterDataComponent = null;
-				if(null != componentMasterDataDTO.getComponentId() && 0 != componentMasterDataDTO.getComponentId()){
+				if(null != componentMasterDataDTO.getComponentId()){
 					masterDataComponent = componentMasterDataDAO.getComponentDataById(componentMasterDataDTO.getComponentId());
 					masterDataComponent.setComponentProductDrawNumber(componentMasterDataDTO.getComponentProductDrawNumber().trim());
 					masterDataComponent.setComponentProductMeterial(componentMasterDataDTO.getComponentProductMeterial().trim());

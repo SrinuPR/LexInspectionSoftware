@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_WOMCS")
 public class LISWorkJobOrderMaster {
 	
-	@Id
 	private String wjOrderId;
 	
 	private String workJobOrderNumber;
