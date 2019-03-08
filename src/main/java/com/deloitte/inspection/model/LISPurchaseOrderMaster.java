@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_CPMCS")
 public class LISPurchaseOrderMaster {
 
+	@Id
+	private String _id;
 	
 	private String customerPoId;
 
@@ -37,6 +39,14 @@ public class LISPurchaseOrderMaster {
     
     private String maintainMasterDataComponentId;//foreign key
     
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getCustomerPoId() {
 		return customerPoId;

@@ -10,6 +10,8 @@ import com.deloitte.inspection.model.LISWorkJobOrderMaster;
 
 public class LISPurchaseOrderMasterResult {
 	
+	private String _id;
+	
 	private String customerPoId;
 
 	private String customerPONumber;
@@ -39,6 +41,14 @@ public class LISPurchaseOrderMasterResult {
     private LISMaintainMasterDataComponent maintainMasterDataComponent;
     
     private List<LISWorkJobOrderMaster> workJobOrderMasters;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getCustomerPoId() {
 		return customerPoId;

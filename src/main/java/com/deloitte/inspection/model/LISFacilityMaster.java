@@ -15,6 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_FMACS")
 public class LISFacilityMaster {
 	
+	@Id
+	private String _id;
+	
 	private String facilityId;
 
 	private String facilityNumber;
@@ -34,6 +37,14 @@ public class LISFacilityMaster {
 	private String userId;
 	
 	private Integer subscriberMasterId;//foreign key
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getFacilityId() {
 		return facilityId;

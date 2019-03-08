@@ -7,7 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "LIS_SHMCS")
 public class LISShiftMaster {
-
+	
+	@Id
+	private String _id;
 	
 	private String shiftId;
 	
@@ -28,6 +30,14 @@ public class LISShiftMaster {
 	private Integer subscriberMasterId;//foreign key
 	
 	private String userId;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getShiftId() {
 		return shiftId;

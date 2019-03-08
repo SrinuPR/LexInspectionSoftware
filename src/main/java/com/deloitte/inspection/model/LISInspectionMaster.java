@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_INMDC")
 public class LISInspectionMaster {
 		
+	@Id
+	private String _id;
 	
 	private String inspId;
 	
@@ -45,6 +47,14 @@ public class LISInspectionMaster {
 	private String maintainMasterDataComponentId;//foreign key
 	
 	private String recordInProcess;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspId() {
 		return inspId;

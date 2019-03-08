@@ -9,6 +9,8 @@ import com.deloitte.inspection.model.LISUserMasterCreate;
 
 public class LISWorkJobOrderMasterResult {
 	
+	private String _id;
+	
 	private String wjOrderId;
 	
 	private String workJobOrderNumber;
@@ -48,6 +50,14 @@ public class LISWorkJobOrderMasterResult {
 	private LISMaintainMasterDataComponent maintainMasterDataComponent;
 	
 	private LISPurchaseOrderMaster purchaseOrderMaster;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getWjOrderId() {
 		return wjOrderId;

@@ -7,6 +7,8 @@ import com.deloitte.inspection.model.LISUserTypeMaster;
 
 public class LISAccessMasterResult {
 	
+	private String _id;
+	
 	private String accessMasterId;
 	
 	private String screenNumber;
@@ -24,6 +26,14 @@ public class LISAccessMasterResult {
 	private LISUserTypeMaster userTypeMaster;
 	
 	private String isActive;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getAccessMasterId() {
 		return accessMasterId;

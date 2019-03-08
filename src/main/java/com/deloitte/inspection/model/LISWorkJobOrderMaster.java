@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_WOMCS")
 public class LISWorkJobOrderMaster {
 	
+	@Id
+	private String _id;
+	
 	private String wjOrderId;
 	
 	private String workJobOrderNumber;
@@ -47,6 +50,14 @@ public class LISWorkJobOrderMaster {
 	private String maintainMasterDataComponentId;//foreign key
 	
 	private String purchaseOrderMasterId;//foreign key
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getWjOrderId() {
 		return wjOrderId;

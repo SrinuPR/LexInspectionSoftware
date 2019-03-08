@@ -6,6 +6,8 @@ import com.deloitte.inspection.model.LISSubscriberMaster;
 
 public class LISInspectionStageMasterResult {
 	
+	private String _id;
+	
 	private String inspStageUniqueId;
 	
 	private Integer inspStageId;
@@ -25,6 +27,14 @@ public class LISInspectionStageMasterResult {
     private LISSubscriberMaster subscriberMaster;
     
 	private String userId;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspStageUniqueId() {
 		return inspStageUniqueId;

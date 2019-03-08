@@ -11,6 +11,8 @@ import com.deloitte.inspection.model.LISUserMasterCreate;
 import com.deloitte.inspection.model.LISWorkJobOrderMaster;
 
 public class LISMaintainMasterDataComponentResult {
+	
+	private String _id;
 
 	private String cmdcsId;
 	
@@ -49,6 +51,14 @@ public class LISMaintainMasterDataComponentResult {
 	private String isActive;
 	
 	private String recordInProcess;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getCmdcsId() {
 		return cmdcsId;

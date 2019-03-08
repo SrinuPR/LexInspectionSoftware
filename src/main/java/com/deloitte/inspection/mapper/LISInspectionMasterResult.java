@@ -7,6 +7,8 @@ import com.deloitte.inspection.model.LISSubscriberMaster;
 
 public class LISInspectionMasterResult {
 	
+	private String _id;
+	
 	private String inspId;
 	
 	private String facilityName;
@@ -36,6 +38,14 @@ public class LISInspectionMasterResult {
 	private LISMaintainMasterDataComponent maintainMasterDataComponent;
 	
 	private String recordInProcess;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspId() {
 		return inspId;

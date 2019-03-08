@@ -4,6 +4,8 @@ import com.deloitte.inspection.model.LISInspectionMeasurements;
 
 public class LISPartIdentificationResult {
 	
+	private String _id;
+	
 	private String partVerifId;
 	
 	private String measurementName;
@@ -23,6 +25,14 @@ public class LISPartIdentificationResult {
 	private String partIdentificationNumber;
 	
 	private LISInspectionMeasurements inspectionMeasurements;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getPartVerifId() {
 		return partVerifId;

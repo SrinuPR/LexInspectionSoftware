@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_ILIMC")
 public class LISInspectionLineItemMaster {
 	
+	@Id
+	private String _id;
+	
 	private String InspectionLineItemId;
 	
 	private String inspectionID;
@@ -43,6 +46,14 @@ public class LISInspectionLineItemMaster {
 	private Date updatedTimestamp;
 	
 	private String isActive;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspectionLineItemId() {
 		return InspectionLineItemId;

@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_PIFIM")
 public class LISPartIdentification {
 	
+	@Id
+	private String _id;
+	
 	private String partVerifId;
 	
 	private String measurementName;
@@ -25,6 +28,14 @@ public class LISPartIdentification {
 	private String partIdentificationNumber;
 	
 	private String inspectionMeasurementsId;//foreign key
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getPartVerifId() {
 		return partVerifId;

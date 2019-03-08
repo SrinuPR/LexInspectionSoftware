@@ -6,6 +6,8 @@ import com.deloitte.inspection.model.LISSubscriberMaster;
 
 public class LISInspectionTypeMasterResult {
 	
+	private String _id;
+	
 	private String inspTypeUniqueId;
 	
 	private Integer inspTypeId;
@@ -25,6 +27,14 @@ public class LISInspectionTypeMasterResult {
 	private String userId;
 	
 	private LISSubscriberMaster subscriberMaster;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspTypeUniqueId() {
 		return inspTypeUniqueId;

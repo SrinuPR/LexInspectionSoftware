@@ -14,7 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "LIS_ISMCS")
 public class LISInspectionStageMaster {
-		
+	
+	@Id
+	private String _id;
 	
 	private String inspStageUniqueId;
 	
@@ -35,6 +37,14 @@ public class LISInspectionStageMaster {
     private Integer subscriberMasterId;//foreign key
 	
 	private String userId;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspStageUniqueId() {
 		return inspStageUniqueId;

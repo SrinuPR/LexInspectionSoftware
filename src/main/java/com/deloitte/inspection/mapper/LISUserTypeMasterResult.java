@@ -7,7 +7,7 @@ import com.deloitte.inspection.model.LISSubscriberMaster;
 
 public class LISUserTypeMasterResult {
 	
-	private String id;
+	private String _id;
 	
 	private String userTypeId;
 	
@@ -27,12 +27,13 @@ public class LISUserTypeMasterResult {
 	
 	private LISAccessMaster lisAccessMaster;
 
-	public String getId() {
-		return id;
+
+	public String get_id() {
+		return _id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void set_id(String _id) {
+		this._id = _id;
 	}
 
 	public String getUserTypeId() {

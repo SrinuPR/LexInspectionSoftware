@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_ACMDS")
 public class LISAccessMaster{
 	
+	@Id
+	private String _id;
+	
 	private String accessMasterId;
 	
 	private String screenNumber;
@@ -25,6 +28,14 @@ public class LISAccessMaster{
 	private Integer userTypeMasterId;//foreign key
 	
 	private String isActive;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getAccessMasterId() {
 		return accessMasterId;

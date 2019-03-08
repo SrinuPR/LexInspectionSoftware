@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "LIS_IRMCS")
 public class LISInspectionReportMaster {
 	
+	@Id
+	private String _id;
 	
 	private String inspRptMasterId;
 	
@@ -56,6 +58,14 @@ public class LISInspectionReportMaster {
 	private String isActive;
 
 	private String reportStatus;
+
+	public String get_id() {
+		return _id;
+	}
+
+	public void set_id(String _id) {
+		this._id = _id;
+	}
 
 	public String getInspRptMasterId() {
 		return inspRptMasterId;
