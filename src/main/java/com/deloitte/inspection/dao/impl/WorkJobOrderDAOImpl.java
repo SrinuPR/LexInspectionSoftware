@@ -84,7 +84,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 				.foreignField("userId").as("userMasterCreate");
 		LookupOperation lookupComponent = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
 				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
-		LookupOperation lookupPurchaseOrder = LookupOperation.newLookup().from("LIS_SUMAS").localField("purchaseOrderMasterId")
+		LookupOperation lookupPurchaseOrder = LookupOperation.newLookup().from("LIS_CPMCS").localField("purchaseOrderMasterId")
 				.foreignField("customerPONumber").as("purchaseOrderMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
 					Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
@@ -155,7 +155,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 				),
 				Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
         List<LISPurchaseOrderMaster> list = mongoTemplate.aggregate(aggregation, "LIS_CPMCS", LISPurchaseOrderMaster.class).getMappedResults();
-		if (list != null)
+		if (list != null && list.size() > 0)
 			return list.get(0);
         return null;
 	}

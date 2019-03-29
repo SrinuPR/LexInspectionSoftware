@@ -126,7 +126,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into getComponentDataByDrwNum");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("componentProductDrawNumber").in(productDrawNumber.toLowerCase())
+		query.addCriteria(Criteria.where("componentProductDrawNumber").in(productDrawNumber)
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISMaintainMasterDataComponent> list = mongoTemplate.find(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		if (list.size() > 0) {
