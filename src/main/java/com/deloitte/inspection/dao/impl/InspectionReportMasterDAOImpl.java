@@ -48,7 +48,7 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 	public LISInspectionReportMaster validateInspReportNumber(Integer inspReportNum)
 			throws InspectionReportMasterException {
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("inspReportNumber").in(inspReportNum)
+		query.addCriteria(Criteria.where("inspReportNumber").is(inspReportNum)
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionReportMaster> list = mongoTemplate.find(query, LISInspectionReportMaster.class, "LIS_IRMCS");
 		if (null != list && list.size() > 0)
@@ -61,7 +61,7 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 			throws InspectionReportMasterException {
 		logger.info("getInspectionReportList DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("compProdDrawNum").in(compDrawNum)
+		query.addCriteria(Criteria.where("compProdDrawNum").is(compDrawNum)
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionReportMaster.class, "LIS_IRMCS");
 	}
@@ -71,7 +71,7 @@ public class InspectionReportMasterDAOImpl implements InspectionReportMasterDAO 
 			throws InspectionReportMasterException {
 		logger.info("Entered into getAllInspectionReportList DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("userID").in(userId)
+		query.addCriteria(Criteria.where("userID").is(userId)
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		return mongoTemplate.find(query, LISInspectionReportMaster.class, "LIS_IRMCS");
 	}

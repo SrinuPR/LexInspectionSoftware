@@ -52,14 +52,14 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 			Aggregation aggregation = Aggregation.newAggregation(
 					Aggregation
 							.match(Criteria.where("subscriberMasterId").is(createuserDTO.getSubscriberId())),
-					Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))));
+					Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 			List<LISUserMasterCreate> userMasterList = mongoTemplate
 					.aggregate(aggregation, "LIS_UMACS", LISUserMasterCreate.class).getMappedResults();
 			if (null != userMasterList && userMasterList.size() >= applicationProperties.EACH_SUBSCRIBER_USER_COUNT) {
 				return StatusConstants.FAILURE;
 			}
 			Query query = new Query();
-			query.addCriteria(Criteria.where("subscriberId").in(createuserDTO.getSubscriberId())
+			query.addCriteria(Criteria.where("subscriberId").is(createuserDTO.getSubscriberId())
 					.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 			LISSubscriberMaster subscriberMaster = mongoTemplate.findOne(query, LISSubscriberMaster.class);
 			LISUserMasterCreate userMaster = new LISUserMasterCreate();
@@ -96,7 +96,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	public LISUserMasterCreate validateUserId(String userId) throws CreateUserException {
 		logger.info("Entered into validateUserId");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("userId").in(userId)
+		query.addCriteria(Criteria.where("userId").is(userId)
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISUserMasterCreate> userMaster = mongoTemplate.find(query, LISUserMasterCreate.class,"LIS_UMACS");
 		if (null != userMaster && userMaster.size() > 0) {
@@ -109,8 +109,8 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	public List<LISUserTypeMaster> getUserTypeBySubscriberId(Integer subscriberId) throws CreateUserException {
 		logger.info("Entered into getUserTypeBySubscriberId ");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("subscriberMasterId").in(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").in(StatusConstants.IS_ACTIVE)),
+				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
+				Aggregation.match(Criteria.where("isActive").is(StatusConstants.IS_ACTIVE)),
 				Aggregation.sort(Direction.ASC, "userTypeName"));
 		return mongoTemplate.aggregate(aggregation, "LIS_UTMCS", LISUserTypeMaster.class).getMappedResults();
 	}
@@ -119,7 +119,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	public LISLogin validateAdminId(String adminId) throws CreateUserException {
 		logger.info("Entered into validateLoginCredentials");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("adminId").in(adminId.toLowerCase()));
+		query.addCriteria(Criteria.where("adminId").is(adminId.toLowerCase()));
 		List<LISLogin> loginList = mongoTemplate.find(query, LISLogin.class,"LIS_LOGIN");
 		if (null != loginList && loginList.size() > 0) {
 			return loginList.get(0);
@@ -130,7 +130,7 @@ public class CreateUserDAOImpl implements CreateUserDAO {
 	@Override
 	public boolean deleteAdmin(String adminId) throws CreateUserException {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("adminId").in(adminId.toLowerCase()));
+		query.addCriteria(Criteria.where("adminId").is(adminId.toLowerCase()));
 		DeleteResult result = mongoTemplate.remove(query, LISLogin.class,"LIS_LOGIN");
 		if (result.wasAcknowledged())
 			return true;

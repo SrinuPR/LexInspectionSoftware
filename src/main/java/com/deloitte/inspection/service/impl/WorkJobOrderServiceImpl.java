@@ -557,7 +557,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		logger.info("Service : getWJODataByCompProdDrawNum");
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
-			List<LISWorkJobOrderMasterResult> workJobOrderMasters = workJobOrderDAO.getWorkJobOrderByCompDrawNum(compProdDrawNum.toLowerCase());
+			List<LISWorkJobOrderMasterResult> workJobOrderMasters = workJobOrderDAO.getWorkJobOrderByCompDrawNum(compProdDrawNum);
 			if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
 				List<WorkJobOrderDTO> results = transferModelToDTO(workJobOrderMasters);
 				workJobOrderResponseDTO.setResults(results);

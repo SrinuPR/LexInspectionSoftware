@@ -43,7 +43,7 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 	public LISInspectionTypeMaster getInspTypeId(Integer inspTypeId) throws InspectionTypeMasterException {
 		logger.info("Entered into getInspTypeId");	
 		Query query = new Query();
-		query.addCriteria(Criteria.where("inspTypeId").in(inspTypeId));
+		query.addCriteria(Criteria.where("inspTypeId").is(inspTypeId));
 		List<LISInspectionTypeMaster> inspTypeList = mongoTemplate.find(query, LISInspectionTypeMaster.class,"LIS_ITMCS");
 		if(null != inspTypeList && inspTypeList.size() > 0) {
 			return inspTypeList.get(0);
@@ -85,6 +85,7 @@ private static final Logger logger = LogManager.getLogger(InspectionTypeMasterDA
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupOperation,
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionTypeMasterResult> list = mongoTemplate.aggregate(aggregation, "LIS_ITMCS", LISInspectionTypeMasterResult.class)
 				.getMappedResults();

@@ -54,7 +54,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into validateLoginCredentials");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("cmdcsId").in(String.valueOf(componentId)));
+		query.addCriteria(Criteria.where("cmdcsId").is(String.valueOf(componentId)));
 		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = mongoTemplate.find(query,
 				LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		if (null != maintainMasterDataComponents && maintainMasterDataComponents.size() > 0) {
@@ -71,7 +71,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 				.foreignField("subscriberId").as("subscriberMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
-				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.ASC, "componentProductDrawNumber"),
 				lookupOperation);
 		List<LISMaintainMasterDataComponentResult> list = mongoTemplate
@@ -85,8 +85,8 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into getAllComponentMasterDataByUserID");
 		Aggregation aggregation = Aggregation.newAggregation(
-				Aggregation.match(Criteria.where("user.userId").in(userId)),
-				Aggregation.match(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE))),
+				Aggregation.match(Criteria.where("user.userId").is(userId)),
+				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISMaintainMasterDataComponent> list = mongoTemplate
 				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
@@ -98,7 +98,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 	public String deleteComponent(Integer componentId) throws ComponentMasterDataException {
 		String status = StatusConstants.FAILURE;
 		Query query = new Query();
-		query.addCriteria(Criteria.where("cmdcsId").in(String.valueOf(componentId)));
+		query.addCriteria(Criteria.where("cmdcsId").is(String.valueOf(componentId)));
 		DeleteResult result = mongoTemplate.remove(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		if (result.wasAcknowledged()) {
 			status = StatusConstants.SUCCESS;
@@ -111,7 +111,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into getAllBySubscriberId");
 		Aggregation aggregation = Aggregation
-				.newAggregation(Aggregation.match(Criteria.where("subscriberMasterId").in(subscriberId)));
+				.newAggregation(Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)));
 		List<LISMaintainMasterDataComponent> maintainMasterDataComponents = mongoTemplate
 				.aggregate(aggregation, "LIS_CMDCS", LISMaintainMasterDataComponent.class)
 				.getMappedResults();
@@ -126,7 +126,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 			throws ComponentMasterDataException {
 		logger.info("Entered into getComponentDataByDrwNum");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("componentProductDrawNumber").in(productDrawNumber)
+		query.addCriteria(Criteria.where("componentProductDrawNumber").is(productDrawNumber)
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISMaintainMasterDataComponent> list = mongoTemplate.find(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		if (list.size() > 0) {
@@ -139,7 +139,7 @@ public class ComponentMasterDataDAOImpl implements ComponentMasterDataDAO {
 	public List<LISMaintainMasterDataComponent> getAllComponentDrawingNumber() throws ComponentMasterDataException {
 		logger.info("Entered into getComponentDataByDrwNum");
 		Query query = new Query().with(new Sort(Direction.ASC, "componentProductDrawNumber"));
-		query.addCriteria(Criteria.where("isActive").in(String.valueOf(StatusConstants.IS_ACTIVE)));
+		query.addCriteria(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE)));
 		List<LISMaintainMasterDataComponent> list = mongoTemplate.find(query, LISMaintainMasterDataComponent.class,"LIS_CMDCS");
 		return list;
 	}

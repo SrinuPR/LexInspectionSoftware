@@ -67,7 +67,7 @@ public class LoginDAOImpl implements LoginDAO{
 	public LISUserMasterCreate validateUser(String userId) throws LoginException {
 		logger.info("Inside LoginDAOImpl validateUser");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("userId").in(userId));
+		query.addCriteria(Criteria.where("userId").is(userId));
 		List<LISUserMasterCreate> userList = mongoTemplate.find(query, LISUserMasterCreate.class, "LIS_UMACS");
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0);

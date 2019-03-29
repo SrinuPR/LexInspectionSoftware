@@ -91,6 +91,7 @@ public class InspectionLineItemController {
 			if(null != userDto){
 				userId = userDto.getUserId();
 				userName = userDto.getUserName();
+				subscriberId = userDto.getSubscriberId();
 			}else{
 				userId = StatusConstants.DEFAULT_USER_ID;
 				userName = StatusConstants.DEFAULT_USER_NAME;
@@ -204,7 +205,7 @@ public class InspectionLineItemController {
 		logger.info("Inside compdrawnum");
 		InspectionLineItemResponseDTO inspLineItemResDto = new InspectionLineItemResponseDTO();
 		try{
-			inspLineItemResDto = inspectionLineItemMasterService.getLineItemByCompDraNum(compdrawnum.toLowerCase());
+			inspLineItemResDto = inspectionLineItemMasterService.getLineItemByCompDraNum(compdrawnum);
 			if(null != inspLineItemResDto && StatusConstants.SUCCESS.equalsIgnoreCase(inspLineItemResDto.getStatus())){
 				return new ResponseEntity(inspLineItemResDto, HttpStatus.OK);
 			}else{

@@ -100,7 +100,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				List<FacilityMasterDTO> facilityMasterDTOs = new ArrayList<FacilityMasterDTO>();
 				for(LISFacilityMaster facilityMaster : facilityMasters){
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();
-					facilityMasterDTO.setFacilityId(Integer.valueOf(facilityMaster.getFacilityId()));
+					facilityMasterDTO.setFacilityId(Integer.valueOf(facilityMaster.getFacilityNumber()));
 					facilityMasterDTO.setFacilityName(facilityMaster.getFacilityName());
 					facilityMasterDTO.setFacilityNumber(facilityMaster.getFacilityNumber());
 					facilityMasterDTOs.add(facilityMasterDTO);
@@ -135,7 +135,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 		logger.info("Entered into getInspectionReportList service");
 		InspectionMeasurementResponseDTO inspectionMeasurementResponseDTO = new InspectionMeasurementResponseDTO();
 		try{
-			List<LISInspectionReportMaster> inspectionReportMasters = inspectionReportMasterDAO.getInspectionReportList(compDrawNum.toLowerCase());
+			List<LISInspectionReportMaster> inspectionReportMasters = inspectionReportMasterDAO.getInspectionReportList(compDrawNum);
 			if(null != inspectionReportMasters && inspectionReportMasters.size() > 0){
 				logger.info("Entered into IRMCS Data");
 				List<InspectionReportMasterDTO> inspectionReportMasterDTOs = new ArrayList<InspectionReportMasterDTO>();
@@ -165,7 +165,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 						inspectionReportMasterDTO.setInspectionTypeId(inspectionTypeMaster.getInspTypeId());
 						inspectionReportMasterDTO.setInspectiontypeName(inspectionTypeMaster.getInspTypeName());
 					}
-					List<LISInspectionLineItemMaster> inspectionLineItemMasters = inspectionLineItemMasterDAO.getAllInspectionLineItemsByDrawNum(compDrawNum.toLowerCase());
+					List<LISInspectionLineItemMaster> inspectionLineItemMasters = inspectionLineItemMasterDAO.getAllInspectionLineItemsByDrawNum(compDrawNum);
 					List<InspectionLineItemDTO> inspectionLineItemDTOs = new ArrayList<InspectionLineItemDTO>();
 					if(null != inspectionLineItemMasters && inspectionLineItemMasters.size() > 0){
 						for(LISInspectionLineItemMaster inspectionLineItemMaster :inspectionLineItemMasters){

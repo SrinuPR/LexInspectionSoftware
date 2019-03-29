@@ -47,7 +47,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 	public LISFacilityMaster getFacilityNumber(String facilityNum) throws FacilityMasterException {
 		logger.info("Entered into getFacilityNumber");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("facilityNumber").in(facilityNum));
+		query.addCriteria(Criteria.where("facilityNumber").is(facilityNum));
 		List<LISFacilityMaster> facilitiesMasterList = mongoTemplate.find(query, LISFacilityMaster.class,"LIS_FMACS");
 		if (null != facilitiesMasterList && facilitiesMasterList.size() > 0) {
 			return facilitiesMasterList.get(0);

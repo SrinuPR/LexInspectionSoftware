@@ -45,8 +45,8 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("maintainMasterDataComponentId")
 						.is(inspectionDTO.getComponentProductDrawNumber())),
-				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
-				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
+				Aggregation.match(Criteria.where("inspTypeId").is(inspectionDTO.getInspectionType())),
+				Aggregation.match(Criteria.where("inspStageId").is(inspectionDTO.getInspectionStage())),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionMaster> list = mongoTemplate
@@ -74,10 +74,13 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		logger.info("Entered into getInspectionMasterList DAO");
 		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_SUMAS").localField("subscriberMasterId")
 				.foreignField("subscriberId").as("subscriberMaster");
+		LookupOperation masterLookup = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
+				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				lookupOperation,
+				masterLookup,
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMasterResult.class)
 				.getMappedResults();
@@ -87,7 +90,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 	public LISInspectionMaster getInspectionMasterById(Integer inspectionMasterId) {
 		logger.info("Inside getWorkJobOrderById DAO");
 		Query query = new Query().with(new Sort(Direction.DESC, "createdTimestamp"));
-		query.addCriteria(Criteria.where("inspId").in(inspectionMasterId)
+		query.addCriteria(Criteria.where("inspId").is(inspectionMasterId.toString())
 				.andOperator(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))));
 		List<LISInspectionMaster> list = mongoTemplate.find(query, LISInspectionMaster.class,"LIS_INMDC");
 		if (list.size() > 0) {
@@ -102,8 +105,8 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("maintainMasterDataComponentId")
 						.is(inspectionDTO.getComponentProductDrawNumber())),
-				Aggregation.match(Criteria.where("inspTypeId").in(inspectionDTO.getInspectionType())),
-				Aggregation.match(Criteria.where("inspStageId").in(inspectionDTO.getInspectionStage())),
+				Aggregation.match(Criteria.where("inspTypeId").is(inspectionDTO.getInspectionType())),
+				Aggregation.match(Criteria.where("inspStageId").is(inspectionDTO.getInspectionStage())),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionMaster> list = mongoTemplate
@@ -119,7 +122,7 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		logger.info("inside deleteInspectionMaster DAO method");
 		String status = StatusConstants.FAILURE;
 		Query query = new Query();
-		query.addCriteria(Criteria.where("inspId").in(inspectionMasterId));
+		query.addCriteria(Criteria.where("inspId").is(inspectionMasterId.toString()));
 		DeleteResult result = mongoTemplate.remove(query, "LIS_INMDC");
 		if (result.wasAcknowledged()) {
 			status = StatusConstants.SUCCESS;
@@ -144,11 +147,11 @@ public class InspectionMasterDAOImpl implements InspectionMasterDAO {
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.project("maintainMasterDataComponentId"));
-		AggregationResults<String> output = mongoTemplate.aggregate(aggregation, "LIS_INMDC", String.class);
+		AggregationResults<LISInspectionMaster> output = mongoTemplate.aggregate(aggregation, "LIS_INMDC", LISInspectionMaster.class);
 		Set<String> drawNums = new HashSet<String>();
 		if (output != null) {
-			for (String result : output) {
-				drawNums.add(result);
+			for (LISInspectionMaster result : output) {
+				drawNums.add(result.getMaintainMasterDataComponent());
 			}
 		}
 		Aggregation aggregation1 = Aggregation.newAggregation(

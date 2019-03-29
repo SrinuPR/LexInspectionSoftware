@@ -250,7 +250,7 @@ private static final Logger logger = LogManager.getLogger(WorkJobOrderDAOImpl.cl
 				.foreignField("userId").as("userMasterCreate");
 		LookupOperation lookupComponent = LookupOperation.newLookup().from("LIS_CMDCS").localField("maintainMasterDataComponentId")
 				.foreignField("componentProductDrawNumber").as("maintainMasterDataComponent");
-		LookupOperation lookupPurchaseOrder = LookupOperation.newLookup().from("LIS_SUMAS").localField("purchaseOrderMasterId")
+		LookupOperation lookupPurchaseOrder = LookupOperation.newLookup().from("LIS_CPMCS").localField("purchaseOrderMasterId")
 				.foreignField("customerPONumber").as("purchaseOrderMaster");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("maintainMasterDataComponentId").is(compProdDrawNum)),

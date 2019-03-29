@@ -53,7 +53,7 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 	public LISInspectionStageMaster getInspSatgeId(Integer inspStageId) throws InspectionStageMasterException {
 		logger.info("Entered into getInspSatgeId");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("inspStageId").in(inspStageId));
+		query.addCriteria(Criteria.where("inspStageId").is(inspStageId));
 		List<LISInspectionStageMaster> inspStageList = mongoTemplate.find(query, LISInspectionStageMaster.class,
 				"LIS_ISMCS");
 		if (null != inspStageList && inspStageList.size() > 0) {
@@ -106,6 +106,7 @@ public class InspectionStageMasterDAOImpl implements InspectionStageMasterDAO {
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberMasterId").is(subscriberId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
+				lookupOperation,
 				Aggregation.sort(Direction.DESC, "createdTimestamp"));
 		List<LISInspectionStageMasterResult> list = mongoTemplate
 				.aggregate(aggregation, "LIS_ISMCS", LISInspectionStageMasterResult.class).getMappedResults();

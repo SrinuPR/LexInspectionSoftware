@@ -184,7 +184,7 @@ public class InspectionMasterServiceImpl implements InspectionMasterService {
 		InspectionMasterResponseDataDTO inspectionMasterResponseDataDTO = new InspectionMasterResponseDataDTO();
 		logger.info("Inside getInspectionTypesByCompProdDrawNum start");
 		try{
-			List<LISInspectionMaster> list = inspectionDAO.getInspectionTypesByCompProdDrawNum(compProdDrawNum.toLowerCase());
+			List<LISInspectionMaster> list = inspectionDAO.getInspectionTypesByCompProdDrawNum(compProdDrawNum);
 			if(null != list && list.size() > 0){
 				Set<Integer> inspTypeIds = new TreeSet<Integer>();
 				Set<Integer> inspStageIds = new TreeSet<Integer>();

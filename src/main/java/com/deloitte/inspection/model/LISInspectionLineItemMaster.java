@@ -11,7 +11,7 @@ public class LISInspectionLineItemMaster {
 	@Id
 	private String _id;
 	
-	private String InspectionLineItemId;
+	private String inspectionLineItemId;
 	
 	private String inspectionID;
 	
@@ -56,11 +56,11 @@ public class LISInspectionLineItemMaster {
 	}
 
 	public String getInspectionLineItemId() {
-		return InspectionLineItemId;
+		return inspectionLineItemId;
 	}
 
 	public void setInspectionLineItemId(String inspectionLineItemId) {
-		InspectionLineItemId = inspectionLineItemId;
+		this.inspectionLineItemId = inspectionLineItemId;
 	}
 
 	public String getInspectionID() {
