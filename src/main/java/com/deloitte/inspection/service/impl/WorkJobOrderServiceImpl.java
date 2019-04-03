@@ -127,14 +127,14 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	private boolean changeValidation(String workJobOrderNumber, String customerPONumber) {
 		boolean flag = false;
 		try{
-			List<LISWorkJobOrderMaster> lisWorkJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderNumber.toLowerCase(),customerPONumber.toLowerCase());
+			List<LISWorkJobOrderMaster> lisWorkJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderNumber,customerPONumber);
 			int lotSize = 0;
 			if(null != lisWorkJobOrderMasters && lisWorkJobOrderMasters.size() > 0 ){
 				for(LISWorkJobOrderMaster workJobOrderMaster : lisWorkJobOrderMasters){
 					lotSize = lotSize + (workJobOrderMaster.getLotSize() != null ? workJobOrderMaster.getLotSize() : 0);
 				}
 			}
-			List<LISInspectionMeasurements> inspectionMeasurements =inspectionMeasurementDAO.getProducedQuantityListByWJandPO(workJobOrderNumber.toLowerCase(),customerPONumber.toLowerCase());
+			List<LISInspectionMeasurements> inspectionMeasurements =inspectionMeasurementDAO.getProducedQuantityListByWJandPO(workJobOrderNumber,customerPONumber);
 			int producedQuantity = 0;
 			if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
 				for(LISInspectionMeasurements inspectionMeasurements2 : inspectionMeasurements){
@@ -164,7 +164,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		logger.error("The Work/Job Order Number "+workJobOrderNumber);
 		boolean isExist = false;
 		try{
-			LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkJobOrderByNumber(workJobOrderNumber.toLowerCase(),lotNumber.toLowerCase(),batchNumber.toLowerCase());
+			LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkJobOrderByNumber(workJobOrderNumber,lotNumber,batchNumber);
 			if(null != workJobOrderMaster){
 				isExist = true;
 			}
@@ -259,7 +259,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			if(null != workJobOrderDTO && null != workJobOrderDTO.getWorkJobOrderNumber() && null != workJobOrderDTO.getCustomerPONumber()){
-				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.validateWorkJobOrderNumber(workJobOrderDTO.getWorkJobOrderNumber().toLowerCase(),workJobOrderDTO.getCustomerPONumber().toLowerCase());
+				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.validateWorkJobOrderNumber(workJobOrderDTO.getWorkJobOrderNumber(),workJobOrderDTO.getCustomerPONumber());
 				if(null != workJobOrderMaster){
 					workJobOrderResponseDTO.setStatus(StatusConstants.WARNING);
 					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.WORK_JOB_ORDER_VALIDATION_WARNING);
@@ -281,13 +281,13 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			if(null != workJobOrderDTO && null != workJobOrderDTO.getWorkJobOrderNumber() && null != workJobOrderDTO.getLotNumber()){
-				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.validateLotNumber(workJobOrderDTO.getWorkJobOrderNumber().toLowerCase(),workJobOrderDTO.getLotNumber().toLowerCase());
+				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.validateLotNumber(workJobOrderDTO.getWorkJobOrderNumber(),workJobOrderDTO.getLotNumber());
 				if(null != workJobOrderMaster){
 					workJobOrderResponseDTO.setLotSize(workJobOrderMaster.getLotSize());
 					workJobOrderResponseDTO.setStatus(StatusConstants.WARNING);
 					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_NUMBER_VALIDATION_WARNING);
 				}else{
-					workJobOrderMaster = workJobOrderDAO.validateLotNumber(null,workJobOrderDTO.getLotNumber().toLowerCase());
+					workJobOrderMaster = workJobOrderDAO.validateLotNumber(null,workJobOrderDTO.getLotNumber());
 					if(null != workJobOrderMaster){
 						workJobOrderResponseDTO.setLotSize(workJobOrderMaster.getLotSize());
 					}
@@ -308,7 +308,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		WorkJobOrderResponseDTO workJobOrderResponseDTO = new WorkJobOrderResponseDTO();
 		try{
 			if(null != workJobOrderDTO && null != workJobOrderDTO.getManufacturingBatchNumber() && null != workJobOrderDTO.getLotNumber()){
-				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.validateManufacturerBatchNumber(workJobOrderDTO.getManufacturingBatchNumber().toLowerCase(),workJobOrderDTO.getLotNumber().toLowerCase());
+				LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.validateManufacturerBatchNumber(workJobOrderDTO.getManufacturingBatchNumber(),workJobOrderDTO.getLotNumber());
 				if(null != workJobOrderMaster){
 					workJobOrderResponseDTO.setStatus(StatusConstants.ERROR);
 					workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.MANUFACTURER_BATCH_NUMBER_VALIDATION_FAILED);
@@ -331,13 +331,13 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 		try{
 			if(null == workJobOrderDTO.getWjOrderId()){
 				if(null != workJobOrderDTO && null != workJobOrderDTO.getComponentProductDrawNumber() && null != workJobOrderDTO.getCustomerPONumber()){
-					LISPurchaseOrderMaster lisPurchaseOrderMaster = workJobOrderDAO.getCustomerPOQuantity(workJobOrderDTO.getComponentProductDrawNumber().toLowerCase(),workJobOrderDTO.getCustomerPONumber().toLowerCase());
+					LISPurchaseOrderMaster lisPurchaseOrderMaster = workJobOrderDAO.getCustomerPOQuantity(workJobOrderDTO.getComponentProductDrawNumber(),workJobOrderDTO.getCustomerPONumber());
 					int customerPOQuantity = 0;
 					int workOrderLotSize = 0;
 					if(null != lisPurchaseOrderMaster){
 						customerPOQuantity = lisPurchaseOrderMaster.getCustomerPOQuantity() != null ? lisPurchaseOrderMaster.getCustomerPOQuantity() :0;
 					}
-					List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderDTO.getWorkJobOrderNumber().toLowerCase(),null);
+					List<LISWorkJobOrderMaster> workJobOrderMasters = workJobOrderDAO.getAllWorkJobOrderListByNumber(workJobOrderDTO.getWorkJobOrderNumber(),null);
 					if(null != workJobOrderMasters && workJobOrderMasters.size() > 0){
 						for(LISWorkJobOrderMaster workJobOrderMaster : workJobOrderMasters){
 							workOrderLotSize = workOrderLotSize + (workJobOrderMaster.getLotSize() != null ? workJobOrderMaster.getLotSize() : 0);
@@ -367,8 +367,8 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 			WorkJobOrderDTO workJobOrderDTO) {
 		logger.info("Inside lotSizeChangeValidation ");
 		try{
-			int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber().toLowerCase());
-			int producedQuantity = getProducedQuantity(workJobOrderDTO.getLotNumber().toLowerCase());
+			int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber());
+			int producedQuantity = getProducedQuantity(workJobOrderDTO.getLotNumber());
 			if((manufacturingBatchSize - producedQuantity) > 0){
 				workJobOrderResponseDTO.setStatus(StatusConstants.SUCCESS);
 				workJobOrderResponseDTO.setMessage(WorkJobOrderConstants.LOT_SIZE_UPDATE_SUCCESS);
@@ -386,7 +386,7 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	
 	private int getProducedQuantity(String lotNumber) throws InspectionMeasurementException {
 		int producedQuantity = 0;
-		List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByLotchNumber(lotNumber.toLowerCase());
+		List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByLotchNumber(lotNumber);
 		if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
 			for(LISInspectionMeasurements inspectionMeasurements2 :inspectionMeasurements){
 				producedQuantity = producedQuantity + inspectionMeasurements2.getProducedQuantity();
@@ -413,15 +413,15 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 			if(null == workJobOrderDTO.getWjOrderId()){
 				if(null != workJobOrderDTO && null != workJobOrderDTO.getComponentProductDrawNumber() && null != workJobOrderDTO.getCustomerPONumber()
 						&& null != workJobOrderDTO.getLotNumber() && null != workJobOrderDTO.getWorkJobOrderNumber()){
-					LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkJobOrderBy4(workJobOrderDTO.getComponentProductDrawNumber().toLowerCase(),
-																								  workJobOrderDTO.getCustomerPONumber().toLowerCase(),
-																								  workJobOrderDTO.getLotNumber().toLowerCase(),
-																								  workJobOrderDTO.getWorkJobOrderNumber().toLowerCase());
+					LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkJobOrderBy4(workJobOrderDTO.getComponentProductDrawNumber(),
+																								  workJobOrderDTO.getCustomerPONumber(),
+																								  workJobOrderDTO.getLotNumber(),
+																								  workJobOrderDTO.getWorkJobOrderNumber());
 					int lotSize = 0;
 					if(null != workJobOrderMaster){
 						lotSize = workJobOrderMaster.getLotSize() != null?workJobOrderMaster.getLotSize():0;
 					}
-					int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber().toLowerCase());
+					int manufacturingBatchSize = getManufacturerBatchSize(workJobOrderDTO.getLotNumber());
 					int dbSizes = (lotSize - manufacturingBatchSize);
 					int newFreeSpace = workJobOrderDTO.getLotSize() - lotSize;
 					newFreeSpace = newFreeSpace+dbSizes;
@@ -448,12 +448,12 @@ public class WorkJobOrderServiceImpl implements WorkJobOrderService{
 	private WorkJobOrderResponseDTO manfBatchSizeChangeValidation(WorkJobOrderResponseDTO workJobOrderResponseDTO,
 			WorkJobOrderDTO workJobOrderDTO) {
 		try{
-			LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkOrderByBatchNumber(workJobOrderDTO.getManufacturingBatchNumber().toLowerCase());
+			LISWorkJobOrderMaster workJobOrderMaster = workJobOrderDAO.getWorkOrderByBatchNumber(workJobOrderDTO.getManufacturingBatchNumber());
 			int batchSize = 0;
 			if(null != workJobOrderMaster)
 				batchSize = null != workJobOrderMaster.getManufacturingBatchSize()?workJobOrderMaster.getManufacturingBatchSize() :0;
 			int producedQuantity = 0;
-			List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByBatchNumber(workJobOrderDTO.getManufacturingBatchNumber().toLowerCase());
+			List<LISInspectionMeasurements> inspectionMeasurements = inspectionMeasurementDAO.getProducedQuantityListByBatchNumber(workJobOrderDTO.getManufacturingBatchNumber());
 			if(null != inspectionMeasurements && inspectionMeasurements.size() > 0){
 				for(LISInspectionMeasurements inspectionMeasurements2 :inspectionMeasurements){
 					producedQuantity = producedQuantity + inspectionMeasurements2.getProducedQuantity();
