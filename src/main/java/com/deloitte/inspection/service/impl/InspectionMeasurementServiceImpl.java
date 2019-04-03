@@ -100,7 +100,7 @@ public class InspectionMeasurementServiceImpl implements InspectionMeasurementSe
 				List<FacilityMasterDTO> facilityMasterDTOs = new ArrayList<FacilityMasterDTO>();
 				for(LISFacilityMaster facilityMaster : facilityMasters){
 					FacilityMasterDTO facilityMasterDTO = new FacilityMasterDTO();
-					facilityMasterDTO.setFacilityId(Integer.valueOf(facilityMaster.getFacilityNumber()));
+					facilityMasterDTO.setFacilityId(Integer.valueOf(facilityMaster.getFacilityId()));
 					facilityMasterDTO.setFacilityName(facilityMaster.getFacilityName());
 					facilityMasterDTO.setFacilityNumber(facilityMaster.getFacilityNumber());
 					facilityMasterDTOs.add(facilityMasterDTO);

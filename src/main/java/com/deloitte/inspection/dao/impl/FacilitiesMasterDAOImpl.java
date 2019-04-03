@@ -18,12 +18,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.deloitte.inspection.constant.StatusConstants;
+import com.deloitte.inspection.dao.DatabaseSequenceDAO;
 import com.deloitte.inspection.dao.FacilitiesMasterDAO;
 import com.deloitte.inspection.dto.FacilityMasterDTO;
 import com.deloitte.inspection.exception.FacilityMasterException;
 import com.deloitte.inspection.mapper.LISFacilityMasterResult;
 import com.deloitte.inspection.model.LISFacilityMaster;
-import com.deloitte.inspection.model.LISSubscriberMaster;
 
 /**
  * @author rnarne
@@ -37,6 +37,9 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	DatabaseSequenceDAO databaseSequence;
 
 	/**
 	 * @param facilityNum
@@ -68,6 +71,7 @@ public class FacilitiesMasterDAOImpl implements FacilitiesMasterDAO {
 			LISFacilityMaster facilityMaster = new LISFacilityMaster();
 			facilityMaster.setCreatedBy(userName);
 			facilityMaster.setCreatedTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
+			facilityMaster.setFacilityId(String.valueOf(databaseSequence.getNextSequenceId("LIS_FMACS")));
 			facilityMaster.setFacilityNumber(facilityMasterDTO.getFacilityNumber());
 			facilityMaster.setFacilityName(facilityMasterDTO.getFacilityName());
 			facilityMaster.setUserId(userName);
