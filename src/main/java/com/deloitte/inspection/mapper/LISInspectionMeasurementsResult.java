@@ -11,7 +11,7 @@ public class LISInspectionMeasurementsResult {
 	
 	private String inspectionMeasurementId;
 	
-	private String subscriberId;
+	private Integer subscriberId;
 	
 	private String recordInProcess;
 	
@@ -77,6 +77,37 @@ public class LISInspectionMeasurementsResult {
 	
 	private Integer producedQuantity;
 	
+	private String updatedBy;
+	
+	private Date updatedTimestamp;
+	
+	private String partStatus;
+	
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getUpdatedTimestamp() {
+		return updatedTimestamp;
+	}
+
+	public void setUpdatedTimestamp(Date updatedTimestamp) {
+		this.updatedTimestamp = updatedTimestamp;
+	}
+
+	public String getPartStatus() {
+		return partStatus;
+	}
+
+	public void setPartStatus(String partStatus) {
+		this.partStatus = partStatus;
+	}
+	
 	public String get_id() {
 		return _id;
 	}
@@ -93,11 +124,11 @@ public class LISInspectionMeasurementsResult {
 		this.inspectionMeasurementId = inspectionMeasurementId;
 	}
 
-	public String getSubscriberId() {
+	public Integer getSubscriberId() {
 		return subscriberId;
 	}
 
-	public void setSubscriberId(String subscriberId) {
+	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
 

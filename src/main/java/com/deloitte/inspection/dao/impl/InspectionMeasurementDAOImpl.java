@@ -108,19 +108,16 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	public List<LISInspectionMeasurementsResult> validatePartIdentification(String partIdententificationId,Integer subscriberId)
 			throws InspectionMeasurementException {
 		logger.info("Entered into validatePartIdentification");
-		LookupOperation lookupOperation = LookupOperation.newLookup().from("LIS_PIFIM").localField("inspectionMeasurementId")
-				.foreignField("inspectionMeasurementsId").as("partIdentifications");
 		Aggregation aggregation = Aggregation.newAggregation(
 				Aggregation.match(Criteria.where("subscriberId").is(subscriberId)),
 				Aggregation.match(Criteria.where("partIdentificationNumber").is(partIdententificationId)),
 				Aggregation.match(Criteria.where("isActive").is(String.valueOf(StatusConstants.IS_ACTIVE))),
-				lookupOperation,
 				Aggregation.sort(Sort.Direction.DESC, "createdTimestamp"));
 		return mongoTemplate.aggregate(aggregation, "LIS_IMDES", LISInspectionMeasurementsResult.class).getMappedResults();
 	}
 
 	@Override
-	public void saveMeasurementsToDataBase(LISInspectionMeasurements inspectionMeasurements)
+	public void saveMeasurementsToDataBase(LISInspectionMeasurementsResult inspectionMeasurements)
 			throws InspectionMeasurementException {
 		logger.info("Entered into saveMeasurementsToDataBase ");
 		try {
@@ -147,7 +144,7 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	public LISPartIdentification getMeasurementRecord(Integer partVerifId) throws InspectionMeasurementException {
 		logger.info("Entered into getMeasurementRecord DAO");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("partVerifId").is(partVerifId));
+		query.addCriteria(Criteria.where("partVerifId").is(partVerifId.toString()));
 		LISPartIdentification lisPartIdentification =  mongoTemplate.findOne(query, LISPartIdentification.class,"LIS_PIFIM");
 		return lisPartIdentification;
 	}
@@ -165,12 +162,12 @@ public class InspectionMeasurementDAOImpl implements InspectionMeasurementDAO{
 	}
 
 	@Override
-	public LISInspectionMeasurements getRecordById(Integer inspectionMeasurementId)
+	public LISInspectionMeasurementsResult getRecordById(Integer inspectionMeasurementId)
 			throws InspectionMeasurementException {
 		logger.info("Entered into getRecordById DAO");
 		Query query = new Query();
-		query.addCriteria(Criteria.where("inspectionMeasurementId").is(inspectionMeasurementId));
-		LISInspectionMeasurements lisInspectionMeasurements =  mongoTemplate.findOne(query, LISInspectionMeasurements.class,"LIS_IMDES");
+		query.addCriteria(Criteria.where("inspectionMeasurementId").is(inspectionMeasurementId.toString()));
+		LISInspectionMeasurementsResult lisInspectionMeasurements =  mongoTemplate.findOne(query, LISInspectionMeasurementsResult.class,"LIS_IMDES");
 		return lisInspectionMeasurements;
 	}
 }

@@ -26,7 +26,7 @@ public interface InspectionMeasurementDAO {
 
 	public List<LISInspectionMeasurementsResult> validatePartIdentification(String partIdententificationId,Integer subscriberId) throws InspectionMeasurementException;
 
-	public void saveMeasurementsToDataBase(LISInspectionMeasurements inspectionMeasurements) throws InspectionMeasurementException;
+	public void saveMeasurementsToDataBase(LISInspectionMeasurementsResult inspectionMeasurements) throws InspectionMeasurementException;
 
 	public List<LISInspectionMeasurements> getProducedQuantityListByWJandSubId(Set<String> wjoNum,
 			Integer subscriberId) throws InspectionMeasurementException;
@@ -35,5 +35,5 @@ public interface InspectionMeasurementDAO {
 
 	public void saveMeasurementRecord(LISPartIdentification partIdentification) throws InspectionMeasurementException;
 
-	public LISInspectionMeasurements getRecordById(Integer inspectionMeasurementId)  throws InspectionMeasurementException;
+	public LISInspectionMeasurementsResult getRecordById(Integer inspectionMeasurementId)  throws InspectionMeasurementException;
 }

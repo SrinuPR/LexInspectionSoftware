@@ -14,7 +14,7 @@ public class LISInspectionMeasurements{
 	
 	private String inspectionMeasurementId;
 	
-	private String subscriberId;
+	private Integer subscriberId;
 	
 	private String recordInProcess;
 	
@@ -88,11 +88,11 @@ public class LISInspectionMeasurements{
 		this.inspectionMeasurementId = inspectionMeasurementId;
 	}
 
-	public String getSubscriberId() {
+	public Integer getSubscriberId() {
 		return subscriberId;
 	}
 
-	public void setSubscriberId(String subscriberId) {
+	public void setSubscriberId(Integer subscriberId) {
 		this.subscriberId = subscriberId;
 	}
 
